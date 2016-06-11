@@ -1,0 +1,2 @@
+serviceClass: com.dickie.sidion.client.GreetingService
+path: 0C102EDD8EFA6F5BC0027B5084AEB98F.gwt.rpc
