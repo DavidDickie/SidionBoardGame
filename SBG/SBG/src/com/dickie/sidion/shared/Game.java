@@ -66,5 +66,9 @@ public class Game {
 	public Game() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public static Game getGame(String name){
+		return games.get(name);
+	}
 
 }

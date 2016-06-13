@@ -48,8 +48,29 @@ public class Player implements GameComponent {
 
 	private String color;
 	private String name;
+	private boolean admin = false;
+	public boolean isAdmin() {
+		return admin;
+	}
+
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
+	private String password = "password";
 	
 	
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
 	public String getName() {
 		return name;
 	}
