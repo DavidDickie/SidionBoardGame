@@ -43,28 +43,14 @@ public class SBG implements EntryPoint {
 			RootPanel navPanel = RootPanel.get("navbar");
 			navPanel.add(vp);
 		} catch (Throwable t){
-			logMessage(t.getMessage());
+			Utils.logMessage(t.getMessage());
 		}
 
 	}
 	
 
 
-	public static void logMessage(String s) {
-		greetingService.logMessage(s, new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				
-			}
-
-		});
-	}
+	
 
 	List<GameComponent> list2 = null;
 

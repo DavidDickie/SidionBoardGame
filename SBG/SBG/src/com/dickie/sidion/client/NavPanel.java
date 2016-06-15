@@ -57,7 +57,7 @@ public class NavPanel extends VerticalPanel {
 					}
 					draw.setMp(mapPanel);
 					draw.setGame(game);
-					draw.drawMap();
+					
 					if (userTextBox.getText().equals("admin")) {
 						if (passwordTextBox.getText().equals("adminpassword")) {
 							player = new Player();
@@ -86,13 +86,21 @@ public class NavPanel extends VerticalPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				caught.printStackTrace();
+				Utils.logMessage(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(List<GameComponent> result) {
-				for (GameComponent gc : result){
-					game.addGameComponent(gc);
+				int count = 0;
+				try{
+					for (GameComponent gc : result){
+						game.addGameComponent(gc);
+						count++;
+					}
+					Utils.logMessage(count + " objects loaded to game");
+					draw.drawMap();
+				} catch (Throwable t){
+					Utils.logMessage(t.getMessage());
 				}
 			}
 			

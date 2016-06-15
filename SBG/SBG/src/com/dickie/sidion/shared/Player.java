@@ -1,11 +1,13 @@
 package com.dickie.sidion.shared;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Player implements GameComponent {
+public class Player implements GameComponent, java.io.Serializable {
+	
+	public Player(){
+		
+	}
 
 	public String getKey() {
 		// TODO Auto-generated method stub
@@ -26,8 +28,15 @@ public class Player implements GameComponent {
 
 	@Override
 	public void setValue(String field, Object value) {
-		// TODO Auto-generated method stub
-		
+		if (field.equals("ADMIN")){
+			setAdmin((Boolean)value);
+		} else if (field.equals("COLOR")){
+			this.setColor(value.toString());
+		} else if (field.equals("NAME")){
+			this.setName(value.toString());
+		} else if (field.equals("PASSWORD")){
+			this.setPassword(value.toString());
+		} 
 	}
 
 

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Town implements GameComponent {
+public class Town implements GameComponent, java.io.Serializable {
 
+	public Town(){
+		
+	}
 	public String getKey() {
 		return name;
 	}
@@ -21,8 +24,23 @@ public class Town implements GameComponent {
 
 	@Override
 	public void setValue(String field, Object value) {
-		// TODO Auto-generated method stub
-		
+		if (field.equals("GOLD")){
+			this.setGold((Integer)value);
+		} else if (field.equals("INF")){
+			this.setInf((Integer) value);
+		} else if (field.equals("MANA")){
+			this.setMana((Integer) value);
+		} else if (field.equals("NAME")){
+			this.setName(value.toString());
+		} else if (field.equals("OWNER")){
+			this.setOwner(value.toString());
+		} else if (field.equals("X")){
+			this.setX((Integer)value);
+		} else if (field.equals("Y")){
+			this.setY((Integer)value);
+		} else {
+			throw new RuntimeException("No field for " + field)
+		}
 	}
 	
 	public String getOwner() {

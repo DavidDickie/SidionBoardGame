@@ -30,9 +30,11 @@ public class Draw {
 	public void drawMap(){
 		
 		for (Path p : game.getPaths()) {
+			Utils.logMessage("Path " + p);
 			draw(p);
 		}
 		for (Town t : game.getTowns()) {
+			Utils.logMessage("Town " + t);
 			draw(t);
 		}
 	}
