@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface GreetingServiceAsync {
 	void greetServer(String input, AsyncCallback<String> callback)
 			throws IllegalArgumentException;
+	void logMessage(String input, AsyncCallback<Void> callback);
 	void get(String name, String type, AsyncCallback<List<GameComponent>> callback) 
 			throws IllegalArgumentException;
 	void set(String name, List<GameComponent> comps, AsyncCallback<Void> callback)

@@ -9,8 +9,10 @@ import org.vaadin.gwtgraphics.client.shape.Text;
 
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Town;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 
 
@@ -94,7 +96,10 @@ public class MapPanel extends DecoratorPanel {
 	
 	public void drawPath(int x1, int y1, int x2, int y2, final GameComponent gc){
 		Line line = new Line(x1, y1, x2, y2);
-		drawRec(x1 + java.lang.Math.abs(x1 - x2)/2, y1 + java.lang.Math.abs(y1 - y2)/2, 8, "", gc);
+		x1 = java.lang.Math.max(x1, x2);
+		y1 = java.lang.Math.max(y1, y2);
+		drawRec(x1 - java.lang.Math.abs(x1 - x2)/2, y1 - java.lang.Math.abs(y1 - y2)/2, 8, "", gc);
+		canvas.add(line);
 	}
 	
 	private void addLabel(int x, int y, int size, String label){

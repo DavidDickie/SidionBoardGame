@@ -7,18 +7,16 @@ import java.util.Map;
 public class Town implements GameComponent {
 
 	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
-	public Town location() {
-		// TODO Auto-generated method stub
-		return Game.getInstance("default").getTown(name);
+	public Town location(Game game) {
+		return game.getTown(name);
 	}
 
 
-	public Player owner() {
-		return Game.getInstance("default").getPlayer(owner);
+	public Player owner(Game game) {
+		return game.getPlayer(owner);
 	}
 
 	@Override
@@ -53,6 +51,34 @@ public class Town implements GameComponent {
 
 	private String owner = "";
 	private String name = "";
+	public Integer getGold() {
+		return gold;
+	}
+
+	public void setGold(Integer gold) {
+		this.gold = gold;
+	}
+
+	public Integer getMana() {
+		return mana;
+	}
+
+	public void setMana(Integer mana) {
+		this.mana = mana;
+	}
+
+	public Integer getInf() {
+		return inf;
+	}
+
+	public void setInf(Integer inf) {
+		this.inf = inf;
+	}
+
+	private Integer gold = 0;
+	private Integer mana = 0;
+	private Integer inf = 0;
+	
 	public String getName() {
 		return name;
 	}
@@ -76,8 +102,8 @@ public class Town implements GameComponent {
 	public static Map<String,Town> createTowns(Game game){
 		Map<String,Town> towns = new HashMap<String,Town>();
 		int count = 0;
-		for (int x = 0; x < 6; x++){
-			for (int y = 0; y < 6; y++){
+		for (int x = 0; x < 5; x++){
+			for (int y = 0; y < 5; y++){
 				Town t = new Town();
 				t.setX(100 + x * 100);
 				t.setY(100 + y * 100);

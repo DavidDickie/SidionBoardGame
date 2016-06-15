@@ -78,15 +78,14 @@ public class Hero implements GameComponent, java.io.Serializable{
 	}
 
 	@Override
-	public Town location() {
-		// TODO Auto-generated method stub
-		return null;
+	public Town location(Game game) {
+		return game.getTown(location);
 	}
 
 	@Override
-	public Player owner() {
+	public Player owner(Game game) {
 		// TODO Auto-generated method stub
-		return null;
+		return game.getPlayer(owner);
 	}
 
 	@Override
@@ -114,6 +113,7 @@ public class Hero implements GameComponent, java.io.Serializable{
 		int count = 0;
 		int count2 = 0;
 		int playerCount = 0;
+		int split = game.getTowns().size()/game.getPlayers().size();
 		for (Town t: game.getTowns()){
 			if (count == 9){
 				count = 0;
@@ -132,8 +132,9 @@ public class Hero implements GameComponent, java.io.Serializable{
 				hero.setLocation(t.getName());
 				heros.put(hero.getName(), hero);
 				playerCount++;
-				count++;
+				
 			}
+			count++;
 		}
 		return heros;
 		

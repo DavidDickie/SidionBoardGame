@@ -9,16 +9,16 @@ public class Player implements GameComponent {
 
 	public String getKey() {
 		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 
-	public Town location() {
+	public Town location(Game game) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Player owner() {
+	public Player owner(Game game) {
 		// TODO Auto-generated method stub
 		return null;
 	}
