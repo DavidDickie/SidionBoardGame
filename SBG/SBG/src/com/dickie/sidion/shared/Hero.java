@@ -1,105 +1,45 @@
 package com.dickie.sidion.shared;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Hero implements GameComponent, java.io.Serializable{
+public class Hero extends GameComponentImpl{
 	
 	public Hero() {
-	};
-
-	@Override
-	public String toString() {
-		return "Hero [name=" + name + ", level=" + level + ", owner=" + owner
-				+ ", location=" + location + "]";
+		validAttributes = Arrays.asList("PLAYER", "LOC", "IS_PRINCE", "LEVEL", "KEY");
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getKey() {
-		// TODO Auto-generated method stub
-		return name;
-	}
-
-
-	public String getLocation() {
-		// TODO Auto-generated method stub
-		return location;
-	}
-
-	public String getOwner() {
-		// TODO Auto-generated method stub
-		return owner;
+	public Town getLocation(Game game) {
+		return game.getTown(getValue("LOC"));
 	}
 	
 	public String getName() {
-		return name;
+		return getValue("KEY");
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		setValue("KEY", name);
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
+	public void setLocation(Town location) {
+		setValue("LOC", location.getKey());
 	}
 	
 	public Integer getLevel() {
-		return level;
+		return Integer.parseInt(getValue("LEVEL"));
 	}
 
 	public void setLevel(Integer level) {
-		this.level = level;
+		setValue("LEVEL", level.toString());
 	}
-
-	private String name;
-	private Integer level = 0;
-	private String owner = "";
-	private String location = "";
-	private Boolean isPrince = false;
 	
 	public Boolean getIsPrince() {
-		return isPrince;
+		return Boolean.valueOf(getValue("IS_PRINCE"));
 	}
 
 	public void setIsPrince(Boolean isPrince) {
-		this.isPrince = isPrince;
-	}
-
-	@Override
-	public Town location(Game game) {
-		return game.getTown(location);
-	}
-
-	@Override
-	public Player owner(Game game) {
-		// TODO Auto-generated method stub
-		return game.getPlayer(owner);
-	}
-
-	@Override
-	public void setValue(String field, Object value) {
-		if (field.equals("NAME")){
-			name = value.toString();
-		} else if (field.equals("LEVEL")){
-			level = Integer.valueOf(value.toString());
-		} else if (field.equals("OWNER")){
-			owner = value.toString();
-		}else if (field.equals("LOCATION")){
-			location = value.toString();
-		}
-		
+		setValue("IS_PRINCE", isPrince.toString());
 	}
 
 	@Override
@@ -115,24 +55,23 @@ public class Hero implements GameComponent, java.io.Serializable{
 		int playerCount = 0;
 		int split = game.getTowns().size()/game.getPlayers().size();
 		for (Town t: game.getTowns()){
-			if (count == 9){
+			if (count == split){
 				count = 0;
 				Hero hero = new Hero();
 				hero.setName("Prince_" + count2++);
 				hero.setLevel(3);
-				hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount].getName());
+				hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
 				hero.setIsPrince(true);
-				hero.setLocation(t.getName());
+				hero.setLocation(t);
 				heros.put(hero.getName(), hero);
 				hero = new Hero();
 				hero.setName("Hero_" + count2++);
 				hero.setLevel(0);
-				hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount].getName());
-				hero.setIsPrince(true);
-				hero.setLocation(t.getName());
+				hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
+				hero.setIsPrince(false);
+				hero.setLocation(t);
 				heros.put(hero.getName(), hero);
 				playerCount++;
-				
 			}
 			count++;
 		}

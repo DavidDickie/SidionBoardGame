@@ -43,7 +43,7 @@ public class Draw {
 		mp.setFillColor("#1111111");
 		mp.setLineColor("red");
 		if (t.isLocked()){
-			mp.setFillColor(t.owner(game).getColor());
+			mp.setFillColor(t.getOwner(game).getColor());
 		}
 		mp.drawRec(t.getX(), t.getY(), defaultSize, t.getName(), t);
 	}

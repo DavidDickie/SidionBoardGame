@@ -14,10 +14,11 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class NavPanel extends VerticalPanel {
+public class NavPanel extends VerticalPanel  {
 
 	private String userName;
 	private String password;
@@ -29,6 +30,8 @@ public class NavPanel extends VerticalPanel {
 	private MapPanel mapPanel = null;
 	private final static GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
+	final TextArea scratchpad = new TextArea();
+	
 	public void initialize(Draw draw, MapPanel mapPanel) {
 		this.draw = draw;
 		this.mapPanel = mapPanel;
@@ -75,10 +78,15 @@ public class NavPanel extends VerticalPanel {
 			}
 		});
 		add(passwordTextBox);
+		add(scratchpad);
 	}
 
 	private void adminState() {
 		this.clear();
+	}
+	
+	public void writeToScratchPad(String s){
+		scratchpad.setText(s);
 	}
 	
 	private void getGameFromServer(final Game game){
@@ -95,6 +103,7 @@ public class NavPanel extends VerticalPanel {
 				try{
 					for (GameComponent gc : result){
 						game.addGameComponent(gc);
+						gc.addObserver(NavPanel.this);
 						count++;
 					}
 					Utils.logMessage(count + " objects loaded to game");
@@ -138,6 +147,11 @@ public class NavPanel extends VerticalPanel {
 		v.setKey(Integer.toString(x));
 		//((Var) precursors.get("_y")).setKey(Integer.toString(y));
 
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		scratchpad.setText("selected " + arg.toString());
 	}
 
 }

@@ -1,115 +1,68 @@
 package com.dickie.sidion.shared;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Town implements GameComponent, java.io.Serializable {
+public class Town extends GameComponentImpl {
 
 	public Town(){
-		
-	}
-	public String getKey() {
-		return name;
+		validAttributes = Arrays.asList("KEY", "X", "Y", "GOLD", "MANA", "INF", "PLAYER");
 	}
 
-	public Town location(Game game) {
-		return game.getTown(name);
-	}
-
-
-	public Player owner(Game game) {
-		return game.getPlayer(owner);
-	}
-
-	@Override
-	public void setValue(String field, Object value) {
-		if (field.equals("GOLD")){
-			this.setGold((Integer)value);
-		} else if (field.equals("INF")){
-			this.setInf((Integer) value);
-		} else if (field.equals("MANA")){
-			this.setMana((Integer) value);
-		} else if (field.equals("NAME")){
-			this.setName(value.toString());
-		} else if (field.equals("OWNER")){
-			this.setOwner(value.toString());
-		} else if (field.equals("X")){
-			this.setX((Integer)value);
-		} else if (field.equals("Y")){
-			this.setY((Integer)value);
-		} else {
-			throw new RuntimeException("No field for " + field)
-		}
-	}
-	
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
 
 	public Integer getX() {
-		return x;
+		return Integer.valueOf(getValue("X"));
 	}
 
 	public void setX(Integer x) {
-		this.x = x;
+		setValue("X", x.toString());
 	}
 
 	public Integer getY() {
-		return y;
+		return Integer.valueOf(getValue("Y"));
 	}
 
 	public void setY(Integer y) {
-		this.y = y;
+		setValue("Y", y.toString());
 	}
 
-	private String owner = "";
-	private String name = "";
 	public Integer getGold() {
-		return gold;
+		return Integer.valueOf(getValue("GOLD"));
 	}
 
-	public void setGold(Integer gold) {
-		this.gold = gold;
+	public void setGold(Integer i) {
+		setValue("GOLD", i.toString());
 	}
 
 	public Integer getMana() {
-		return mana;
+		return Integer.valueOf(getValue("MANA"));
 	}
 
-	public void setMana(Integer mana) {
-		this.mana = mana;
+	public void setMana(Integer i) {
+		setValue("MANA", i.toString());
 	}
 
 	public Integer getInf() {
-		return inf;
+		return Integer.valueOf(getValue("INF"));
 	}
 
-	public void setInf(Integer inf) {
-		this.inf = inf;
+	public void setInf(Integer i) {
+		setValue("INF", i.toString());
 	}
 
-	private Integer gold = 0;
-	private Integer mana = 0;
-	private Integer inf = 0;
-	
 	public String getName() {
-		return name;
+		return getValue("KEY");
 	}
 
 	public void setName(String town) {
-		this.name = town;
+		setValue("KEY", town);
 	}
 
-	private Integer x = 0;
-	private Integer y = 0;
 	
 	public boolean isLocked(){
-		return !owner.equals("");
+		return getValue("PLAYER") != null;
 	}
 
 	@Override
@@ -126,6 +79,32 @@ public class Town implements GameComponent, java.io.Serializable {
 				t.setX(100 + x * 100);
 				t.setY(100 + y * 100);
 				t.setName(townNames[count]);
+				int production = (int) (java.lang.Math.random() * 10);
+				if (production < 3 ){
+					t.setGold(1);
+					t.setInf(0);
+					t.setMana(0);
+				} else if (production < 5){
+					t.setGold(0);
+					t.setInf(1);
+					t.setMana(0);
+				} else if (production < 7){
+					t.setGold(0);
+					t.setInf(0);
+					t.setMana(1);
+				} else if (production < 8){
+					t.setGold(1);
+					t.setInf(1);
+					t.setMana(0);
+				} else if (production < 9){
+					t.setGold(1);
+					t.setInf(0);
+					t.setMana(1);
+				}  else {
+					t.setGold(0);
+					t.setInf(0);
+					t.setMana(0);
+				}
 				towns.put(townNames[count],t);
 				count++;
 			}

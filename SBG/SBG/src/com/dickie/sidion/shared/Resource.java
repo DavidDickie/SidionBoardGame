@@ -1,43 +1,27 @@
 package com.dickie.sidion.shared;
 
-public class Resource implements GameComponent, java.io.Serializable{
+import java.util.Arrays;
+
+public class Resource extends GameComponentImpl{
 	
 	public Resource(){
-		
+		validAttributes = Arrays.asList("KEY", "TYPE", "VALUE");
 	}
 
-	@Override
-	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
+	public enum Rtypes {GOLD, INF, MANA};
+	public Rtypes getType(){
+		return Rtypes.valueOf(getValue("TYPE"));
 	}
-
-	@Override
-	public Town location(Game game) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Player owner(Game game) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setValue(String field, Object value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void selected() {
-		// TODO Auto-generated method stub
-		
+	public void setType(Rtypes t){
+		setValue("TYPE", t.toString());
 	}
 	
-	String type;
-	Integer number;
-	Player owner;
+	public int getValue(){
+		return Integer.parseInt(getValue("VALUE"));
+	}
+	
+	public void setValue(int value){
+		setValue("VALUE", Integer.toString(value));
+	}
 
 }

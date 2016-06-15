@@ -1,90 +1,48 @@
 package com.dickie.sidion.shared;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import com.dickie.sidion.client.SBG;
 
-public class Path implements GameComponent, IsSerializable{
+public class Path extends GameComponentImpl{
 	
 	public Path(){
-		
-	}
-
-	@Override
-	public String toString() {
-		return "Path [town1=" + town1 + ", town2=" + town2 + ", key=" + key + ", blocked=" + blocked + "]";
-	}
-
-	@Override
-	public String getKey() {
-		return key;
+		validAttributes = Arrays.asList("KEY", "PLAYER", "TOWN1", "TOWN2", "BLOCKED");
 	}
 	
-	public void setKey(String key){
-		this.key = key;
+	public Town getTown1(Game game) {
+		return game.getTown(getValue("TOWN1"));
 	}
 
-	@Override
-	public Town location(Game game) {
-		return null;
+	public void setTown1(Town town1) {
+		setValue("TOWN1", town1.getKey());
 	}
 
-	@Override
-	public Player owner(Game game) {
-		// TODO Auto-generated method stub
-		return null;
+	public Town getTown2(Game game) {
+		return game.getTown(getValue("TOWN2"));
 	}
 
-	@Override
-	public void setValue(String field, Object value) {
-		// TODO Auto-generated method stub
-		
+	public void setTown2(Town town2) {
+		setValue("TOWN2", town2.getKey());
 	}
 
-	@Override
-	public void selected() {
-		
-	}
-	
-	public String getTown1() {
-		return town1;
-	}
-
-	public void setTown1(String town1) {
-		this.town1 = town1;
-	}
-
-	public String getTown2() {
-		return town2;
-	}
-
-	public void setTown2(String town2) {
-		this.town2 = town2;
-	}
-
-	private String town1;
-	private String town2;
-	private String key;
-	private Boolean blocked = false;
-	
-	
-	
 	public Boolean getBlocked() {
-		return blocked;
+		return Boolean.valueOf(getValue("BLOCKED"));
 	}
 
 	public void setBlocked(Boolean blocked) {
-		this.blocked = blocked;
+		setValue("BLOCKED", blocked.toString());
 	}
 
 	public Town firstTown(Game game){
-		return game.getTown(town1);
+		return getTown1(game);
 	}
 	
 	public Town secondTown(Game game){
-		return game.getTown(town2);
+		return getTown2(game);
 	}
 	
 	public static Map<String,Path> createPath(Game game){
@@ -105,15 +63,15 @@ public class Path implements GameComponent, IsSerializable{
 			for (y = 0; y < square; y++){
 				Path path = new Path();
 				if (x != 0){ 
-					path.setTown1(towns[x][y].getKey());
-					path.setTown2(towns[x-1][y].getKey());
+					path.setTown1(towns[x][y]);
+					path.setTown2(towns[x-1][y]);
 					path.setKey(x + "_" + y + "a");
 					paths.put(path.getKey(), path);
 				}
 				path = new Path();
 				if (y != 0){
-					path.setTown1(towns[x][y].getKey());
-					path.setTown2(towns[x][y-1].getKey());
+					path.setTown1(towns[x][y]);
+					path.setTown2(towns[x][y-1]);
 					path.setKey(x + "_" + y + "b");
 					paths.put(path.getKey(), path);
 				}

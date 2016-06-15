@@ -1,92 +1,45 @@
 package com.dickie.sidion.shared;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Player implements GameComponent, java.io.Serializable {
+public class Player extends GameComponentImpl {
 	
 	public Player(){
-		
-	}
-
-	public String getKey() {
-		// TODO Auto-generated method stub
-		return name;
-	}
-
-
-	public Town location(Game game) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Player owner(Game game) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void setValue(String field, Object value) {
-		if (field.equals("ADMIN")){
-			setAdmin((Boolean)value);
-		} else if (field.equals("COLOR")){
-			this.setColor(value.toString());
-		} else if (field.equals("NAME")){
-			this.setName(value.toString());
-		} else if (field.equals("PASSWORD")){
-			this.setPassword(value.toString());
-		} 
-	}
-
-
-	@Override
-	public void selected() {
-		// TODO Auto-generated method stub
-		
+		validAttributes = Arrays.asList("KEY", "COLOR", "PASSWORD", "IS_ADMIN");
 	}
 	
 	public String getColor() {
-		return color;
+		return getValue("COLOR");
 	}
 
 
 	public void setColor(String color) {
-		this.color = color;
+		setValue("COLOR", color);
 	}
 
-	private String color;
-	private String name;
-	private boolean admin = false;
-	public boolean isAdmin() {
-		return admin;
-	}
-
-
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
-	}
-
-	private String password = "password";
-	
+	public void setAdmin(Boolean admin) {
+		setValue("IS_ADMIN", admin.toString());
+	}	
 	
 	public String getPassword() {
-		return password;
+		return getValue("PASSWORD");
 	}
 
 
 	public void setPassword(String password) {
-		this.password = password;
+		setValue("PASSWORD", password);
 	}
 
 
 	public String getName() {
-		return name;
+		return getValue("KEY");
 	}
 
 
 	public void setName(String name) {
-		this.name = name;
+		setValue("KEY", name);
 	}
 
 
@@ -96,7 +49,8 @@ public class Player implements GameComponent, java.io.Serializable {
 		for (String name : names){
 			Player p = new Player();
 			p.setColor(colors[count]);
-			p.setName(names[count]);
+			p.setName(name);
+			p.setAdmin(false);
 			players.put(names[count],p);
 			count++;
 		}

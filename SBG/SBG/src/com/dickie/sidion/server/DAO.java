@@ -42,37 +42,19 @@ public class DAO {
 		return game;
 	}
 	
-	public void setAttributes (Entity e, Object t)
-			throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-
-		Method[] gettersAndSetters = t.getClass().getMethods();
-		for (int i = 0; i < gettersAndSetters.length; i++) {
-			String methodName = gettersAndSetters[i].getName();
-			if (methodName.equals("getClass")) {
-				continue;
-			}
-			if (!(methodName.startsWith("get") || methodName.startsWith("is"))) {
-				continue;
-			}
-			Object o = gettersAndSetters[i].invoke(t, null);
-			if (o == null){
-				continue;
-			}
-
-			if (methodName.startsWith("get")) {
-				e.setProperty(methodName.substring(3).toUpperCase(), o);
-			} else if (methodName.startsWith("is")) {
-				e.setProperty(methodName.substring(2).toUpperCase(), o);
+	public void setAttributes (Entity e, GameComponent t) {
+		for (String s : t.getKeys()){
+			if (t.getValue(s) != null){
+				e.setProperty(s, t.getValue(s));
 			}
 		}
 	}
 	
 	
 	
-	public void setAttributes (GameComponent t, Entity e)
-			throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public void setAttributes (GameComponent t, Entity e) {
 		for (String s : e.getProperties().keySet()){
-			t.setValue(s, e.getProperty(s));
+			t.setValue(s, e.getProperty(s).toString());
 		}
 		
 	}

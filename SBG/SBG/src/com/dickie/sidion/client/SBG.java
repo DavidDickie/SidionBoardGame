@@ -26,7 +26,7 @@ public class SBG implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	
-	boolean init = false;
+	boolean init = true;
 	
 	public void onModuleLoad() {
 		try{
@@ -61,8 +61,7 @@ public class SBG implements EntryPoint {
 			Hero h = new Hero();
 			h.setName("hero" + i);
 			h.setLevel(1);
-			h.setOwner("Blue");
-			h.setLocation("tacky");
+
 			list.add(h);
 		}
 
