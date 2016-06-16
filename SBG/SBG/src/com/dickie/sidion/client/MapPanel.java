@@ -35,9 +35,13 @@ public class MapPanel extends DecoratorPanel {
 	}
 
 	public MapPanel() {
+		drawBackgroundImage();
+		this.add(canvas);
+	}
+	
+	public void drawBackgroundImage(){
 		Image image = new Image(0, 0, 800, 800, "Project1.png");
 		canvas.add(image);
-		this.add(canvas);
 	}
 	
 	public void drawMapBackground(){
@@ -67,16 +71,18 @@ public class MapPanel extends DecoratorPanel {
 	
 
 	public void drawRec(int x, int y, int size, String label, final GameComponent gc){
-		int textDrop = size/4;
 		Rectangle rec = new Rectangle(x - size/2, y-size/2, size, size);
 		rec.setStrokeColor(lineColor);
 		rec.setFillColor(fillColor);
 		canvas.add(rec);
-		rec.addClickHandler(new ClickHandler() {
-			  public void onClick(ClickEvent event) {
-			    gc.selected();
-			  }
-			});
+		if (gc != null){
+			rec.addClickHandler(new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+				    gc.selected();
+				    Utils.logMessage("Selected " + gc);
+				  }
+				});
+		}
 		addLabel(x,y,size,label);
 	}
 	
@@ -96,6 +102,7 @@ public class MapPanel extends DecoratorPanel {
 	
 	public void drawPath(int x1, int y1, int x2, int y2, final GameComponent gc){
 		Line line = new Line(x1, y1, x2, y2);
+		line.setStrokeColor(lineColor);
 		x1 = java.lang.Math.max(x1, x2);
 		y1 = java.lang.Math.max(y1, y2);
 		drawRec(x1 - java.lang.Math.abs(x1 - x2)/2, y1 - java.lang.Math.abs(y1 - y2)/2, 8, "", gc);

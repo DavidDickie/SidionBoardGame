@@ -11,6 +11,6 @@ public interface GameComponent {
 	public void setValue(String field, String value);
 	public String getValue(String field);
 	public void selected();
-	public void addObserver(Observer o);
+	public void addObserver(GameComponentListener o);
 }
 

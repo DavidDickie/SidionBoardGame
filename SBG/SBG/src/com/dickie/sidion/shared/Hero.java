@@ -41,12 +41,6 @@ public class Hero extends GameComponentImpl{
 	public void setIsPrince(Boolean isPrince) {
 		setValue("IS_PRINCE", isPrince.toString());
 	}
-
-	@Override
-	public void selected() {
-		System.out.println(getName() + " has been seleced");
-		
-	}
 	
 	public static Map<String,Hero> createHeros(Game game){
 		Map<String,Hero> heros = new HashMap<String,Hero>();
@@ -63,6 +57,10 @@ public class Hero extends GameComponentImpl{
 				hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
 				hero.setIsPrince(true);
 				hero.setLocation(t);
+				t.setGold(1);
+				t.setMana(1);;
+				t.setInf(1);;
+				t.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
 				heros.put(hero.getName(), hero);
 				hero = new Hero();
 				hero.setName("Hero_" + count2++);

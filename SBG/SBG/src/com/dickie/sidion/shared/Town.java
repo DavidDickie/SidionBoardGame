@@ -3,6 +3,8 @@ package com.dickie.sidion.shared;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Town extends GameComponentImpl {
@@ -64,10 +66,17 @@ public class Town extends GameComponentImpl {
 	public boolean isLocked(){
 		return getValue("PLAYER") != null;
 	}
-
-	@Override
-	public void selected() {
-		System.out.println(getName() + " has been seleced");
+	
+	public List<Hero> getHeros(Game game){
+		ArrayList<Hero> list = new ArrayList<Hero>();
+		Iterator<Hero> iHero = game.getHeros().iterator();
+		while (iHero.hasNext()){
+			Hero h = iHero.next();
+			if (h.getLocation(game).equals(this)){
+				list.add(h);
+			}
+		}
+		return list;
 	}
 	
 	public static Map<String,Town> createTowns(Game game){

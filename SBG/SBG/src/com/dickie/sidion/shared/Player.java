@@ -1,7 +1,10 @@
 package com.dickie.sidion.shared;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Player extends GameComponentImpl {
@@ -41,6 +44,18 @@ public class Player extends GameComponentImpl {
 	public void setName(String name) {
 		setValue("KEY", name);
 	}
+	
+	public List<Hero> getHeros(Game game){
+		ArrayList<Hero> list = new ArrayList<Hero>();
+		Iterator<Hero> iHero = game.getHeros().iterator();
+		while (iHero.hasNext()){
+			Hero h = iHero.next();
+			if (h.getOwner(game).equals(this)){
+				list.add(h);
+			}
+		}
+		return list;
+	}
 
 
 	public static Map<String, Player> createPlayers(Game game, String []names){
@@ -58,13 +73,13 @@ public class Player extends GameComponentImpl {
 	}
 	
 	static String[] colors = {
-			"#000080",
-			"#008000",
-			"#00FFFF",
-			"#4B0082",
+			"#009999",
+			"#6666FF",
+			"#993366",
+			"#990000",
 			"#7FFFD4",
-			"#800000",
-			"#8B0000"
+			"#CC0000",
+			"#CC9933"
 	};
 	
 

@@ -52,7 +52,9 @@ public class Path extends GameComponentImpl{
 		int x = 0;
 		int y = 0;
 		for (Town t: game.getTowns()){
-			towns[x++][y] = t;
+			x = (t.getX() - 100)/100;
+			y = (t.getY() - 100)/100;
+			towns[x][y] = t;
 			if (x == square){
 				x = 0;
 				y++;

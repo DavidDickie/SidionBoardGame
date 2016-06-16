@@ -28,7 +28,8 @@ public class Draw {
 	int defaultSize = 40;
 	
 	public void drawMap(){
-		
+		mp.clear();
+		mp.drawBackgroundImage();
 		for (Path p : game.getPaths()) {
 			Utils.logMessage("Path " + p);
 			draw(p);
@@ -40,12 +41,37 @@ public class Draw {
 	}
 	
 	public void draw(Town t){
-		mp.setFillColor("#1111111");
-		mp.setLineColor("red");
+		mp.setFillColor("black");
 		if (t.isLocked()){
 			mp.setFillColor(t.getOwner(game).getColor());
+		} else {
+			mp.setLineColor("red");
 		}
 		mp.drawRec(t.getX(), t.getY(), defaultSize, t.getName(), t);
+		mp.setLineColor("white");
+		if (t.isLocked()){
+			mp.setFillColor(t.getOwner(game).getColor());
+		} else {
+			mp.setFillColor("gray");
+		}
+		mp.drawCircle(t.getX(), t.getY(), defaultSize/4, null, t);
+		int scaler = 8;
+		
+		if (t.getGold() == 1){
+			mp.setFillColor("yellow");
+			mp.setLineColor("white");
+			mp.drawRec(t.getX() + 3*defaultSize/scaler, t.getY() - 3*defaultSize/scaler , (defaultSize+8)/scaler, null, null);
+		}
+		if (t.getMana() == 1){
+			mp.setFillColor("red");
+			mp.setLineColor("white");
+			mp.drawRec(t.getX() - 3*defaultSize/scaler, t.getY() - 3*defaultSize/scaler , (defaultSize+8)/scaler, null, null);
+		}
+		if (t.getInf() == 1){
+			mp.setFillColor("#8ED6EA");
+			mp.setLineColor("white");
+			mp.drawRec(t.getX() + 3*defaultSize/scaler, t.getY() + 3*defaultSize/scaler , (defaultSize+8)/scaler, null, null);
+		}
 	}
 	
 	public void draw(Path p){

@@ -47,8 +47,8 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 
 	@Override
 	public void selected() {
-		for (Observer o : observers){
-			o.update(null, this);
+		for (GameComponentListener o : observers){
+			o.componentEvent("SELECTED", this);
 		}
 	}
 
@@ -67,9 +67,9 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 	
 	protected Map<String, String> attributes = new HashMap<String, String>();
 	protected List<String> validAttributes = new ArrayList<String>();
-	protected List<Observer> observers = new ArrayList<Observer>();
+	protected List<GameComponentListener> observers = new ArrayList<GameComponentListener>();
 	@Override
-	public void addObserver(Observer o) {
+	public void addObserver(GameComponentListener o) {
 		observers.add(o);
 	}
 
