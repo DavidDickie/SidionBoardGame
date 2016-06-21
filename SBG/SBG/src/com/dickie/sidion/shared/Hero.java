@@ -34,7 +34,7 @@ public class Hero extends GameComponentImpl{
 		setValue("LEVEL", level.toString());
 	}
 	
-	public Boolean getIsPrince() {
+	public Boolean isPrince() {
 		return Boolean.valueOf(getValue("IS_PRINCE"));
 	}
 
@@ -47,9 +47,18 @@ public class Hero extends GameComponentImpl{
 		int count = 0;
 		int count2 = 0;
 		int playerCount = 0;
+		int x = 0;
+		int y = 0;
 		int split = game.getTowns().size()/game.getPlayers().size();
 		for (Town t: game.getTowns()){
-			if (count == split){
+			x++;
+			if (x == split){
+				y++;
+			}
+			if ((x == 1 && y == 1) ||
+			   (x == split - 1 && y == split -1) ||
+				(x == split - 1 && y == 1) ||
+				(x == 1 &&  y == split - 1)){
 				count = 0;
 				Hero hero = new Hero();
 				hero.setName("Prince_" + count2++);

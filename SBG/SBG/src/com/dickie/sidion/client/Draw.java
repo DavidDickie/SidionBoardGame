@@ -1,6 +1,9 @@
 package com.dickie.sidion.client;
 
+import java.util.List;
+
 import com.dickie.sidion.shared.Game;
+import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Path;
 import com.dickie.sidion.shared.Town;
 
@@ -28,15 +31,17 @@ public class Draw {
 	int defaultSize = 40;
 	
 	public void drawMap(){
-		mp.clear();
-		mp.drawBackgroundImage();
-		for (Path p : game.getPaths()) {
-			Utils.logMessage("Path " + p);
-			draw(p);
-		}
-		for (Town t : game.getTowns()) {
-			Utils.logMessage("Town " + t);
-			draw(t);
+		try{
+			mp.clear();
+			mp.drawBackgroundImage();
+			for (Path p : game.getPaths()) {
+				draw(p);
+			}
+			for (Town t : game.getTowns()) {
+				draw(t);
+			}
+		} catch (Throwable t){
+			Utils.displayMessage(t.getMessage());
 		}
 	}
 	
@@ -71,6 +76,19 @@ public class Draw {
 			mp.setFillColor("#8ED6EA");
 			mp.setLineColor("white");
 			mp.drawRec(t.getX() + 3*defaultSize/scaler, t.getY() + 3*defaultSize/scaler , (defaultSize+8)/scaler, null, null);
+		}
+		
+		List<Hero> heros = t.getHeros(game);
+		int number = heros.size() - 1;
+		for (Hero h : heros){
+			if (!h.isPrince()){
+				mp.setLineColor("white");
+			} else { 
+				mp.setLineColor(h.getOwner(game).getColor()); 
+			}	
+			mp.setFillColor(h.getOwner(game).getColor());
+			mp.drawCircle(t.getX() - defaultSize/2 * number/2, t.getY() + defaultSize, defaultSize/8, null, h);
+			number--;
 		}
 	}
 	

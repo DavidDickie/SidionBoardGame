@@ -33,8 +33,18 @@ public class MapPanel extends DecoratorPanel {
 	DrawingArea getCanvas(){
 		return canvas;
 	}
+	
+	public void AddClickListener(final NavPanel np){
+		canvas.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				np.rawClick(event.getClientX(), event.getClientY());	
+			}});
+	}
 
 	public MapPanel() {
+		
 		drawBackgroundImage();
 		this.add(canvas);
 	}
@@ -79,7 +89,6 @@ public class MapPanel extends DecoratorPanel {
 			rec.addClickHandler(new ClickHandler() {
 				  public void onClick(ClickEvent event) {
 				    gc.selected();
-				    Utils.logMessage("Selected " + gc);
 				  }
 				});
 		}

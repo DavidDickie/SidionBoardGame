@@ -5,6 +5,8 @@ import java.util.List;
 import com.dickie.sidion.client.GreetingService;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.Order;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -36,9 +38,33 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			throw new IllegalArgumentException(e.getMessage());
 		}
 	}
-
-	public void set(String name, List<GameComponent> comps) {
-		dao.saveData(name, comps);
+	
+	public String  executeSingleOrder(String name, Order order){
+		try{
+			System.out.println("received new order");
+			OrderProcessor op = new OrderProcessor();
+			return op.processOrder(order, name);
+		} catch (Throwable t){
+			return(t.getMessage());
+		}
+		
+	}
+	
+	public String sendOrders(String name, List<Order> orders) throws IllegalArgumentException {
+		try{
+			System.out.println("received new orders");
+			OrderProcessor op = new OrderProcessor();
+			for (Order o : orders){
+				String s = o.validateOrder();
+				if (s != null){
+					return s;
+				}
+				return op.processOrder(o, name);
+			}
+		} catch (Throwable t){
+			throw new IllegalArgumentException(t);
+		}
+		return "nothing happened";
 	}
 	
 	

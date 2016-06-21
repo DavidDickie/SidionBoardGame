@@ -3,6 +3,7 @@ package com.dickie.sidion.client;
 import java.util.List;
 
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.Order;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -14,5 +15,6 @@ public interface GreetingService extends RemoteService {
 	String greetServer(String name) throws IllegalArgumentException;
 	Void logMessage(String input);
 	List<GameComponent> get(String name, String type) throws IllegalArgumentException;
-	void set(String name, List<GameComponent> comps)throws IllegalArgumentException;
+	String sendOrders(String name, List<Order> orders) throws IllegalArgumentException ;
+	String executeSingleOrder(String name, Order order);
 }

@@ -26,7 +26,7 @@ public class SBG implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	
-	boolean init = true;
+	boolean init = false;
 	
 	public void onModuleLoad() {
 		try{
@@ -45,48 +45,6 @@ public class SBG implements EntryPoint {
 		} catch (Throwable t){
 			Utils.logMessage(t.getMessage());
 		}
-
-	}
-	
-
-
-	
-
-	List<GameComponent> list2 = null;
-
-	public void test() {
-
-		ArrayList<GameComponent> list = new ArrayList<GameComponent>();
-		for (int i = 0; i < 5; i++) {
-			Hero h = new Hero();
-			h.setName("hero" + i);
-			h.setLevel(1);
-
-			list.add(h);
-		}
-
-		greetingService.set("test", list, new AsyncCallback<Void>() {
-			public void onFailure(Throwable caught) {
-				// Show the RPC error message to the user
-				caught.printStackTrace();
-			}
-
-			public void onSuccess(Void x) {
-			}
-		});
-
-		greetingService.get("test", Hero.class.getName(), new AsyncCallback<List<GameComponent>>() {
-			public void onFailure(Throwable caught) {
-				// Show the RPC error message to the user
-				caught.printStackTrace();
-			}
-
-			@Override
-			public void onSuccess(List<GameComponent> result) {
-				list2 = result;
-				System.out.println(list2);
-			}
-		});
 
 	}
 	

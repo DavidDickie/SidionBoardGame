@@ -3,6 +3,7 @@ package com.dickie.sidion.client;
 import java.util.List;
 
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.Order;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -14,6 +15,6 @@ public interface GreetingServiceAsync {
 	void logMessage(String input, AsyncCallback<Void> callback);
 	void get(String name, String type, AsyncCallback<List<GameComponent>> callback) 
 			throws IllegalArgumentException;
-	void set(String name, List<GameComponent> comps, AsyncCallback<Void> callback)
-			throws IllegalArgumentException;	
+	void sendOrders(String name, List<Order> orders, AsyncCallback<String> callback) throws IllegalArgumentException ;
+	void executeSingleOrder(String name, Order order, AsyncCallback<String> callback);	
 }

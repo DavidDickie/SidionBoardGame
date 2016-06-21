@@ -1,24 +1,26 @@
 package com.dickie.sidion.server;
 
+import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Town;
-import com.dickie.sidion.shared.Var;
+import com.dickie.sidion.shared.order.EditOrder;
 
 public class OrderProcessor {
 	
 	DAO dao = new DAO();
 
-	public void processOrder(Order order) {
-
-		if (order.getOrderType().equals("Edit")) {
-			Town t = (Town) order.precursorFetch().get("_town");
-			Var xVal = (Var) order.precursorFetch().get("_x");
-			int x = Integer.valueOf(xVal.getKey());
-			Var yVal = (Var) order.precursorFetch().get("_x");
-			int y = Integer.valueOf(xVal.getKey());
-			t.setX(x);
-			t.setY(y);
-			dao.saveGameComponent(t, order.getGameName());
+	public String processOrder(Order order, String gameName) {
+		// execute admin orders immediately
+		order.setPrecursors(order.getValue("PRECURSORS"), Game.getGame(gameName));
+		if (order.getClass().equals(EditOrder.class)){
+			System.out.println("Server execution: " + order);
+			Town t = (Town) order.getPrecursors().get("TOWN");
+			t.setX(order.getX());
+			t.setY(order.getY());
+			dao.saveGameComponent(t, gameName);
+			return "Town moved";
 		}
+		// otherwise, verify they match the full list of expected orders and that it's the player's turn
+		return "Unknown order " + order.getClass();
 	}
 }

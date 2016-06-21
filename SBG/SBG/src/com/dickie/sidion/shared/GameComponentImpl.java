@@ -33,6 +33,7 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 		return game.getPlayer(attributes.get("PLAYER"));
 	}
 	
+	@Override
 	public void setOwner(Player p) {
 		setValue("PLAYER", p.getKey());
 	}

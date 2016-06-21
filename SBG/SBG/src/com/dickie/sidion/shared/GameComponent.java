@@ -8,6 +8,7 @@ public interface GameComponent {
 	public List<String> getKeys();
 	public void setKey(String key);
 	public Player getOwner(Game game);
+	public void setOwner(Player player);
 	public void setValue(String field, String value);
 	public String getValue(String field);
 	public void selected();
