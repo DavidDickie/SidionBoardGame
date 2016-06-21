@@ -10,8 +10,13 @@ public class OrderProcessor {
 	DAO dao = new DAO();
 
 	public String processOrder(Order order, String gameName) {
-		// execute admin orders immediately
+		if (Game.getGame(gameName) == null){
+			return "Bad game name " + gameName;
+		}
 		order.setPrecursors(order.getValue("PRECURSORS"), Game.getGame(gameName));
+		if (order.validateOrder(Game.getGame(gameName)) != null){
+			return order.validateOrder(Game.getGame(gameName));
+		}
 		if (order.getClass().equals(EditOrder.class)){
 			System.out.println("Server execution: " + order);
 			Town t = (Town) order.getPrecursors().get("TOWN");

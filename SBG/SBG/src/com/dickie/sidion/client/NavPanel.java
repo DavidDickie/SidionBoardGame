@@ -115,21 +115,16 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	private void adminState() {
 		this.clear();
 		this.add(refresh); 
-		currentOrder = new EditOrder();
-		currentOrder.setTown(game.getTown("Vonnie"));
-		currentOrder.setX(100);
-		currentOrder.setY(100);
-		Utils.sendOrderToServer(currentOrder, game);
-		sendOrder();
-		
-		try{
-//			Utils.sendOrderToServer(currentOrder, game);
-			Map<String, GameComponent> parameters = currentOrder.getPrecursors();
-			renderOrder(currentOrder, game.getName());
-		}
-		catch (Throwable t){
-			Utils.displayMessage("error rendering order:"  + t.getMessage());
-		}
+//		currentOrder = new EditOrder();
+//	
+//		try{
+////			Utils.sendOrderToServer(currentOrder, game);
+//			Map<String, GameComponent> parameters = currentOrder.getPrecursors();
+//			renderOrder(currentOrder, game.getName());
+//		}
+//		catch (Throwable t){
+//			Utils.displayMessage("error rendering order:"  + t.getMessage());
+//		}
 	}
 	
 	private void playerLoggedInState() {
@@ -183,7 +178,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	
 	private Map<String, TextBox> orderTextBoxMap = new HashMap<String, TextBox>();
 
-	private void renderOrder(final Order order, final String gameName){
+	private void renderOrder(Order order, String gameName){
 		Map<String, GameComponent> parameters = order.getPrecursors();
 		for (String key : parameters.keySet()){
 			this.add(new Label(key));
@@ -192,6 +187,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 			orderTextBoxMap.put(key, tb);
 			this.add(tb);
 		}
+		//sendOrder();
 		Button b = new Button("EXECUTE");
 		b.addClickHandler(new ClickHandler(){
 
@@ -205,12 +201,13 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	
 	private void sendOrder(){
 		try{
-			Utils.logMessage("Client executing " + currentOrder.toString());
-			String s = currentOrder.validateOrder();
+			String s = currentOrder.validateOrder(game);
 			if (s  != null){
-				Utils.displayMessage("validation: " + s);
+				Utils.displayMessage("Validation failed: " + s);
+				return;
 			}
-			Utils.sendOrderToServer(currentOrder, game);
+			currentOrder.execute();
+			Utils.displayMessage(Utils.sendOrderToServer(currentOrder, game));
 		} catch (Throwable t){
 			Utils.displayMessage("error: " + t.getMessage());
 		}
@@ -224,7 +221,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 		if (gc instanceof Hero && currentOrder.getPrecursors().get("HERO") != null){
 			currentOrder.setHero((Hero)gc);
 			orderTextBoxMap.get("HERO").setText(gc.getKey());
-		} else if (gc instanceof Town && currentOrder.getPrecursors().get("TOWN") != null){
+		} else if (gc instanceof Town ){  //&& currentOrder.getPrecursors().get("TOWN") != null
 			currentOrder.setTown((Town)gc);
 			orderTextBoxMap.get("TOWN").setText(gc.getKey());
 		} else if (gc instanceof Path && currentOrder.getPrecursors().get("PATH") != null){

@@ -9,13 +9,7 @@ import java.util.Map;
 public class Game {
 	
 	private String name;
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	private Map<String, Player> players = new HashMap<String, Player>();
 	private Map<String, Hero> heros = new HashMap<String, Hero>();
@@ -24,6 +18,7 @@ public class Game {
 	private static Map<String, Game> games = new HashMap<String, Game>();
 	
 	private String currentPlayer;
+	private String startingPlayer;  
 	
 	public Path getPath(String key){
 		return paths.get(key);
@@ -63,30 +58,35 @@ public class Game {
 	public Collection<Player> getPlayers(){
 		return players.values();
 	}
-	
-	public Player getCurrentPlayer(){
-		return getPlayer(currentPlayer);
-	}
+
 	
 	public static Game getInstance(String name){
-		return games.get(0);
+		return games.get(name);
 	}
 	
 	public Game(String name){
-		if (games.containsKey(name)){
-			return;
-		}
 		setName(name);
-		players = Player.createPlayers(this, new String []{"Player1", "Player2", "Player3", "Player4"});
-		towns = Town.createTowns(this);
-		heros = Hero.createHeros(this);
-		paths = Path.createPath(this);;
 		games.put(name, this);
+	}
+	
+	public static Game createGame(String name){
+		if (games.containsKey(name)){
+			return games.get(name);
+		}
+		Game game = new Game(name);
+		game.players = Player.createPlayers(game, new String []{"Player1", "Player2", "Player3", "Player4"});
+		game.towns = Town.createTowns(game);
+		game.heros = Hero.createHeros(game);
+		game.paths = Path.createPath(game);;
+		return game;
 	}
  
 
 	public Game() {
-		// TODO Auto-generated constructor stub
+	}
+	
+	public void addGame(Game g){
+		games.put(g.getName(), g);
 	}
 	
 	public static Game getGame(String name){
@@ -96,5 +96,46 @@ public class Game {
 	public Collection<Hero> getHeros() {
 		return heros.values();
 	}
+	
+	public final int ORDER_PHASE = 0;
+	public final int MAGIC_PHASE = 1;
+	public final int PHYS_PHASE = 2;
+	
+	private int gameState = ORDER_PHASE;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getGameState() {
+		return gameState;
+	}
+
+	public void setGameState(int gameState) {
+		if (gameState < ORDER_PHASE || gameState > PHYS_PHASE){
+			throw new RuntimeException("Illegal game state");
+		}
+		this.gameState = gameState;
+	}
+	
+	
+	public Player getCurrentPlayer(){
+		return getPlayer(currentPlayer);
+	}
+
+	public void setCurrentPlayer(String currentPlayer) {
+		this.currentPlayer = currentPlayer;
+	} 
+	
+	public Player getStartingPlayer(){
+		return getPlayer(startingPlayer);
+	}
+
+	public void setStartingPlayer(String player) {
+		this.startingPlayer = player;
+	} 
 
 }

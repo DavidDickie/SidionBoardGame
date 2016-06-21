@@ -10,6 +10,7 @@ import com.dickie.sidion.shared.GameComponent;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -18,25 +19,49 @@ import com.google.appengine.api.datastore.Query;
 public class DAO {
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	
+	public void saveGameStatus(Game game){
+		Key key = getKey(game.getName());
+		try {
+			Entity e = datastore.get(key);
+			e.setProperty("CurrentPlayer", game.getCurrentPlayer().getName());
+			e.setProperty("StartingPlayer", game.getStartingPlayer().getName());
+			e.setProperty("GameState", game.getGameState());
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadGameStatus(Game game){
+		Key key = getKey(game.getName());
+		try {
+			Entity e = datastore.get(key);
+			game.setCurrentPlayer((String)e.getProperty("CurrentPlayer"));
+			game.setStartingPlayer((String)e.getProperty("StartingPlayer"));
+			game.setGameState((int)e.getProperty("GameState"));
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void saveGame(Game game){
+		saveGameStatus(game);
 		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getPaths()));
 		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getHeros()));
 		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getTowns()));
 		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getPlayers()));
 	}
 	
-	public Game loadGame(String gameName){
-		Game game = new Game();
-		game.setName(gameName);
-		try {
-			List<GameComponent> list = getData(gameName, null);
-			for (GameComponent gc : list){
-				game.addGameComponent(gc);
-			}
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public Game loadGame(String gameName) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException{
+		Game game = new Game(gameName);
+		loadGameStatus(game);
+		List<GameComponent> list = getData(gameName, null);
+		if (list.size() == 0){
+			throw new RuntimeException("No game " + gameName);
+		}
+		for (GameComponent gc : list){
+			game.addGameComponent(gc);
 		}
 		
 		return game;
@@ -56,7 +81,16 @@ public class DAO {
 		for (String s : e.getProperties().keySet()){
 			t.setValue(s, e.getProperty(s).toString());
 		}
-		
+	}
+	
+	public List<String> getGames(){
+		ArrayList<String> games = new ArrayList<String>();
+		Query query = new Query("Game");
+		List<Entity> entities = entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		for (Entity e: entities){
+			games.add((String)e.getProperty("Name"));
+		}
+		return games;
 	}
 	
 	public List<GameComponent> getData(String gameName, String component) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException{

@@ -1,5 +1,6 @@
 package com.dickie.sidion.server;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.dickie.sidion.client.GreetingService;
@@ -18,6 +19,21 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	private DAO dao = new DAO();
 	
+	{
+		List<String> games = dao.getGames();
+		if (games.size() == 0){
+			System.out.println("No games loaded????");
+		}
+		for (String gameName : games){
+			try {
+				System.out.println("Loaded " + gameName);
+				dao.loadGame(gameName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public String greetServer(String input) throws IllegalArgumentException {
 		Game game = new Game(input);
 		dao.saveGame(game);
@@ -34,37 +50,41 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		try {
 			return dao.getData(gameName, type);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new IllegalArgumentException(e.getMessage());
 		}
 	}
 	
 	public String  executeSingleOrder(String name, Order order){
 		try{
-			System.out.println("received new order");
+			System.out.println("received new order: " + order);
 			OrderProcessor op = new OrderProcessor();
 			return op.processOrder(order, name);
 		} catch (Throwable t){
-			return(t.getMessage());
+			t.printStackTrace();
+			return("ERROR: " + t.getMessage());
 		}
 		
 	}
 	
-	public String sendOrders(String name, List<Order> orders) throws IllegalArgumentException {
+	public String sendOrders(String name, List<Order> orders) {
 		try{
-			System.out.println("received new orders");
+			Game game = Game.getInstance(name);
 			OrderProcessor op = new OrderProcessor();
 			for (Order o : orders){
-				String s = o.validateOrder();
+				String s = o.validateOrder(game);
 				if (s != null){
-					return s;
+					return "Order list invalid; order: " + o + " failed with " + s;
 				}
-				return op.processOrder(o, name);
 			}
+			for (Order o : orders){
+				op.processOrder(o, name);
+			}
+			return "orders processed";
 		} catch (Throwable t){
-			throw new IllegalArgumentException(t);
+			t.printStackTrace();
+			return "ERROR: " + t.getMessage();
 		}
-		return "nothing happened";
 	}
 	
 	

@@ -15,6 +15,6 @@ public interface GreetingService extends RemoteService {
 	String greetServer(String name) throws IllegalArgumentException;
 	Void logMessage(String input);
 	List<GameComponent> get(String name, String type) throws IllegalArgumentException;
-	String sendOrders(String name, List<Order> orders) throws IllegalArgumentException ;
+	String sendOrders(String name, List<Order> orders);
 	String executeSingleOrder(String name, Order order);
 }

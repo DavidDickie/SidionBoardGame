@@ -52,9 +52,10 @@ public class OrderImpl extends GameComponentImpl implements Order {
 	}
 	
 	public void setPrecursors(String s, Game game){
-		String[] strings = s.split("|");
-		for (int i = 1; i < strings.length-1; i++) {
+		String[] strings = s.split("\\|");
+		for (int i = 0; i < strings.length; i++) {
 			String[] param = strings[i].split(";");
+			param[0] = param[0].split(" ")[1];
 			if (param[0].equals(Town.class.getName())){
 				precursors.put("TOWN", game.getTown(param[2]));
 			} else if (param[0].equals(Hero.class.getName())){
@@ -62,14 +63,16 @@ public class OrderImpl extends GameComponentImpl implements Order {
 			} else if (param[0].equals(Path.class.getName())){
 				precursors.put("PATH", game.getHero(param[2]));
 			} else if (param[0].equals(Var.class.getName())){
-				precursors.put(param[1], game.getHero(param[2]));
+				Var v = new Var();
+				v.setKey(param[2]);
+				precursors.put(param[1], v);
 			} else {
 				throw new RuntimeException("Could not figure out what to do with " + strings[i] + " for " + this);
 			}
 		}
 	}
 
-	public String validateOrder() {
+	public String validateOrder(Game game) {
 		if (getValue("PLAYER") == null) {
 			return "No player set";
 		}
@@ -151,6 +154,7 @@ public class OrderImpl extends GameComponentImpl implements Order {
 	@Override
 	public void execute() {
 		this.setValue("PRECURSORS", this.getPrecursorsAsString());
+		precursors = new HashMap<String, GameComponent>();
 	}
 	
 	public void addPrecursors(boolean hero, boolean town, boolean path, boolean resource, boolean x, boolean y, boolean number){
@@ -162,6 +166,16 @@ public class OrderImpl extends GameComponentImpl implements Order {
 		if (y) precursors.put("Y", new Var());
 		if (number) precursors.put("NUMBER", new Var());
 	
+	}
+
+	@Override
+	public boolean isExecutable(Game game, Player player){
+		return false;
+	}
+
+	@Override
+	public void addDoOrderParams() {
+		return;
 	}
 
 

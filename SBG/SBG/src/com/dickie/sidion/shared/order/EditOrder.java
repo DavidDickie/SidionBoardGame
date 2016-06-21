@@ -1,5 +1,6 @@
 package com.dickie.sidion.shared.order;
 
+import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Town;
 
@@ -9,8 +10,8 @@ public class EditOrder extends OrderImpl implements Order {
 		super.addPrecursors(false, true, false, false, true, true, false);
 	}
 	
-	public String validateOrder() {
-		super.validateOrder();
+	public String validateOrder(Game game) {
+		super.validateOrder(game);
 		Town t = (Town) precursors.get("TOWN");
 		if (t == null)
 			return "no town";
@@ -23,5 +24,15 @@ public class EditOrder extends OrderImpl implements Order {
 	@Override
 	public void execute() {
 		super.execute(); 
+	}
+	
+	@Override
+	public boolean isExecutable() {
+		return true;
+	}
+
+	@Override
+	public void addDoOrderParams() {
+		return;
 	}
 }

@@ -15,6 +15,6 @@ public interface GreetingServiceAsync {
 	void logMessage(String input, AsyncCallback<Void> callback);
 	void get(String name, String type, AsyncCallback<List<GameComponent>> callback) 
 			throws IllegalArgumentException;
-	void sendOrders(String name, List<Order> orders, AsyncCallback<String> callback) throws IllegalArgumentException ;
+	void sendOrders(String name, List<Order> orders, AsyncCallback<String> callback);
 	void executeSingleOrder(String name, Order order, AsyncCallback<String> callback);	
 }

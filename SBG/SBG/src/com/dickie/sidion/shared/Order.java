@@ -19,8 +19,10 @@ public interface Order extends GameComponent{
 	public Path getPath();
 	
 	
-	public String validateOrder();
+	public String validateOrder(Game game);
 	public void execute();
 	public void setPrecursors(String s, Game game);
 	public String getPrecursorsAsString();
+	public boolean isExecutable(Game game, Player player);
+	public void addDoOrderParams();
 }
