@@ -1,6 +1,6 @@
 package com.dickie.sidion.shared.order;
 
-import com.dickie.sidion.client.Utils;
+
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
@@ -8,6 +8,12 @@ import com.dickie.sidion.shared.Town;
 
 public class EditOrder extends OrderImpl implements Order {
 	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public EditOrder (){
 		super.addPrecursors(false, true, false, false, true, true, false);
 	}
@@ -26,6 +32,13 @@ public class EditOrder extends OrderImpl implements Order {
 	@Override
 	public void execute() {
 		super.execute(); 
+	}
+	
+	@Override
+	public void executeOnServer(Game game) {
+		Town t = getTown();
+		t.setX(getX());
+		t.setY(getY());
 	}
 	
 	@Override

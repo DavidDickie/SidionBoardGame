@@ -57,9 +57,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public String  executeSingleOrder(String name, Order order){
 		try{
+			
 			System.out.println("received new order: " + order);
 			OrderProcessor op = new OrderProcessor();
-			return op.processOrder(order, name);
+			op.processOrder(order, Game.getInstance(name));
+			dao.saveGame(Game.getInstance(name));
+			return "order executed";
 		} catch (Throwable t){
 			t.printStackTrace();
 			return("ERROR: " + t.getMessage());
@@ -72,14 +75,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			Game game = Game.getInstance(name);
 			OrderProcessor op = new OrderProcessor();
 			for (Order o : orders){
-				String s = o.validateOrder(game);
-				if (s != null){
-					return "Order list invalid; order: " + o + " failed with " + s;
-				}
+				op.processOrder(o, game);
 			}
-			for (Order o : orders){
-				op.processOrder(o, name);
-			}
+			dao.saveGame(game);
 			return "orders processed";
 		} catch (Throwable t){
 			t.printStackTrace();

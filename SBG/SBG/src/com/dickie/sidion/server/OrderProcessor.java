@@ -2,25 +2,19 @@ package com.dickie.sidion.server;
 
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Order;
-import com.dickie.sidion.shared.Town;
-import com.dickie.sidion.shared.order.EditOrder;
 
 public class OrderProcessor {
 	
 	DAO dao = new DAO();
 
-	public String processOrder(Order order, String gameName) {
+	public String processOrder(Order order, Game game) {
 		System.out.println("Processing " + order);
-		Game g = Game.getGame(gameName);
-		if (g == null){
-			return "Bad game name " + gameName;
-		}
-		order.setPrecursors(order.getValue("PRECURSORS"), g);
-		if (order.validateOrder(Game.getGame(gameName)) != null){
-			return order.validateOrder(g);
+		order.setPrecursors(order.getValue("PRECURSORS"), game);
+		if (order.validateOrder(game) != null){
+			return order.validateOrder(game);
 		}
 		try{
-			order.executeOnServer(g);
+			order.executeOnServer(game);
 		} catch (Throwable t){
 			return t.getMessage();
 		}

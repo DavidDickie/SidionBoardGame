@@ -28,6 +28,11 @@ public class CreateGameOrder extends OrderImpl{
 	}
 	
 	@Override
+	public void executeOnServer(Game game) {
+		Game.createGame(((VarString)precursors.get("KEY")).getValue());
+	}
+	
+	@Override
 	public boolean isExecutable(Game game, Player player) {
 		if (player.isAdmin()) return true;
 		return false;

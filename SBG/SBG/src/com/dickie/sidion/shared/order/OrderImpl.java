@@ -10,14 +10,13 @@ import com.dickie.sidion.shared.GameComponentImpl;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Path;
-import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Resource;
 import com.dickie.sidion.shared.Town;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
 
 
-public class OrderImpl extends GameComponentImpl implements Order {
+public abstract class OrderImpl extends GameComponentImpl implements Order {
 	
 	/**
 	 * 
@@ -26,7 +25,13 @@ public class OrderImpl extends GameComponentImpl implements Order {
 
 	@Override
 	public String toString() {
-		return  getClass().getName() + this.getPrecursorsAsString();
+		String s = getClass().getName();
+		if (attributes.get("PRECUSORS") != null){
+			s += " [serialized] " + getValue("PRECURSORS");
+		} else {
+			s+= this.getPrecursorsAsString() ;
+		}
+		return s;
 	}
 
 	public OrderImpl(){
@@ -163,7 +168,6 @@ public class OrderImpl extends GameComponentImpl implements Order {
 	@Override
 	public void execute() {
 		this.setValue("PRECURSORS", this.getPrecursorsAsString());
-		precursors = new HashMap<String, GameComponent>();
 	}
 	
 	public void addPrecursors(boolean hero, boolean town, boolean path, boolean resource, boolean x, boolean y, boolean number){
@@ -175,22 +179,5 @@ public class OrderImpl extends GameComponentImpl implements Order {
 		if (y) precursors.put("Y", new Var());
 		if (number) precursors.put("NUMBER", new Var());
 	}
-
-	@Override
-	public boolean isExecutable(Game game, Player player){
-		throw new RuntimeException("This must be overriden");
-	}
-
-	@Override
-	public void addDoOrderParams() {
-		throw new RuntimeException("This must be overriden");
-	}
-
-	@Override
-	public void executeOnServer(Game game) {
-		throw new RuntimeException("This must be overriden");
-	}
-
-
 
 }

@@ -39,7 +39,7 @@ public class DAO {
 			game.setCurrentPlayer((String)e.getProperty("CurrentPlayer"));
 			game.setStartingPlayer((String)e.getProperty("StartingPlayer"));
 			game.setGameState((int)e.getProperty("GameState"));
-		} catch (EntityNotFoundException e) {
+		} catch (Exception e) {
 			game.setCurrentPlayer(game.getPlayers().iterator().next().getName());
 			game.setGameState(game.ORDER_PHASE);
 			game.setStartingPlayer(game.getCurrentPlayer().getName());
@@ -57,7 +57,7 @@ public class DAO {
 	
 	public Game loadGame(String gameName) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException{
 		Game game = new Game(gameName);
-		loadGameStatus(game);
+		
 		List<GameComponent> list = getData(gameName, null);
 		if (list.size() == 0){
 			throw new RuntimeException("No game " + gameName);
@@ -65,7 +65,8 @@ public class DAO {
 		for (GameComponent gc : list){
 			game.addGameComponent(gc);
 		}
-		
+		loadGameStatus(game);
+		game.addGame(game);
 		return game;
 	}
 	

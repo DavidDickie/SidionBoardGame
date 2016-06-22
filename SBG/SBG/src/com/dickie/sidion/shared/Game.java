@@ -40,6 +40,9 @@ public class Game {
 		return paths.values();
 	}
 	public Town getTown(String townName){
+		if (towns.get(townName) == null){
+			throw new RuntimeException ("No town " + townName);
+		}
 		return towns.get(townName);
 	}
 	
@@ -61,6 +64,9 @@ public class Game {
 
 	
 	public static Game getInstance(String name){
+		if (games.get(name) == null){
+			throw new RuntimeException ("No game with name " + name);
+		}
 		return games.get(name);
 	}
 	

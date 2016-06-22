@@ -1,5 +1,6 @@
 package com.dickie.sidion.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,18 +39,13 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	private MapPanel mapPanel = null;
 	private final static GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
-	final TextArea scratchpad = new TextArea();
 	final Button refresh = new Button("refresh");
-	
-	public NavPanel(){
-		
-	}
 	
 	public void initialize(Draw draw, MapPanel mapPanel) {
 		this.draw = draw;
 		this.mapPanel = mapPanel;
 		mapPanel.AddClickListener(this);
-		scratchpad.setSize("100px", "400px");
+
 		refresh.addClickHandler(new ClickHandler(){
 
 			@Override
@@ -120,7 +116,6 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	
 	private void playerLoggedInState() {
 		this.clear();
-		this.add(scratchpad);
 	}
 	
 	private void getGameFromServer(final Game game){
@@ -150,27 +145,21 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 		});
 	}
 
-	
-	Order currentOrder = null;
-
 	public void rawClick(int x, int y) {
-		if (currentOrder == null || currentOrder.getPrecursors().get("X") == null){
-			return;
-		}
-		currentOrder.setX(x);
-		currentOrder.setY(y);
 		for (TextBox tb : orderTextBoxMap.keySet()){
 			if (orderTextBoxMap.get(tb).equals("X")){
-				tb.setText(Integer.toString(x));			
+				tb.setText(Integer.toString(x));
+				textBoxToOrder.get(tb).setX(x);
 			} 
 			if (orderTextBoxMap.get(tb).equals("Y")){
-				tb.setText(Integer.toString(y));			
+				tb.setText(Integer.toString(y));		
+				textBoxToOrder.get(tb).setY(y);
 			}
 		}
-		
 	}
 	
 	private Map<TextBox, String> orderTextBoxMap = new HashMap<TextBox, String>();
+	private Map<TextBox, Order> textBoxToOrder = new HashMap<TextBox, Order>();
 	private Map<TextBox, String> textBoxCompType = new HashMap<TextBox, String>();
 
 	private void renderOrder(final Order order, String gameName){
@@ -195,6 +184,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 			}
 			orderTextBoxMap.put(tb, key);
 			textBoxCompType.put(tb, parameters.get(key).getClass().getName());
+			textBoxToOrder.put(tb, order);
 			this.add(tb);
 		}
 		//sendOrder();
@@ -213,13 +203,12 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 		try{
 			Utils.logMessage("Doing " + order.toString());
 			String s = order.validateOrder(game);
-//			if (s  != null){
-//				Utils.displayMessage("Validation failed: " + s);
-//				return;
-//			}
-			Utils.logMessage(s);
+			if (s  != null){
+				Utils.displayMessage("Validation failed: " + s);
+				return;
+			}
 			order.execute();
-			Utils.logMessage("Exectuted");
+			Utils.logMessage("Exectuted on client: " + order);
 			Utils.displayMessage(Utils.sendOrderToServer(order, game));
 		} catch (Throwable t){
 			Utils.displayMessage("error: " + t.getMessage());
@@ -232,8 +221,9 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 			if (gc.getClass().getName().equals(textBoxCompType.get(tb))){
 				Utils.logMessage("GameComp is " + gc);
 				Utils.logMessage("Looking up " + orderTextBoxMap.get(tb));
-				Utils.logMessage("Precursor is " + currentOrder.getPrecursors().get(orderTextBoxMap.get(tb)));
 				Utils.logMessage("Key is " + gc.getKey());
+				Order currentOrder = textBoxToOrder.get(tb);
+				Utils.logMessage("Precursor is " + currentOrder.getPrecursors().get(orderTextBoxMap.get(tb)));
 				currentOrder.getPrecursors().get(orderTextBoxMap.get(tb)).setKey(gc.getKey());
 				tb.setText(gc.getKey());
 			} 
