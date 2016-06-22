@@ -14,6 +14,7 @@ import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Resource;
 import com.dickie.sidion.shared.Town;
 import com.dickie.sidion.shared.Var;
+import com.dickie.sidion.shared.VarString;
 
 
 public class OrderImpl extends GameComponentImpl implements Order {
@@ -57,14 +58,18 @@ public class OrderImpl extends GameComponentImpl implements Order {
 			String[] param = strings[i].split(";");
 			param[0] = param[0].split(" ")[1];
 			if (param[0].equals(Town.class.getName())){
-				precursors.put("TOWN", game.getTown(param[2]));
+				precursors.put(param[1], game.getTown(param[2]));
 			} else if (param[0].equals(Hero.class.getName())){
-				precursors.put("HERO", game.getHero(param[2]));
+				precursors.put(param[1], game.getHero(param[2]));
 			} else if (param[0].equals(Path.class.getName())){
-				precursors.put("PATH", game.getHero(param[2]));
+				precursors.put(param[1], game.getHero(param[2]));
 			} else if (param[0].equals(Var.class.getName())){
 				Var v = new Var();
 				v.setKey(param[2]);
+				precursors.put(param[1], v);
+			}else if (param[0].equals(VarString.class.getName())){
+				VarString v = new VarString();
+				v.setValue(param[2]);
 				precursors.put(param[1], v);
 			} else {
 				throw new RuntimeException("Could not figure out what to do with " + strings[i] + " for " + this);
@@ -73,11 +78,15 @@ public class OrderImpl extends GameComponentImpl implements Order {
 	}
 
 	public String validateOrder(Game game) {
-		if (getValue("PLAYER") == null) {
-			return "No player set";
-		}
-		if (getValue("PRECURSORS") == null){
-			return "No parameters for order";
+		try{
+			if (getValue("PLAYER") == null) {
+				return "No player set";
+			}
+			if (getValue("PRECURSORS") == null){
+				return "No parameters for order";
+			}
+		} catch (Exception e) {
+			return e.getMessage();
 		}
 		return null;
 	}
@@ -165,17 +174,21 @@ public class OrderImpl extends GameComponentImpl implements Order {
 		if (x) precursors.put("X", new Var());
 		if (y) precursors.put("Y", new Var());
 		if (number) precursors.put("NUMBER", new Var());
-	
 	}
 
 	@Override
 	public boolean isExecutable(Game game, Player player){
-		return false;
+		throw new RuntimeException("This must be overriden");
 	}
 
 	@Override
 	public void addDoOrderParams() {
-		return;
+		throw new RuntimeException("This must be overriden");
+	}
+
+	@Override
+	public void executeOnServer(Game game) {
+		throw new RuntimeException("This must be overriden");
 	}
 
 

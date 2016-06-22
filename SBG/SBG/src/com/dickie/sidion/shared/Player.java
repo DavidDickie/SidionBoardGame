@@ -81,6 +81,10 @@ public class Player extends GameComponentImpl {
 			"#CC0000",
 			"#CC9933"
 	};
+
+	public boolean isAdmin() {
+		return isAdmin();
+	}
 	
 
 

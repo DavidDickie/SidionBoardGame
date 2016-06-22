@@ -21,6 +21,7 @@ public interface Order extends GameComponent{
 	
 	public String validateOrder(Game game);
 	public void execute();
+	public void executeOnServer(Game game);
 	public void setPrecursors(String s, Game game);
 	public String getPrecursorsAsString();
 	public boolean isExecutable(Game game, Player player);

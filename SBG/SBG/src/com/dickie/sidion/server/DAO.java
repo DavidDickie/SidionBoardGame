@@ -40,8 +40,10 @@ public class DAO {
 			game.setStartingPlayer((String)e.getProperty("StartingPlayer"));
 			game.setGameState((int)e.getProperty("GameState"));
 		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			game.setCurrentPlayer(game.getPlayers().iterator().next().getName());
+			game.setGameState(game.ORDER_PHASE);
+			game.setStartingPlayer(game.getCurrentPlayer().getName());
+			saveGameStatus(game);
 		}
 	}
 	

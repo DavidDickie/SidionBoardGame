@@ -1,26 +1,25 @@
 package com.dickie.sidion.client;
 
-import com.dickie.sidion.shared.GameComponent;
-import com.dickie.sidion.shared.GameComponentListener;
-import com.dickie.sidion.shared.Hero;
-import com.dickie.sidion.shared.Order;
-import com.dickie.sidion.shared.Path;
-import com.dickie.sidion.shared.order.EditOrder;
-import com.dickie.sidion.shared.order.OrderImpl;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.dickie.sidion.shared.Game;
+import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.GameComponentListener;
+import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
-import com.dickie.sidion.shared.Town;
+import com.dickie.sidion.shared.VarString;
+import com.dickie.sidion.shared.order.CreateGameOrder;
+import com.dickie.sidion.shared.order.EditOrder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
@@ -115,25 +114,13 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	private void adminState() {
 		this.clear();
 		this.add(refresh); 
-//		currentOrder = new EditOrder();
-//	
-//		try{
-////			Utils.sendOrderToServer(currentOrder, game);
-//			Map<String, GameComponent> parameters = currentOrder.getPrecursors();
-//			renderOrder(currentOrder, game.getName());
-//		}
-//		catch (Throwable t){
-//			Utils.displayMessage("error rendering order:"  + t.getMessage());
-//		}
+		this.renderOrder(new CreateGameOrder(), game.getName());
+		this.renderOrder(new EditOrder(), game.getName());
 	}
 	
 	private void playerLoggedInState() {
 		this.clear();
 		this.add(scratchpad);
-	}
-	
-	public void writeToScratchPad(String s){
-		scratchpad.setText(s);
 	}
 	
 	private void getGameFromServer(final Game game){
@@ -171,20 +158,43 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 			return;
 		}
 		currentOrder.setX(x);
-		orderTextBoxMap.get("X").setText(Integer.toString(x));
 		currentOrder.setY(y);
-		orderTextBoxMap.get("Y").setText(Integer.toString(y));
+		for (TextBox tb : orderTextBoxMap.keySet()){
+			if (orderTextBoxMap.get(tb).equals("X")){
+				tb.setText(Integer.toString(x));			
+			} 
+			if (orderTextBoxMap.get(tb).equals("Y")){
+				tb.setText(Integer.toString(y));			
+			}
+		}
+		
 	}
 	
-	private Map<String, TextBox> orderTextBoxMap = new HashMap<String, TextBox>();
+	private Map<TextBox, String> orderTextBoxMap = new HashMap<TextBox, String>();
+	private Map<TextBox, String> textBoxCompType = new HashMap<TextBox, String>();
 
-	private void renderOrder(Order order, String gameName){
+	private void renderOrder(final Order order, String gameName){
 		Map<String, GameComponent> parameters = order.getPrecursors();
 		for (String key : parameters.keySet()){
 			this.add(new Label(key));
-			TextBox tb = new TextBox();
-			tb.setReadOnly(true);
-			orderTextBoxMap.put(key, tb);
+			final TextBox tb = new TextBox();
+			if (!(parameters.get(key) instanceof VarString)){
+				tb.setReadOnly(true);
+			} else {
+				tb.addKeyUpHandler(new KeyUpHandler(){
+
+					@Override
+					public void onKeyUp(KeyUpEvent event) {
+						order.getPrecursors().get(orderTextBoxMap.get(tb)).setKey(tb.getText());
+					}
+					
+				});
+			}
+			if (parameters.get(key).getKey() != null){
+				tb.setText(parameters.get(key).getKey());
+			}
+			orderTextBoxMap.put(tb, key);
+			textBoxCompType.put(tb, parameters.get(key).getClass().getName());
 			this.add(tb);
 		}
 		//sendOrder();
@@ -193,21 +203,24 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 
 			@Override
 			public void onClick(ClickEvent event) {
-				NavPanel.this.sendOrder();
+				NavPanel.this.sendOrder(order);
 			}});
 		this.add(b);
 			
 	}
 	
-	private void sendOrder(){
+	private void sendOrder(Order order){
 		try{
-			String s = currentOrder.validateOrder(game);
-			if (s  != null){
-				Utils.displayMessage("Validation failed: " + s);
-				return;
-			}
-			currentOrder.execute();
-			Utils.displayMessage(Utils.sendOrderToServer(currentOrder, game));
+			Utils.logMessage("Doing " + order.toString());
+			String s = order.validateOrder(game);
+//			if (s  != null){
+//				Utils.displayMessage("Validation failed: " + s);
+//				return;
+//			}
+			Utils.logMessage(s);
+			order.execute();
+			Utils.logMessage("Exectuted");
+			Utils.displayMessage(Utils.sendOrderToServer(order, game));
 		} catch (Throwable t){
 			Utils.displayMessage("error: " + t.getMessage());
 		}
@@ -215,19 +228,16 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 
 	@Override
 	public void componentEvent(String event, GameComponent gc) {
-		if (currentOrder == null){
-			return;
+		for (TextBox tb : textBoxCompType.keySet()){
+			if (gc.getClass().getName().equals(textBoxCompType.get(tb))){
+				Utils.logMessage("GameComp is " + gc);
+				Utils.logMessage("Looking up " + orderTextBoxMap.get(tb));
+				Utils.logMessage("Precursor is " + currentOrder.getPrecursors().get(orderTextBoxMap.get(tb)));
+				Utils.logMessage("Key is " + gc.getKey());
+				currentOrder.getPrecursors().get(orderTextBoxMap.get(tb)).setKey(gc.getKey());
+				tb.setText(gc.getKey());
+			} 
 		}
-		if (gc instanceof Hero && currentOrder.getPrecursors().get("HERO") != null){
-			currentOrder.setHero((Hero)gc);
-			orderTextBoxMap.get("HERO").setText(gc.getKey());
-		} else if (gc instanceof Town ){  //&& currentOrder.getPrecursors().get("TOWN") != null
-			currentOrder.setTown((Town)gc);
-			orderTextBoxMap.get("TOWN").setText(gc.getKey());
-		} else if (gc instanceof Path && currentOrder.getPrecursors().get("PATH") != null){
-			currentOrder.setPath((Path)gc);
-			orderTextBoxMap.get("PATH").setText(gc.getKey());
-		} 
 	}
 
 }

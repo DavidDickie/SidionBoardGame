@@ -10,22 +10,20 @@ public class OrderProcessor {
 	DAO dao = new DAO();
 
 	public String processOrder(Order order, String gameName) {
-		if (Game.getGame(gameName) == null){
+		System.out.println("Processing " + order);
+		Game g = Game.getGame(gameName);
+		if (g == null){
 			return "Bad game name " + gameName;
 		}
-		order.setPrecursors(order.getValue("PRECURSORS"), Game.getGame(gameName));
+		order.setPrecursors(order.getValue("PRECURSORS"), g);
 		if (order.validateOrder(Game.getGame(gameName)) != null){
-			return order.validateOrder(Game.getGame(gameName));
+			return order.validateOrder(g);
 		}
-		if (order.getClass().equals(EditOrder.class)){
-			System.out.println("Server execution: " + order);
-			Town t = (Town) order.getPrecursors().get("TOWN");
-			t.setX(order.getX());
-			t.setY(order.getY());
-			dao.saveGameComponent(t, gameName);
-			return "Town moved";
+		try{
+			order.executeOnServer(g);
+		} catch (Throwable t){
+			return t.getMessage();
 		}
-		// otherwise, verify they match the full list of expected orders and that it's the player's turn
-		return "Unknown order " + order.getClass();
+		return "Order executed";
 	}
 }

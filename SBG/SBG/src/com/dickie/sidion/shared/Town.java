@@ -79,15 +79,40 @@ public class Town extends GameComponentImpl {
 		return list;
 	}
 	
+	private static final int towner = 5;
+	
+	private static String[][] distance = new String[towner][towner];
+	
+	public static int getDistance(Town t1, Town t2){
+		int x1 = 0;
+		int y1 = 0;
+		int x2 = 0;
+		int y2 = 0;
+		for (int x = 0; x < towner; x++){
+			for (int y = 0; y < towner; y++){
+				if (distance[x][y].equals(t1.getName())){
+					x1 = x; y1 = y;
+				}
+				if (distance[x][y].equals(t2.getName())){
+					x2 = x; y2 = y;
+				}
+			}
+		}
+		int distance = java.lang.Math.abs(x1 -x2) + java.lang.Math.abs(y1 - y2);
+		if (distance == 0) throw new RuntimeException("could not find towns!");
+		return distance;
+	}
+	
 	public static Map<String,Town> createTowns(Game game){
 		Map<String,Town> towns = new HashMap<String,Town>();
 		int count = 0;
-		for (int x = 0; x < 5; x++){
-			for (int y = 0; y < 5; y++){
+		for (int x = 0; x < towner; x++){
+			for (int y = 0; y < towner; y++){
 				Town t = new Town();
 				t.setX(100 + x * 100);
 				t.setY(100 + y * 100);
 				t.setName(townNames[count]);
+				distance[x][y] = townNames[count];
 				int production = (int) (java.lang.Math.random() * 10);
 				if (production < 3 ){
 					t.setGold(1);

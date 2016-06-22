@@ -1,7 +1,9 @@
 package com.dickie.sidion.shared.order;
 
+import com.dickie.sidion.client.Utils;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Order;
+import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Town;
 
 public class EditOrder extends OrderImpl implements Order {
@@ -27,8 +29,9 @@ public class EditOrder extends OrderImpl implements Order {
 	}
 	
 	@Override
-	public boolean isExecutable() {
-		return true;
+	public boolean isExecutable(Game game, Player player) {
+		if (player.isAdmin()) return true;
+		return false;
 	}
 
 	@Override
