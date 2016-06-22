@@ -8,9 +8,11 @@ import java.util.Map;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.GameComponentListener;
+import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.VarString;
+import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.CreateGameOrder;
 import com.dickie.sidion.shared.order.EditOrder;
 import com.google.gwt.core.client.GWT;
@@ -24,6 +26,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -91,13 +94,17 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 					}
 					Player p = game.getPlayer(userTextBox.getText());
 					if (p == null) {
-						Utils.displayMessage("That is not a valid username");
+						String s = "";
+						for (Player p2 : game.getPlayers()){
+							s += p2.getName() + "/";
+						}
+						Utils.displayMessage("That is not a valid username; " + s);
 						return;
 					}
-					if (!p.getPassword().equals(passwordTextBox.getText())){
-						Utils.displayMessage("Wrong password, try again");
-						return;
-					};
+//					if (!p.getPassword().equals(passwordTextBox.getText())){
+//						Utils.displayMessage("Wrong password, try again");
+//						return;
+//					};
 					userName = userTextBox.getText();
 					password = passwordTextBox.getText();
 					playerLoggedInState();
@@ -110,12 +117,14 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	private void adminState() {
 		this.clear();
 		this.add(refresh); 
-		this.renderOrder(new CreateGameOrder(), game.getName());
-		this.renderOrder(new EditOrder(), game.getName());
+		this.renderOrder(new CreateGameOrder());
+		this.renderOrder(new EditOrder());
 	}
 	
 	private void playerLoggedInState() {
-		this.clear();
+		if (game.getGameState() == game.ORDER_PHASE){
+			playerOrderState();
+		}
 	}
 	
 	private void getGameFromServer(final Game game){
@@ -162,7 +171,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 	private Map<TextBox, Order> textBoxToOrder = new HashMap<TextBox, Order>();
 	private Map<TextBox, String> textBoxCompType = new HashMap<TextBox, String>();
 
-	private void renderOrder(final Order order, String gameName){
+	private void renderOrder(final Order order){
 		Map<String, GameComponent> parameters = order.getPrecursors();
 		for (String key : parameters.keySet()){
 			this.add(new Label(key));
@@ -197,6 +206,53 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 			}});
 		this.add(b);
 			
+	}
+	
+	private void playerOrderState(){
+		this.clear();
+		this.add(refresh); 
+		for (Hero h : game.getHeros()){
+			if (!h.getOwner(game).equals(player)){
+				continue;
+			}
+			if (h.hasOrder()){
+				continue;
+			}
+			Label l = new Label(h.getName());
+			add(l);
+			final Hero hero = h;
+			final ListBox cb = new ListBox();
+			cb.addItem("CONVERT");
+			cb.addItem("TELEPORT");
+			cb.addItem("BLOCKPATH");
+			cb.addItem("MOVE");
+			cb.addItem("LOCK");
+			cb.addItem("BID");
+			cb.addItem("IMPROVETOWN");
+			cb.addItem("IMPROVEHERO");
+			cb.addItem("RETREAT");
+			add(cb);
+			Button exBut = new Button("EXECUTE");
+			exBut.addClickHandler(new ClickHandler(){
+
+				@Override
+				public void onClick(ClickEvent event) {
+					addOrderState(hero, cb.getSelectedItemText());
+				}
+			
+			});
+		}
+	}
+	
+	private void addOrderState(Hero hero, String order){
+		this.clear();
+		this.add(refresh); 
+		if (order.equals("CONVERT")){
+			ConvertOrder co = new ConvertOrder();
+			co.setPlayer(player);
+			co.setHero(hero);
+			renderOrder(co);
+		}
 	}
 	
 	private void sendOrder(Order order){

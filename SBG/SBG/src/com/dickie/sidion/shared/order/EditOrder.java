@@ -30,11 +30,6 @@ public class EditOrder extends OrderImpl implements Order {
 	}
 	
 	@Override
-	public void execute() {
-		super.execute(); 
-	}
-	
-	@Override
 	public void executeOnServer(Game game) {
 		Town t = getTown();
 		t.setX(getX());

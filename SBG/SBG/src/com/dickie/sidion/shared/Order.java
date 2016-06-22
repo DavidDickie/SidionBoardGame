@@ -17,6 +17,7 @@ public interface Order extends GameComponent{
 	public int getNumber();
 	public Hero getHero();
 	public Path getPath();
+	public Player getPlayer(Game game);
 	
 	
 	public String validateOrder(Game game);

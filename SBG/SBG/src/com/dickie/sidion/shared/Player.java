@@ -10,7 +10,7 @@ import java.util.Map;
 public class Player extends GameComponentImpl {
 	
 	public Player(){
-		validAttributes = Arrays.asList("KEY", "COLOR", "PASSWORD", "IS_ADMIN");
+		validAttributes = Arrays.asList("KEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS");
 	}
 	
 	public String getColor() {
@@ -28,6 +28,16 @@ public class Player extends GameComponentImpl {
 	
 	public String getPassword() {
 		return getValue("PASSWORD");
+	}
+	
+	public int getResource(String type){
+		return Integer.valueOf(getValue(type));
+	}
+	
+	public void addResource(String type, int number){
+		int current = getResource(type);
+		current += number;
+		setValue(type, Integer.toString(current));
 	}
 
 

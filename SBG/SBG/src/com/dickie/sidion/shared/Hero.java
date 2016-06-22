@@ -7,7 +7,7 @@ import java.util.Map;
 public class Hero extends GameComponentImpl{
 	
 	public Hero() {
-		validAttributes = Arrays.asList("PLAYER", "LOC", "IS_PRINCE", "LEVEL", "KEY");
+		validAttributes = Arrays.asList("PLAYER", "LOC", "IS_PRINCE", "LEVEL", "KEY", "HASORDER");
 	}
 
 	public Town getLocation(Game game) {
@@ -40,6 +40,17 @@ public class Hero extends GameComponentImpl{
 
 	public void setIsPrince(Boolean isPrince) {
 		setValue("IS_PRINCE", isPrince.toString());
+	}
+	
+	public boolean hasOrder(){
+		if (this.attributes.containsKey("HASORDER")){
+			return Boolean.valueOf(attributes.get("HASORDER"));
+		}
+		return false;
+	}
+	
+	public void setOrder(){
+		setValue("HASORDER", "true");
 	}
 	
 	public static Map<String,Hero> createHeros(Game game){

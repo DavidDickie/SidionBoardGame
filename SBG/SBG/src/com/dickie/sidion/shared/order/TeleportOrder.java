@@ -36,11 +36,6 @@ public class TeleportOrder extends OrderImpl{
 	}
 	
 	@Override
-	public void execute() {
-		super.execute(); 
-	}
-	
-	@Override
 	public boolean isExecutable(Game game, Player player) {
 		if (player.isAdmin()){
 			return false;

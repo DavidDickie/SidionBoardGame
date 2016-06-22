@@ -10,6 +10,7 @@ import com.dickie.sidion.shared.GameComponentImpl;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Path;
+import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Resource;
 import com.dickie.sidion.shared.Town;
 import com.dickie.sidion.shared.Var;
@@ -80,6 +81,14 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 				throw new RuntimeException("Could not figure out what to do with " + strings[i] + " for " + this);
 			}
 		}
+	}
+	
+	public Player getPlayer(Game game){
+		return game.getPlayer(getValue("PLAYER"));
+	}
+	
+	public void setPlayer(Player player){
+		setValue("PLAYER", player.getKey());
 	}
 
 	public String validateOrder(Game game) {

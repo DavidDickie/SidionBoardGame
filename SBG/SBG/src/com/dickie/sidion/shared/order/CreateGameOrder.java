@@ -23,11 +23,6 @@ public class CreateGameOrder extends OrderImpl{
 	}
 	
 	@Override
-	public void execute() {
-		super.execute(); 
-	}
-	
-	@Override
 	public void executeOnServer(Game game) {
 		Game.createGame(((VarString)precursors.get("KEY")).getValue());
 	}
