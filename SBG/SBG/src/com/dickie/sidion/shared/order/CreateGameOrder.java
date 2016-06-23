@@ -8,23 +8,20 @@ import com.dickie.sidion.shared.VarString;
 public class CreateGameOrder extends OrderImpl{
 	
 	public CreateGameOrder(){
-		precursors.put("KEY", new VarString());
+		precursors.put("LKEY", new VarString());
 	}
 	
 	public String validateOrder(Game game) {
 		super.validateOrder(game);
-		if (precursors.get("KEY") == null || precursors.get("KEY").getValue("KEY") == null){
+		if (precursors.get("LKEY") == null || precursors.get("LKEY").getValue("LKEY") == null){
 			return "no name";
-		}
-		if ( Game.getInstance(precursors.get("KEY").getValue("KEY")) != null){
-			return "Game already exists";
 		}
 		return null;
 	}
 	
 	@Override
 	public void executeOnServer(Game game) {
-		Game.createGame(((VarString)precursors.get("KEY")).getValue());
+		Game.createGame(((VarString)precursors.get("LKEY")).getValue());
 	}
 	
 	@Override

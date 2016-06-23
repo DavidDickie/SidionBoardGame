@@ -36,7 +36,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 	}
 
 	public OrderImpl(){
-		validAttributes = Arrays.asList("PLAYER", "KEY", "TYPE", "PRECURSORS");	
+		validAttributes = Arrays.asList("PLAYER", "LKEY", "TYPE", "PRECURSORS");	
 		setValue("TYPE", getClass().getName());
 	}
 

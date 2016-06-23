@@ -39,8 +39,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	public String greetServer(String input) throws IllegalArgumentException {
-		Game game = new Game(input);
-		dao.saveGame(game);
+		dao.saveGame(Game.createGame(input));
 		return input;
 	}
 	

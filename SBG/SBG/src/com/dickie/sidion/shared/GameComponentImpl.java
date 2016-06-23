@@ -19,12 +19,12 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 	
 	@Override
 	public String getKey() {
-		return getValue("KEY");
+		return getValue("LKEY");
 	}
 	
 	@Override
 	public void setKey(String key) {
-		setValue("KEY", key);
+		setValue("LKEY", key);
 	}
 
 

@@ -5,11 +5,11 @@ import java.util.Arrays;
 public class VarString extends GameComponentImpl{
 
 	public VarString(){
-		validAttributes = Arrays.asList("KEY");
+		validAttributes = Arrays.asList("LKEY");
 	}
 	
 	public VarString(String s){
-		validAttributes = Arrays.asList("KEY");
+		validAttributes = Arrays.asList("LKEY");
 		setValue(s);
 	}
 	

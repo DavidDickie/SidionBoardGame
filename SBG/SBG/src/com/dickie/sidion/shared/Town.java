@@ -10,7 +10,7 @@ import java.util.Map;
 public class Town extends GameComponentImpl {
 
 	public Town(){
-		validAttributes = Arrays.asList("KEY", "X", "Y", "GOLD", "MANA", "INF", "PLAYER");
+		validAttributes = Arrays.asList("LKEY", "X", "Y", "GOLD", "MANA", "INF", "PLAYER");
 	}
 
 
@@ -55,11 +55,11 @@ public class Town extends GameComponentImpl {
 	}
 
 	public String getName() {
-		return getValue("KEY");
+		return getValue("LKEY");
 	}
 
 	public void setName(String town) {
-		setValue("KEY", town);
+		setValue("LKEY", town);
 	}
 
 	

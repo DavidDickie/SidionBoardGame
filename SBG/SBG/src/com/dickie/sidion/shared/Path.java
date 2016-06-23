@@ -10,7 +10,7 @@ import com.dickie.sidion.client.SBG;
 public class Path extends GameComponentImpl{
 	
 	public Path(){
-		validAttributes = Arrays.asList("KEY", "PLAYER", "TOWN1", "TOWN2", "BLOCKED");
+		validAttributes = Arrays.asList("LKEY", "PLAYER", "TOWN1", "TOWN2", "BLOCKED");
 	}
 	
 	public Town getTown1(Game game) {

@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Resource extends GameComponentImpl{
 	
 	public Resource(){
-		validAttributes = Arrays.asList("KEY", "TYPE", "VALUE");
+		validAttributes = Arrays.asList("LKEY", "TYPE", "VALUE");
 	}
 
 	public enum Rtypes {GOLD, INF, MANA};

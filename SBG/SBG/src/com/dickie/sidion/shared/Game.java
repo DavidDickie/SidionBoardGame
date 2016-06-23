@@ -101,14 +101,15 @@ public class Game {
 	}
 	
 	public static Game createGame(String name){
-		if (games.containsKey(name)){
-			return games.get(name);
-		}
 		Game game = new Game(name);
 		game.players = Player.createPlayers(game, new String []{"Player1", "Player2", "Player3", "Player4"});
+		game.setCurrentPlayer("Player1");
+		game.setGameState(0);
+		game.setStartingPlayer("Player1");
 		game.towns = Town.createTowns(game);
 		game.heros = Hero.createHeros(game);
-		game.paths = Path.createPath(game);;
+		game.paths = Path.createPath(game);
+		Game.games.put(name, game);
 		return game;
 	}
  

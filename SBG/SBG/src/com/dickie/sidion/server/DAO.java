@@ -118,6 +118,14 @@ public class DAO {
 		return list;
 	}
 	
+	public void deleteGame(String gameName) {
+		Query query;
+		query = new Query().setAncestor(getKey(gameName));			
+		List<Entity> entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		datastore.delete((Key[]) entities.toArray());
+		datastore.delete(getKey(gameName));
+	}
+	
 	public void saveData(String gameName, List<GameComponent> components){
 		if (components.size() == 0){
 			return;
@@ -130,7 +138,12 @@ public class DAO {
 	public void saveGameComponent(GameComponent gc, String gameName){
 		Key key = getKey(gameName);
 		String type = gc.getClass().getName();
-		Entity e = new Entity (type, gc.getKey(), key);
+		Entity e = null;
+		if (gc.getKey() == null){
+			e = new Entity (type, gc.getKey(), key);
+		} else {
+			e = new Entity (type,  key);
+		}
 		try {
 			setAttributes(e, gc);
 			datastore.put(e);

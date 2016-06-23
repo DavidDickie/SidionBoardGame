@@ -118,7 +118,23 @@ public class Utils {
 		return null;
 	}
 	
-	
+	public static void createGame(String gameName){
+		greetingService.greetServer(gameName, new AsyncCallback<String> (){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				Utils.displayMessage(result);
+				
+			}
+			
+		});
+	}
 
 
 }
