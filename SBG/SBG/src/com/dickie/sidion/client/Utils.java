@@ -81,7 +81,7 @@ public class Utils {
 		return null;
 	}
 	
-	public static void getGameFromServer(final Game game, final NavPanel np, final Draw draw){
+	public static void getGameFromServer(final Game game, final NavPanel np, final Draw draw){ 
 		greetingService.get(game.getName(), null, new AsyncCallback<List<GameComponent>>(){
 
 			@Override
