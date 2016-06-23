@@ -56,8 +56,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	public String  executeSingleOrder(String name, Order order){
-		try{
-			
+		try{	
 			System.out.println("received new order: " + order);
 			OrderProcessor op = new OrderProcessor();
 			op.processOrder(order, Game.getInstance(name));

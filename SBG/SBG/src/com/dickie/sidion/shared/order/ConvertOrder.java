@@ -21,7 +21,7 @@ public class ConvertOrder extends OrderImpl{
 			return "No wizard is set";
 		}
 		if (getHero().getLevel() == 0){
-			return getHero().getName() + " must be at least level 1";
+			return getHero().getName() + " is " + getHero() + "; they must be at least level 1";
 		}
 		if (game.getGameState() == game.MAGIC_PHASE){
 			if (precursors.get("TYPE") == null){

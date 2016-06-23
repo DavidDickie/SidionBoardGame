@@ -80,5 +80,37 @@ public class Utils {
 			}});
 		return null;
 	}
+	
+	public static void getGameFromServer(final Game game, final NavPanel np, final Draw draw){
+		greetingService.get(game.getName(), null, new AsyncCallback<List<GameComponent>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Utils.displayMessage(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(List<GameComponent> result) {
+				StringBuffer sb = new StringBuffer();
+				int count = 0;
+				try{
+					for (GameComponent gc : result){
+						game.addGameComponent(gc);
+						gc.addObserver(np);
+						sb.append(gc + "\n");
+						count++;
+					}
+					Utils.logMessage(count + " objects loaded to game");
+					draw.drawMap();
+				} catch (Throwable t){
+					Utils.displayMessage(t.getMessage());
+				}
+				Utils.displayMessage(sb.toString());
+				np.userLogin();
+			}
+			
+		});
+	}
+
 
 }

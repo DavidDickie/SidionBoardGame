@@ -30,7 +30,12 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 
 	@Override
 	public Player getOwner(Game game) {
-		return game.getPlayer(attributes.get("PLAYER"));
+		Player p =  game.getPlayer(getValue("PLAYER"));
+		if (p == null){
+			throw new RuntimeException ("There is no player " + getValue("PLAYER") + "; " +
+					game.getPlayers().toArray());
+		}
+		return p;
 	}
 	
 	@Override
