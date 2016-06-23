@@ -1,12 +1,16 @@
 package com.dickie.sidion.server;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dickie.sidion.client.GreetingService;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Order;
+import com.dickie.sidion.shared.Var;
+import com.dickie.sidion.shared.VarString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -38,7 +42,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		Game game = new Game(input);
 		dao.saveGame(game);
 		return input;
-		
 	}
 	
 	public Void logMessage(String input){
@@ -66,7 +69,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			t.printStackTrace();
 			return("ERROR: " + t.getMessage());
 		}
-		
 	}
 	
 	public String sendOrders(String name, List<Order> orders) {
@@ -82,6 +84,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			t.printStackTrace();
 			return "ERROR: " + t.getMessage();
 		}
+	}
+	
+	public Map<String, GameComponent> getGameAttrs(String name){
+		HashMap<String, GameComponent> map = new HashMap<String, GameComponent>();
+		Game game = Game.getInstance(name);
+		Var var = new Var(game.getGameState());
+		map.put("GAMESTATE", var);
+		VarString var2 = new VarString(game.getCurrentPlayer().getName());
+		map.put("CURRENTPLAYER", var2);
+		return map;
 	}
 	
 	

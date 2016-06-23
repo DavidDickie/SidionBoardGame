@@ -1,6 +1,7 @@
 package com.dickie.sidion.client;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Order;
@@ -17,4 +18,5 @@ public interface GreetingService extends RemoteService {
 	List<GameComponent> get(String name, String type) throws IllegalArgumentException;
 	String sendOrders(String name, List<Order> orders);
 	String executeSingleOrder(String name, Order order);
+	Map<String, GameComponent> getGameAttrs(String name);
 }

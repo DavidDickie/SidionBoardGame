@@ -10,15 +10,6 @@ import com.dickie.sidion.shared.Town;
 public class Draw {
 	
 	MapPanel mp = null;
-	Game game = null;
-	
-	public Game getGame() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
 
 	public MapPanel getMp() {
 		return mp;
@@ -30,22 +21,22 @@ public class Draw {
 
 	int defaultSize = 40;
 	
-	public void drawMap(){
+	public void drawMap(Game game){
 		try{
 			mp.clear();
 			mp.drawBackgroundImage();
 			for (Path p : game.getPaths()) {
-				draw(p);
+				draw(p, game);
 			}
 			for (Town t : game.getTowns()) {
-				draw(t);
+				draw(t, game);
 			}
 		} catch (Throwable t){
 			Utils.displayMessage(t.getMessage());
 		}
 	}
 	
-	public void draw(Town t){
+	public void draw(Town t, Game game){
 		mp.setFillColor("black");
 		if (t.isLocked()){
 			mp.setFillColor(t.getOwner(game).getColor());
@@ -92,7 +83,7 @@ public class Draw {
 		}
 	}
 	
-	public void draw(Path p){
+	public void draw(Path p, Game game){
 		if (p.getBlocked()){
 			mp.setLineColor("red");
 			mp.setFillColor("red");

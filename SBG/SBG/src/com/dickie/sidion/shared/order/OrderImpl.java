@@ -177,6 +177,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 	@Override
 	public void execute() {
 		this.setValue("PRECURSORS", this.getPrecursorsAsString());
+		precursors = new HashMap<String, GameComponent>();
 	}
 	
 	public void addPrecursors(boolean hero, boolean town, boolean path, boolean resource, boolean x, boolean y, boolean number){

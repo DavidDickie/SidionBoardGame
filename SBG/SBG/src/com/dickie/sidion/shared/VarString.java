@@ -8,6 +8,11 @@ public class VarString extends GameComponentImpl{
 		validAttributes = Arrays.asList("KEY");
 	}
 	
+	public VarString(String s){
+		validAttributes = Arrays.asList("KEY");
+		setValue(s);
+	}
+	
 	public void setValue(String s){
 		setKey(s);
 	}

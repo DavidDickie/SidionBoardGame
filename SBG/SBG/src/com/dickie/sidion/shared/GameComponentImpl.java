@@ -78,5 +78,4 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 	public void addObserver(GameComponentListener o) {
 		observers.add(o);
 	}
-
 }

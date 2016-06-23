@@ -24,6 +24,31 @@ public class Game {
 		return paths.get(key);
 	}
 	
+	public String toString(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("Game " + getName() + " state: " + getGameState() + " current player: " +isNull( getCurrentPlayer().getName()));
+		sb.append("\nPlayers");
+		for (Player p: players.values()){
+			sb.append("\t" + p + "\n");
+		}
+		sb.append("\nHeroes");
+		for (Hero p: heros.values()){
+			sb.append("\t" + p + "\n");
+		}
+		sb.append("\nTowns");
+		for (Town p: towns.values()){
+			sb.append("\t" + p + "\n");
+		}
+		return sb.toString();
+	}
+	
+	public String isNull(Object o){
+		if (o == null){
+			return "not set";
+		}
+		return o.toString();
+	}
+	
 	public void addGameComponent(GameComponent gc){
 		if (gc instanceof Player){
 			players.put(gc.getKey(), (Player) gc);
@@ -131,6 +156,10 @@ public class Game {
 	public Player getCurrentPlayer(){
 		return getPlayer(currentPlayer);
 	}
+	
+	public String getCurrentPlayerAsString(){
+		return currentPlayer;
+	}
 
 	public void setCurrentPlayer(String currentPlayer) {
 		this.currentPlayer = currentPlayer;
@@ -138,6 +167,10 @@ public class Game {
 	
 	public Player getStartingPlayer(){
 		return getPlayer(startingPlayer);
+	}
+	
+	public String getStartingPlayerAsString(){
+		return startingPlayer;
 	}
 
 	public void setStartingPlayer(String player) {

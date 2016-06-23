@@ -8,6 +8,11 @@ public class Var extends GameComponentImpl{
 		validAttributes = Arrays.asList("KEY");
 	}
 	
+	public Var(int x){
+		validAttributes = Arrays.asList("KEY");
+		setKey(Integer.toString(x));
+	}
+	
 	public void setValue(int x){
 		setKey(Integer.toString(x));
 	}

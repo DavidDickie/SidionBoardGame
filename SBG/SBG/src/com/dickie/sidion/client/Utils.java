@@ -1,13 +1,14 @@
 package com.dickie.sidion.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.GameComponentListener;
 import com.dickie.sidion.shared.Order;
+import com.dickie.sidion.shared.Var;
+import com.dickie.sidion.shared.VarString;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -37,26 +38,62 @@ public class Utils {
 		});
 	}
 	
-//	private static Map<String, List<Order>> orders = new HashMap<String, List<Order>>();
-//	
-//	public static void addOrderToQueue(Order order, String game){
-//		if (orders.containsKey(game)){
-//			orders.get(game).add(order);
-//		} else {
-//			ArrayList<Order> list = new ArrayList<Order>();
-//			list.add(order);
-//			orders.put(game,  list);
-//		}
-//	}
-//	
-//	public static void setOrders(){
-//		for (String game : orders.keySet()){
-//			for (Order o : orders.get(game)){
-//				Utils.logMessage("Sending order " + o);
-//				sendOrderToServer(o, game);
-//			}
-//		}
-//	}
+	public static void getGameFromServer(final Game game, final LoadEventListener listener, final GameComponentListener gcList){ 
+		greetingService.get(game.getName(), null, new AsyncCallback<List<GameComponent>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Utils.displayMessage(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(List<GameComponent> result) {
+				int count = 0;
+				try{
+					for (GameComponent gc : result){
+						if (gc instanceof Var){
+							game.setGameState(((Var)gc).getValue());
+							continue;
+						}
+						if (gc instanceof VarString){
+							game.setCurrentPlayer(((VarString)gc).getValue());
+							return;
+						}
+						game.addGameComponent(gc);
+						if (gcList != null){
+							gc.addObserver(gcList);
+						}
+						count++;
+					}
+					Utils.logMessage(count + " objects loaded to game");
+					
+					listener.LoadEvent("GAMEOBJECTS LOADED", game);
+				} catch (Throwable t){
+					Utils.displayMessage(t.getMessage());
+				}
+			}
+			
+		});
+	}
+	
+	public static void setGameAttrs(final Game game, final LoadEventListener listener){
+		greetingService.getGameAttrs(game.getName(), new AsyncCallback<Map<String, GameComponent>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(Map<String, GameComponent> result) {
+				game.setCurrentPlayer(((VarString)result.get("CURRENTPLAYER")).getValue());
+				game.setGameState(((Var)result.get("GAMESTATE")).getValue());
+				listener.LoadEvent("GAMEATTRS LOADED", game);
+			}
+			
+		});
+	}
 	
 	public static String sendOrderToServer(Order order, Game game){
 		
@@ -81,36 +118,7 @@ public class Utils {
 		return null;
 	}
 	
-	public static void getGameFromServer(final Game game, final NavPanel np, final Draw draw){ 
-		greetingService.get(game.getName(), null, new AsyncCallback<List<GameComponent>>(){
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Utils.displayMessage(caught.getMessage());
-			}
-
-			@Override
-			public void onSuccess(List<GameComponent> result) {
-				StringBuffer sb = new StringBuffer();
-				int count = 0;
-				try{
-					for (GameComponent gc : result){
-						game.addGameComponent(gc);
-						gc.addObserver(np);
-						sb.append(gc + "\n");
-						count++;
-					}
-					Utils.logMessage(count + " objects loaded to game");
-					draw.drawMap();
-				} catch (Throwable t){
-					Utils.displayMessage(t.getMessage());
-				}
-				Utils.displayMessage(sb.toString());
-				np.userLogin();
-			}
-			
-		});
-	}
+	
 
 
 }

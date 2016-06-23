@@ -1,6 +1,7 @@
 package com.dickie.sidion.client;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Order;
@@ -17,4 +18,5 @@ public interface GreetingServiceAsync {
 			throws IllegalArgumentException;
 	void sendOrders(String name, List<Order> orders, AsyncCallback<String> callback);
 	void executeSingleOrder(String name, Order order, AsyncCallback<String> callback);	
+	void getGameAttrs(String name, AsyncCallback<Map<String, GameComponent>> callback);
 }

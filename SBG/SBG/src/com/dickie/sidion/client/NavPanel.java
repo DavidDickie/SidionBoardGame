@@ -27,21 +27,27 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class NavPanel extends VerticalPanel implements GameComponentListener, java.io.Serializable{
+public class NavPanel extends VerticalPanel implements GameComponentListener, LoadEventListener, java.io.Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	boolean authenticated = false;
 	private Game game = null;;
 	private Player player = null;
 	private Draw draw = null;
 	private MapPanel mapPanel = null;
 	
+	private final static GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+	
 	enum UiState {ORDER_ASSIGMENT, ADMIN, MAGIC_ORDERS, PHYS_ORDERS, RETREATS};
 	
 	private UiState state = null;
 
-	final Button refresh = new Button("refresh");
+	Button refresh = new Button("refresh");
 	
-	public void initialize(final Draw draw, MapPanel mapPanel) {
+	public void initialize(Draw draw, MapPanel mapPanel) {
 		this.draw = draw;
 		this.mapPanel = mapPanel;
 		mapPanel.AddClickListener(this);
@@ -50,14 +56,15 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 
 			@Override
 			public void onClick(ClickEvent event) {
-				Utils.getGameFromServer(game, NavPanel.this, draw);
+				Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
+				Utils.setGameAttrs(game, NavPanel.this);
 			}});
 		initialState();
 	}
 
-	final TextBox gnTextBox = new TextBox();
-	final TextBox userTextBox = new TextBox();
-	final TextBox passwordTextBox = new TextBox();
+	TextBox gnTextBox = new TextBox();
+	TextBox userTextBox = new TextBox();
+	TextBox passwordTextBox = new TextBox();
 	
 	
 	private void initialState() {
@@ -72,15 +79,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
 					game = new Game();
 					game.setName(gnTextBox.getText());
-					Utils.getGameFromServer(game, NavPanel.this, draw);
-					if (game == null) {
-						Utils.displayMessage("Game " + gnTextBox.getText() + " doesn't exist, try again");
-						return;
-					}
-					draw.setMp(mapPanel);
-					draw.setGame(game);
-					
-					
+					Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
+					Utils.setGameAttrs(game, NavPanel.this);			
 				}
 			}
 		});
@@ -119,7 +119,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 		this.add(refresh); 
 		this.renderOrder(new CreateGameOrder());
 		this.renderOrder(new EditOrder());
-		state = UiState.ADMIN;
+//		state = UiState.ADMIN;
 	}
 	
 	private void playerLoggedInState() {
@@ -284,6 +284,16 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, ja
 				currentOrder.getPrecursors().put(orderTextBoxMap.get(tb),gc);
 				tb.setText(gc.getKey());
 			} 
+		}
+	}
+	
+
+	@Override
+	public void LoadEvent(String event, Object loaded) {
+		if (event.equals("GAMEOBJECTS LOADED")){
+			draw.setMp(mapPanel);
+			draw.drawMap(game);
+			userLogin();
 		}
 	}
 

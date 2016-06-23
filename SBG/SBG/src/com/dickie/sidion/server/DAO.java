@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.Var;
+import com.dickie.sidion.shared.VarString;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -26,6 +28,7 @@ public class DAO {
 			e.setProperty("CurrentPlayer", game.getCurrentPlayer().getName());
 			e.setProperty("StartingPlayer", game.getStartingPlayer().getName());
 			e.setProperty("GameState", game.getGameState());
+			datastore.put(e);
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,12 +41,9 @@ public class DAO {
 			Entity e = datastore.get(key);
 			game.setCurrentPlayer((String)e.getProperty("CurrentPlayer"));
 			game.setStartingPlayer((String)e.getProperty("StartingPlayer"));
-			game.setGameState((int)e.getProperty("GameState"));
+			game.setGameState(((Long)e.getProperty("GameState")).intValue());
 		} catch (Exception e) {
-			game.setCurrentPlayer(game.getPlayers().iterator().next().getName());
-			game.setGameState(game.ORDER_PHASE);
-			game.setStartingPlayer(game.getCurrentPlayer().getName());
-			saveGameStatus(game);
+			e.printStackTrace();
 		}
 	}
 	
@@ -58,6 +58,7 @@ public class DAO {
 	public Game loadGame(String gameName) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException{
 		Game game = new Game(gameName);
 		
+		loadGameStatus(game);
 		List<GameComponent> list = getData(gameName, null);
 		if (list.size() == 0){
 			throw new RuntimeException("No game " + gameName);
@@ -65,7 +66,6 @@ public class DAO {
 		for (GameComponent gc : list){
 			game.addGameComponent(gc);
 		}
-		loadGameStatus(game);
 		game.addGame(game);
 		return game;
 	}
@@ -102,15 +102,11 @@ public class DAO {
 		if (component != null){
 			query = new Query(component).setAncestor(getKey(gameName)); 
 		} else {
-			query = new Query().setAncestor(getKey(gameName));
+			query = new Query().setAncestor(getKey(gameName));			
 		}
 		
 		List<Entity> entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-		if (component != null){
-			entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-		} else {
-			
-		}
+		
 		for (Entity e : entities){
 			if (e.getKind().equals("Game")){
 				continue;
@@ -129,7 +125,6 @@ public class DAO {
 		for (GameComponent gc : components){
 			saveGameComponent(gc, gameName);
 		}
-		
 	}
 	
 	public void saveGameComponent(GameComponent gc, String gameName){
