@@ -73,7 +73,7 @@ public class DAO {
 		for (Hero h : game.getHeros()){
 			h.setOrder(false);
 			for (Order o : game.getOrders()){
-				if (h.equals(o.getHero())){
+				if (h.equals(o.getHero(game))){
 					h.setOrder(true);
 				}
 			}

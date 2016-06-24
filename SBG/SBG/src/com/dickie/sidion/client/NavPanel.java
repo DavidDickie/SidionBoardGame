@@ -1,6 +1,7 @@
 package com.dickie.sidion.client;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.dickie.sidion.shared.Game;
@@ -23,6 +24,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -90,6 +92,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 	private void renderOrder(final Order order) {
 		Utils.logMessage("Rendering " + order);
+		Label heroLable = new Label(order.getHero(game).getKey());
+		this.add(heroLable);
 		Map<String, GameComponent> parameters = order.getPrecursors();
 		for (String key : parameters.keySet()) {
 			this.add(new Label(key));
@@ -124,7 +128,21 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				
 			}
 		});
-		this.add(b);
+		HorizontalPanel hp = new HorizontalPanel();
+		hp.add(b);
+		Button b2 = new Button("STAND");
+		b.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				StandOrder so = new StandOrder();
+				so.setPlayer(player);
+				so.setHero(order.getHero(game));
+				NavPanel.this.sendOrder(so);
+			}
+		});
+		hp.add(b2);
+		this.add(hp);
 
 	}
 
@@ -141,7 +159,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				Utils.createGame(((VarString)order.getPrecursors().get("LKEY")).getValue());
 				return;
 			}
-			order.getHero().setOrder(true);
+			order.getHero(game).setOrder(true);
 			order.execute();
 			Utils.logMessage("Exectuted on client: " + order);
 			Utils.displayMessage(Utils.sendOrderToServer(order, game));
@@ -346,8 +364,14 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			Utils.logMessage("It is " + h.getName());
 			Order order = null; 
 			for (Order o : game.getOrders()){
+				List<String> keys = o.getKeys();
+				for (String key : keys){
+					Utils.logMessage("Key " + key + " is " + o.getValue(key));
+					if (key.equals("PLAYER")) Utils.logMessage("Which is " + o.getPlayer(game));
+					if (key.equals("HERO")) Utils.logMessage("Which is " + o.getHero(game));
+				}
 				Utils.logMessage("checking order " + o);
-				if (o.getHero().equals(h) && !h.hasOrder()){
+				if (o.getHero(game).equals(h) && !h.hasOrder()){
 					order = o;
 					break;
 				}

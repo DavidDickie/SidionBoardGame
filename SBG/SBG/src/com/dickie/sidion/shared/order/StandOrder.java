@@ -12,7 +12,7 @@ public class StandOrder extends OrderImpl{
 	public String validateOrder(Game game) {
 		
 		super.validateOrder(game);
-		if (getHero() == null){
+		if (getHero(game) == null){
 			return "No hero is set";
 		}
 		return null;

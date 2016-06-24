@@ -52,6 +52,7 @@ public class Utils {
 				try{
 					for (GameComponent gc : result){
 						game.addGameComponent(gc);
+						
 						if (gcList != null){
 							gc.addObserver(gcList);
 						}

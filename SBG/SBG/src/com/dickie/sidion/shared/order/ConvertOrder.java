@@ -17,18 +17,18 @@ public class ConvertOrder extends OrderImpl{
 	
 	public String validateOrder(Game game) {
 		super.validateOrder(game);
-		if (getHero() == null){
+		if (getHero(game) == null){
 			return "No wizard is set";
 		}
-		if (getHero().getLevel() == 0){
-			return getHero().getName() + " is " + getHero().getLevel() + "; they must be at least level 1";
+		if (getHero(game).getLevel() == 0){
+			return getHero(game).getName() + " is " + getHero(game).getLevel() + "; they must be at least level 1";
 		}
 		if (game.getGameState() == game.MAGIC_PHASE){
 			if (precursors.get("TYPE") == null){
 				return "No type to convert mana to";
 			}
-			if (getPlayer(game).getResource(precursors.get("TYPE").toString()) - 3 + getHero().getLevel() < 0){
-				return "insufficient mana to do transfer; need " + (4 - getHero().getLevel());
+			if (getPlayer(game).getResource(precursors.get("TYPE").toString()) - 3 + getHero(game).getLevel() < 0){
+				return "insufficient mana to do transfer; need " + (4 - getHero(game).getLevel());
 			}
 		}
 		return null;
@@ -62,8 +62,8 @@ public class ConvertOrder extends OrderImpl{
 	@Override
 	public void executeOnServer(Game game){
 		String rType = precursors.get("TYPE").getKey();
-		getPlayer(game).addResource("MANA", getHero().getLevel().intValue()-4);
-		getPlayer(game).addResource(rType, 4-getHero().getLevel().intValue());
+		getPlayer(game).addResource("MANA", getHero(game).getLevel().intValue()-4);
+		getPlayer(game).addResource(rType, 4-getHero(game).getLevel().intValue());
 	}
 
 }

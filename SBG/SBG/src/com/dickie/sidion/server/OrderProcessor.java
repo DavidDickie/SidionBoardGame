@@ -18,11 +18,11 @@ public class OrderProcessor {
 				!(order instanceof EditOrder || order instanceof CreateGameOrder)){
 			System.out.println("Game state is order phase; storing order");
 			game.getOrders().add(order);
-			order.getHero().setOrder(true);
+			order.getHero(game).setOrder(true);
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				boolean allDone = true;
 				for (Player p : game.getPlayers()){
-					if (!game.ordersSubmitted(order.getPlayer(game))){
+					if (!game.ordersSubmitted(p)){
 						allDone = false;
 						break;
 					}
@@ -43,7 +43,7 @@ public class OrderProcessor {
 		}
 		try{
 			order.executeOnServer(game);
-			order.getHero().setOrder(true);
+			order.getHero(game).setOrder(true);
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				System.out.println("Player has all orders in, shifting to next player");
 				if (game.shiftCurrentToNextPlayer()){

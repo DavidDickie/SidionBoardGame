@@ -15,7 +15,7 @@ public interface Order extends GameComponent{
 	public int getY();
 	public Town getTown();
 	public int getNumber();
-	public Hero getHero();
+	public Hero getHero(Game game);
 	public Path getPath();
 	public Player getPlayer(Game game);
 	

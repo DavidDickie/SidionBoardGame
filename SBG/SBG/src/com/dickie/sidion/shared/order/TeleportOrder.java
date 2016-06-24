@@ -26,7 +26,7 @@ public class TeleportOrder extends OrderImpl{
 		if (precursors.get("TOWN") == null){
 			return "No target town selected";
 		}
-		Hero wizard = this.getHero();
+		Hero wizard = this.getHero(game);
 		Town startLoc = ((Hero)precursors.get("TARGET_HERO")).getLocation(game);
 		Town endLoc = this.getTown();
 		if (Town.getDistance(startLoc, endLoc) > wizard.getLevel()){

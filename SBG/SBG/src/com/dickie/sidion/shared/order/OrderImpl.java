@@ -161,13 +161,12 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 
 	@Override
 	public void setHero(Hero h) {
-		precursors.put("HERO", h);
 		setValue("LKEY", h.getName());
 	}
 	
 	@Override
-	public Hero getHero() {
-		return (Hero) precursors.get("HERO");
+	public Hero getHero(Game game) {
+		return game.getHero(getValue("LKEY"));
 	}
 
 	@Override
