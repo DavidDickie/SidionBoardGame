@@ -26,12 +26,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 
 	@Override
 	public String toString() {
-		String s = getClass().getName();
-		if (attributes.get("PRECUSORS") != null){
-			s += " [serialized] " + getValue("PRECURSORS");
-		} else {
-			s+= this.getPrecursorsAsString() ;
-		}
+		String s = super.toString()+ " [serialized] " + getPrecursorsAsString() ;
 		return s;
 	}
 
@@ -47,7 +42,9 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 	}
 
 	public String getPrecursorsAsString() {
-
+		if (precursors == null || precursors.size() == 0){
+			return "No precursors";
+		}
 		StringBuffer sb = new StringBuffer();
 		for (String key : precursors.keySet()) {
 			GameComponent gc = precursors.get(key);
@@ -58,9 +55,16 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 
 	}
 	
-	public void setPrecursors(String s, Game game){
+	public void setPrecursors(Game game){
+		String s = getValue("PRECURSORS");
+		if (s == null || s.equals("No precursors")){
+			return;
+		}
 		String[] strings = s.split("\\|");
 		for (int i = 0; i < strings.length; i++) {
+			if (strings[i].length() < 1){
+				continue;
+			}
 			String[] param = strings[i].split(";");
 			param[0] = param[0].split(" ")[1];
 			if (param[0].equals(Town.class.getName())){
@@ -78,9 +82,10 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 				v.setValue(param[2]);
 				precursors.put(param[1], v);
 			} else {
-				throw new RuntimeException("Could not figure out what to do with " + strings[i] + " for " + this);
+				throw new RuntimeException("Could not figure out what to do with '" + strings[i] + "' for " + this);
 			}
 		}
+		attributes.remove("PRECURSORS");
 	}
 	
 	public Player getPlayer(Game game){
@@ -189,6 +194,10 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 		if (x) precursors.put("X", new Var());
 		if (y) precursors.put("Y", new Var());
 		if (number) precursors.put("NUMBER", new Var());
+	}
+	
+	public void clearAttrs(){
+		precursors = new HashMap<String, GameComponent>();
 	}
 
 }

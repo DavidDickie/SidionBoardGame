@@ -50,8 +50,8 @@ public class Hero extends GameComponentImpl {
 		return false;
 	}
 
-	public void setOrder() {
-		setValue("HASORDER", "true");
+	public void setOrder(boolean b) {
+		setValue("HASORDER", Boolean.toString(b));
 	}
 
 	public static Map<String, Hero> createHeros(Game game) {

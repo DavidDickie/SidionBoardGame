@@ -32,6 +32,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			try {
 				System.out.println("Loaded " + gameName);
 				dao.loadGame(gameName);
+				Game.getInstance("test").setGameState(0);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

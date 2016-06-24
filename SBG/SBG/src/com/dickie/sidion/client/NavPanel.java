@@ -89,6 +89,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private Map<TextBox, String> textBoxCompType = new HashMap<TextBox, String>();
 
 	private void renderOrder(final Order order) {
+		Utils.logMessage("Rendering " + order);
 		Map<String, GameComponent> parameters = order.getPrecursors();
 		for (String key : parameters.keySet()) {
 			this.add(new Label(key));
@@ -130,7 +131,6 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private void sendOrder(Order order) {
 		try {
 			Utils.logMessage("Doing " + order.toString());
-
 			String s = order.validateOrder(game);
 			if (s != null) {
 				Utils.displayMessage("Validation failed: " + s);
@@ -141,7 +141,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				Utils.createGame(((VarString)order.getPrecursors().get("LKEY")).getValue());
 				return;
 			}
-			order.getHero().setOrder();
+			order.getHero().setOrder(true);
 			order.execute();
 			Utils.logMessage("Exectuted on client: " + order);
 			Utils.displayMessage(Utils.sendOrderToServer(order, game));
@@ -179,8 +179,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 	@Override
 	public void LoadEvent(String event, Object loaded) {
+		Utils.logMessage("Received event " + event + " for " + loaded);
 		if (event.equals("GAMEOBJECTS LOADED")) {
-			game.setGameState(game.MAGIC_PHASE);
 			draw.setMp(mapPanel);
 			draw.drawMap(game);
 			userLoginState();
@@ -260,9 +260,10 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			co.setPlayer(player);
 			co.setHero(hero);
 			co.execute();
+			Utils.logMessage("Sending to server: " + co);
 			Utils.sendOrderToServer(co, game);
 		}
-		hero.setOrder();
+		hero.setOrder(true);
 		playerOrderState();
 	}
 
@@ -329,6 +330,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	}
 	
 	private void playerMagicOrderState(){
+		Utils.logMessage("Entering playerMagicOrderState");
 		state = UiState.MAGIC_ORDERS;
 		this.clear();
 		this.add(refresh);
@@ -352,16 +354,18 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			}
 			if (order == null){
 				Utils.displayMessage("No orders for hero " + h.getName() + "?");
-				h.setOrder();
+				h.setOrder(true);
 				playerMagicOrderState();
 				return;
 			}
 			Utils.logMessage("Found order " + order);
 			if (!order.isExecutable(game, player)){
-				Utils.displayMessage("Order is not exectable right now " + h.getName() + " " + order);
-				h.setOrder();
+				Utils.logMessage("Order is not executable right now " + h.getName() + " " + order);
+				h.setOrder(true);
+				return;
 			}
 			renderOrder(order);
+			return;
 		}
 		if (!foundOne) {
 			Utils.displayMessage("You have no heros left to give orders to");

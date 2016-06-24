@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observer;
+import java.util.Set;
 
 public class GameComponentImpl implements GameComponent, java.io.Serializable{
 
@@ -77,5 +78,15 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 	@Override
 	public void addObserver(GameComponentListener o) {
 		observers.add(o);
+	}
+
+	@Override
+	public Set<String> keySet() {
+		return attributes.keySet();
+	}
+
+	@Override
+	public List<String> values() {
+		return new ArrayList<String>(attributes.values());
 	}
 }

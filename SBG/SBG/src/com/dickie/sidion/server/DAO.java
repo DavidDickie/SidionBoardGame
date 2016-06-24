@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.Hero;
+import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -67,6 +69,15 @@ public class DAO {
 		for (GameComponent gc : list){
 			game.addGameComponent(gc);
 		}
+		// synch up orders in case they were nuked or something
+		for (Hero h : game.getHeros()){
+			h.setOrder(false);
+			for (Order o : game.getOrders()){
+				if (h.equals(o.getHero())){
+					h.setOrder(true);
+				}
+			}
+		}
 		game.addGame(game);
 		return game;
 	}
@@ -114,6 +125,9 @@ public class DAO {
 			}
 			GameComponent gc = (GameComponent) Class.forName(e.getKind()).newInstance();
 			setAttributes(gc, e);
+			if (gc instanceof Order){
+				((Order)gc).clearAttrs();
+			}
 			list.add(gc);
 		}
 		return list;

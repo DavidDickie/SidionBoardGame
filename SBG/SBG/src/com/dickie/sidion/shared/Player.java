@@ -93,7 +93,7 @@ public class Player extends GameComponentImpl {
 	};
 
 	public boolean isAdmin() {
-		return isAdmin();
+		return Boolean.valueOf(getValue("IS_ADMIN"));
 	}
 	
 

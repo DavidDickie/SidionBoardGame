@@ -20,7 +20,7 @@ public class OrderTest {
 		eo.setY(40);
 		eo.validateOrder(game);
 		eo.execute();
-		eo.setPrecursors(eo.getValue("PRECURSORS"), game);
+		eo.setPrecursors(game);
 		eo.executeOnServer(game);
 	}
 }

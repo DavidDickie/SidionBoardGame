@@ -61,13 +61,7 @@ public class Utils {
 					// now unpack order paramaters
 					
 					for (Order o : game.getOrders()){
-						Utils.logMessage("Expanding order " + o);
-						if (o.getValue("PRECURSORS") == null){
-							logMessage("no precursors");
-							continue;
-						}
-						o.setPrecursors(o.getPrecursorsAsString(), game);
-						Utils.logMessage("Order is now " + o);
+						o.setPrecursors(game);
 					}
 					Utils.logMessage(count + " objects loaded to game");
 					
@@ -127,7 +121,7 @@ public class Utils {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+				Utils.displayMessage(caught.getMessage());
 				
 			}
 

@@ -41,6 +41,10 @@ public class Game {
 		for (Town p: towns.values()){
 			sb.append("\t" + p + "\n");
 		}
+		sb.append("\nOrders");
+		for (Order p: orders){
+			sb.append("\t" + p + "\n");
+		}
 		return sb.toString();
 	}
 	
@@ -186,5 +190,52 @@ public class Game {
 	public void setStartingPlayer(String player) {
 		this.startingPlayer = player;
 	} 
+	
+	public boolean ordersSubmitted(Player p){
+		ArrayList<Hero> list = new ArrayList<Hero>();
+		for (Hero h : heros.values()){
+			if (h.getOwner(this).equals(p)){
+				list.add(h);
+			}
+		}
+		int count = list.size();
+		for (Hero h : list){
+			if (h.hasOrder()){
+				count--;
+			}
+		}
+		
+		return count == 0;
+	}
+	
+	// returns true if all players have moved
+	public boolean shiftCurrentToNextPlayer(){
+		Player next = getNextPlayer();
+		if (next.equals(getStartingPlayer())){
+			currentPlayer = next.getName(); // move to the original starting player....
+			currentPlayer = getNextPlayer().getName();  // and one beyond
+			startingPlayer = currentPlayer;
+			return true;
+		}
+		currentPlayer = next.getName();
+		return false;
+	}
+	
+	public Player getNextPlayer(){
+		int i = 0;
+		Player nextPlayer = null;
+		for (Player p : players.values()){
+			if (p.equals(getCurrentPlayer())){
+				break;
+			}
+			i++;
+		}
+		if (i == players.size()-1){
+			i = -1;
+		}
+		i++;
+		nextPlayer = (Player) players.values().toArray()[i];
+		return nextPlayer;
+	}
 
 }
