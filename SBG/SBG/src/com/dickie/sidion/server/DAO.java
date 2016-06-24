@@ -53,6 +53,7 @@ public class DAO {
 		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getHeros()));
 		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getTowns()));
 		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getPlayers()));
+		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getOrders()));
 	}
 	
 	public Game loadGame(String gameName) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException{
@@ -139,7 +140,7 @@ public class DAO {
 		Key key = getKey(gameName);
 		String type = gc.getClass().getName();
 		Entity e = null;
-		if (gc.getKey() == null){
+		if (gc.getKey() != null){
 			e = new Entity (type, gc.getKey(), key);
 		} else {
 			e = new Entity (type,  key);

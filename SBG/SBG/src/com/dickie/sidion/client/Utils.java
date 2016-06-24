@@ -51,19 +51,23 @@ public class Utils {
 				int count = 0;
 				try{
 					for (GameComponent gc : result){
-						if (gc instanceof Var){
-							game.setGameState(((Var)gc).getValue());
-							continue;
-						}
-						if (gc instanceof VarString){
-							game.setCurrentPlayer(((VarString)gc).getValue());
-							return;
-						}
 						game.addGameComponent(gc);
 						if (gcList != null){
 							gc.addObserver(gcList);
 						}
 						count++;
+					}
+					
+					// now unpack order paramaters
+					
+					for (Order o : game.getOrders()){
+						Utils.logMessage("Expanding order " + o);
+						if (o.getValue("PRECURSORS") == null){
+							logMessage("no precursors");
+							continue;
+						}
+						o.setPrecursors(o.getPrecursorsAsString(), game);
+						Utils.logMessage("Order is now " + o);
 					}
 					Utils.logMessage(count + " objects loaded to game");
 					

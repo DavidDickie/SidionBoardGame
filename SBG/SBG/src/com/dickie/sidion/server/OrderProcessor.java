@@ -14,7 +14,7 @@ public class OrderProcessor {
 		if (game.getGameState() == game.ORDER_PHASE &&
 				!(order instanceof EditOrder || order instanceof CreateGameOrder)){
 			System.out.println("Game state is order phase; storing order");
-			dao.saveGameComponent(order, game.getName());
+			game.getOrders().add(order);
 			return "order accepted";
 		}
 		order.setPrecursors(order.getValue("PRECURSORS"), game);

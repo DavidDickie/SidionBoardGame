@@ -13,6 +13,7 @@ import com.dickie.sidion.shared.VarString;
 import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.CreateGameOrder;
 import com.dickie.sidion.shared.order.EditOrder;
+import com.dickie.sidion.shared.order.StandOrder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -119,6 +120,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			@Override
 			public void onClick(ClickEvent event) {
 				NavPanel.this.sendOrder(order);
+				
 			}
 		});
 		this.add(b);
@@ -139,6 +141,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				Utils.createGame(((VarString)order.getPrecursors().get("LKEY")).getValue());
 				return;
 			}
+			order.getHero().setOrder();
 			order.execute();
 			Utils.logMessage("Exectuted on client: " + order);
 			Utils.displayMessage(Utils.sendOrderToServer(order, game));
@@ -177,6 +180,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	@Override
 	public void LoadEvent(String event, Object loaded) {
 		if (event.equals("GAMEOBJECTS LOADED")) {
+			game.setGameState(game.MAGIC_PHASE);
 			draw.setMp(mapPanel);
 			draw.drawMap(game);
 			userLoginState();
@@ -244,16 +248,21 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		this.clear();
 		this.add(refresh);
 		if (order.equals("STAND")) {
-			hero.setOrder();
+			StandOrder so = new StandOrder();
+			so.setPlayer(player);
+			so.setHero(hero);
+			so.execute();
+			Utils.sendOrderToServer(so, game);
 		}
 		if (order.equals("CONVERT")) {
-			hero.setOrder();
+			
 			ConvertOrder co = new ConvertOrder();
 			co.setPlayer(player);
 			co.setHero(hero);
 			co.execute();
 			Utils.sendOrderToServer(co, game);
 		}
+		hero.setOrder();
 		playerOrderState();
 	}
 
@@ -318,12 +327,56 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		}
 		 state = UiState.ADMIN;
 	}
+	
+	private void playerMagicOrderState(){
+		state = UiState.MAGIC_ORDERS;
+		this.clear();
+		this.add(refresh);
+		boolean foundOne = false;
+		for (Hero h : game.getHeros()) {
+			Utils.logMessage("Looking at " + h);
+			if (!h.getOwner(game).equals(player)) {
+				continue;
+			}
+			if (h.hasOrder()) {
+				continue;
+			}
+			Utils.logMessage("It is " + h.getName());
+			Order order = null; 
+			for (Order o : game.getOrders()){
+				Utils.logMessage("checking order " + o);
+				if (o.getHero().equals(h) && !h.hasOrder()){
+					order = o;
+					break;
+				}
+			}
+			if (order == null){
+				Utils.displayMessage("No orders for hero " + h.getName() + "?");
+				h.setOrder();
+				playerMagicOrderState();
+				return;
+			}
+			Utils.logMessage("Found order " + order);
+			if (!order.isExecutable(game, player)){
+				Utils.displayMessage("Order is not exectable right now " + h.getName() + " " + order);
+				h.setOrder();
+			}
+			renderOrder(order);
+		}
+		if (!foundOne) {
+			Utils.displayMessage("You have no heros left to give orders to");
+		}
+		// Utils.displayMessage(sb.toString());
+		
+	}
 
+	
 	private void playerLoggedInState() {
 		if (game.getGameState() == game.ORDER_PHASE) {
 			playerOrderState();
+		} else if (game.getGameState() == game.MAGIC_PHASE){
+			playerMagicOrderState();
 		}
-		playerOrderState();
 	}
 
 }

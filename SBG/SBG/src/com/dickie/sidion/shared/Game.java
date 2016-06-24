@@ -1,5 +1,6 @@
 package com.dickie.sidion.shared;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +17,7 @@ public class Game {
 	private Map<String, Town> towns = new HashMap<String, Town>();
 	private Map<String, Path> paths = new HashMap<String, Path>();
 	private static Map<String, Game> games = new HashMap<String, Game>();
+	private static List<Order> orders = new ArrayList<Order>();
 	
 	private String currentPlayer;
 	private String startingPlayer;  
@@ -58,6 +60,8 @@ public class Game {
 			towns.put(gc.getKey(), (Town)gc);
 		} else if (gc instanceof Path){
 			paths.put(gc.getKey(), (Path)gc);
+		} else if (gc instanceof Order){
+			orders.add((Order)gc);
 		}
 	}
 	
@@ -70,6 +74,11 @@ public class Game {
 		}
 		return towns.get(townName);
 	}
+	
+	public Collection<Order> getOrders(){
+		return orders;
+	}
+	
 	
 	public Collection<Town> getTowns(){
 		return towns.values();
