@@ -17,6 +17,7 @@ public class ConvertOrder extends OrderImpl{
 	
 	public String validateOrder(Game game) {
 		super.validateOrder(game);
+	
 		if (getHero(game) == null){
 			return "No wizard is set";
 		}
@@ -24,10 +25,14 @@ public class ConvertOrder extends OrderImpl{
 			return getHero(game).getName() + " is " + getHero(game).getLevel() + "; they must be at least level 1";
 		}
 		if (game.getGameState() == game.MAGIC_PHASE){
-			if (precursors.get("TYPE") == null){
+			VarString vs = (VarString) precursors.get("TYPE");
+			if (vs == null){
 				return "No type to convert mana to";
 			}
-			if (getPlayer(game).getResource(precursors.get("TYPE").toString()) - 3 + getHero(game).getLevel() < 0){
+			if (!(vs.getValue().equals("GOLD") || vs.getValue().equals("INF"))){
+				return "Invalid type " + precursors.get("TYPE").getKey();
+			}
+			if (getPlayer(game).getResource(vs.getValue()) - 3 + getHero(game).getLevel() < 0){
 				return "insufficient mana to do transfer; need " + (4 - getHero(game).getLevel());
 			}
 		}

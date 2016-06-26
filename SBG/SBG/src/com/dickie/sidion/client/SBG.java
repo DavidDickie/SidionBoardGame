@@ -25,23 +25,22 @@ public class SBG implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	
-	boolean init = false;
+
 	
 	public void onModuleLoad() {
 		try{
-			if (init){
-				createGame("test");
-			}
 			MapPanel mapPanel = new MapPanel();
 			DecoratorPanel dp = new DecoratorPanel();
 			dp.add(mapPanel.getCanvas());
 			RootPanel rootPanel = RootPanel.get("display");
 			rootPanel.add(dp);
 			NavPanel vp = new NavPanel();
-			vp.initialize(draw,mapPanel);
 			RootPanel navPanel = RootPanel.get("navbar");
 			navPanel.add(vp);
+			GameInfoPanel gmp = new GameInfoPanel();
+			RootPanel gameInfoPanel = RootPanel.get("messages");
+			gameInfoPanel.add(gmp);
+			vp.initialize(draw,mapPanel,gmp);
 		} catch (Throwable t){
 			Utils.logMessage(t.getMessage());
 		}

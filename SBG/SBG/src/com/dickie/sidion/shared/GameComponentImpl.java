@@ -58,6 +58,12 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 			o.componentEvent("SELECTED", this);
 		}
 	}
+	
+	public void selectedForOrder(){
+		for (GameComponentListener o : observers){
+			o.componentEvent("SELECTED_FOR_ORDER", this);
+		}
+	}
 
 	@Override
 	public String getValue(String field) {

@@ -1,6 +1,7 @@
 package com.dickie.sidion.server;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +24,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	private DAO dao = new DAO();
 	
+	private static Map<String, ArrayList<String>> gameMessages = new HashMap<String, ArrayList<String>>();
+	
 	{
+		
 		List<String> games = dao.getGames();
 		if (games.size() == 0){
 			System.out.println("No games loaded????");
 		}
 		for (String gameName : games){
+			ArrayList<String> messages = new ArrayList<String>();
+			messages.add("Start");
+			gameMessages.put(gameName, messages);
 			try {
 				System.out.println("Loaded " + gameName);
 				dao.loadGame(gameName);
@@ -38,9 +45,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 	
+	public static synchronized List<String> getMessageList(String game){
+		return gameMessages.get(game);
+	}
+	
+	
 	public String greetServer(String input) throws IllegalArgumentException {
 		dao.saveGame(Game.createGame(input));
 		return input;
+	}
+	
+	public List<String> getLatestMessagesFromServer(String game, int lastMessage){
+		ArrayList<String> messages =  new ArrayList<String>();
+		for (int i = lastMessage + 1; i < gameMessages.get(game).size(); i++){
+			messages.add(gameMessages.get(game).get(i));
+		}
+		return messages;
 	}
 	
 	public Void logMessage(String input){
@@ -92,6 +112,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		map.put("GAMESTATE", var);
 		VarString var2 = new VarString(game.getCurrentPlayer().getName());
 		map.put("CURRENTPLAYER", var2);
+		VarString var3 = new VarString(game.getStartingPlayer().getName());
+		map.put("STARTINGPLAYER", var3);
 		return map;
 	}
 	

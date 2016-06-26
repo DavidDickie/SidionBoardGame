@@ -6,6 +6,7 @@ import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.order.CreateGameOrder;
 import com.dickie.sidion.shared.order.EditOrder;
+import com.dickie.sidion.shared.order.StandOrder;
 
 public class OrderProcessor {
 	
@@ -28,7 +29,7 @@ public class OrderProcessor {
 					}
 				}
 				if (allDone){
-					System.out.println("All orders are in, shifting to magic phase");
+					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
 					game.setGameState(game.MAGIC_PHASE);
 					for (Hero h: game.getHeros()){
 						h.setOrder(false);
@@ -42,10 +43,15 @@ public class OrderProcessor {
 			return order.validateOrder(game);
 		}
 		try{
+			if (order instanceof StandOrder && game.getGameState() == game.MAGIC_PHASE){
+				System.out.println("Replacing a magic order with a standing order");
+				dao.saveGameComponent(order, game.getName());
+				return "Stand order saved";
+			}
 			order.executeOnServer(game);
 			order.getHero(game).setOrder(true);
 			if (game.ordersSubmitted(order.getPlayer(game))){
-				System.out.println("Player has all orders in, shifting to next player");
+				GreetingServiceImpl.getMessageList(game.getName()).add("Player " + order.getPlayer(game).getName() + " has all orders in, shifting to " + game.getNextPlayer().getName());
 				if (game.shiftCurrentToNextPlayer()){
 					// if true, all players have moved
 					System.out.println("Moving to next phase");

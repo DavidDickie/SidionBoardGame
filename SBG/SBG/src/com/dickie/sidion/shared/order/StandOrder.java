@@ -26,7 +26,7 @@ public class StandOrder extends OrderImpl{
 		if (game.getGameState() == game.ORDER_PHASE){
 			return true;
 		}
-		return false;
+		return game.getGameState() == game.PHYS_PHASE && game.getCurrentPlayer().equals(player);
 	}
 
 	@Override

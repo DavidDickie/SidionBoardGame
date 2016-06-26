@@ -69,14 +69,8 @@ public class DAO {
 		for (GameComponent gc : list){
 			game.addGameComponent(gc);
 		}
-		// synch up orders in case they were nuked or something
-		for (Hero h : game.getHeros()){
+		for (Hero h: game.getHeros()){
 			h.setOrder(false);
-			for (Order o : game.getOrders()){
-				if (h.equals(o.getHero(game))){
-					h.setOrder(true);
-				}
-			}
 		}
 		game.addGame(game);
 		return game;

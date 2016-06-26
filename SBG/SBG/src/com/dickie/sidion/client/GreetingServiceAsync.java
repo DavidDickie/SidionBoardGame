@@ -19,4 +19,5 @@ public interface GreetingServiceAsync {
 	void sendOrders(String name, List<Order> orders, AsyncCallback<String> callback);
 	void executeSingleOrder(String name, Order order, AsyncCallback<String> callback);	
 	void getGameAttrs(String name, AsyncCallback<Map<String, GameComponent>> callback);
+	void getLatestMessagesFromServer(String game, int lastMessage, AsyncCallback<List<String>> callback);
 }

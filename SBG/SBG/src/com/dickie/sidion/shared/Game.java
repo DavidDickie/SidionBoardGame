@@ -145,6 +145,7 @@ public class Game {
 	public final int ORDER_PHASE = 0;
 	public final int MAGIC_PHASE = 1;
 	public final int PHYS_PHASE = 2;
+	public final int FINAL = 2;
 	
 	private int gameState = ORDER_PHASE;
 	
@@ -192,20 +193,7 @@ public class Game {
 	} 
 	
 	public boolean ordersSubmitted(Player p){
-		ArrayList<Hero> list = new ArrayList<Hero>();
-		for (Hero h : heros.values()){
-			if (h.getOwner(this).equals(p)){
-				list.add(h);
-			}
-		}
-		int count = list.size();
-		for (Hero h : list){
-			if (h.hasOrder()){
-				count--;
-			}
-		}
-		
-		return count == 0;
+		return p.isTurnFinshed();
 	}
 	
 	// returns true if all players have moved
@@ -236,6 +224,15 @@ public class Game {
 		i++;
 		nextPlayer = (Player) players.values().toArray()[i];
 		return nextPlayer;
+	}
+
+	public void shiftToNextGameState() {
+		if (getGameState() == FINAL){
+			setGameState(0);
+		} else {
+			setGameState(getGameState() + 1);
+		}
+			
 	}
 
 }

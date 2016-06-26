@@ -15,6 +15,7 @@ public interface GameComponent {
 	public Set<String> keySet();
 	public List<String> values();
 	public void selected();
+	public void selectedForOrder();
 	public void addObserver(GameComponentListener o);
 }
 

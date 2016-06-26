@@ -10,7 +10,7 @@ import java.util.Map;
 public class Player extends GameComponentImpl {
 	
 	public Player(){
-		validAttributes = Arrays.asList("LKEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS");
+		validAttributes = Arrays.asList("LKEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS", "TURN_FINISHED");
 	}
 	
 	public String getColor() {
@@ -31,6 +31,9 @@ public class Player extends GameComponentImpl {
 	}
 	
 	public int getResource(String type){
+		if (getValue(type) == null){
+			return 0;
+		}
 		return Integer.valueOf(getValue(type));
 	}
 	
@@ -43,6 +46,17 @@ public class Player extends GameComponentImpl {
 
 	public void setPassword(String password) {
 		setValue("PASSWORD", password);
+	}
+	
+	public boolean isTurnFinshed(){
+		if (attributes.containsKey("TURN_FINISHED")){
+			return Boolean.valueOf(getValue("TURN_FINISHED"));
+		}
+		return false;
+	}
+	
+	public void setTurnFinished(boolean b){
+		setValue("TURN_FINISHED", Boolean.toString(b));
 	}
 
 
@@ -76,6 +90,9 @@ public class Player extends GameComponentImpl {
 			p.setColor(colors[count]);
 			p.setName(name);
 			p.setAdmin(false);
+			p.addResource("GOLD", 5);
+			p.addResource("MANA", 3);
+			p.addResource("INF", 0);
 			players.put(names[count],p);
 			count++;
 		}

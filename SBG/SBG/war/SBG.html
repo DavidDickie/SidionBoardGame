@@ -13,6 +13,8 @@
     <!--                                                               -->
     <link type="text/css" rel="stylesheet" href="SBG.css">
 
+    <link href="http://www.dickieville.com/css/zg_lite.css" rel="stylesheet" type="text/css">
+
     <!--                                           -->
     <!-- Any title is fine                         -->
     <!--                                           -->
@@ -24,6 +26,12 @@
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" language="javascript" src="sbg/sbg.nocache.js"></script>
+    <style type="text/css">
+	.auto-style1 {
+		border: 2px solid #009999;
+		background-color: #C0C0C0;
+	}
+	</style>
   </head>
 
   <!--                                           -->
@@ -43,14 +51,32 @@
         in order for this application to display correctly.
       </div>
     </noscript>
-    <H1>Sidion, the board game</H1>
-    <table>
-    	<tr>
-    		<td id="navbar" valign="top">
-    		</td>
-    		<td id="display"></td>
-    	<tr>
-    </table>
-    
+  
+	<table style="width: 100%">
+		<tr>
+			<td>  <H1>Sidion, the board game</H1></td>
+		</tr>
+		<tr>
+			<table>
+		    	<tr>
+		    		<td id="navbar" valign="top"></td>
+		    		<td id="display"></td>
+		    	<tr>
+		    </table>		
+		</tr>
+		<tr> 
+			<table class="auto-style1" style="width: 100%">
+				<tr>
+					<td id="messages"></td>
+					<td id="Player1"></td>
+					<td id="Player2"></td>
+					<td id="Player3"></td>
+					<td id="Player4"></td>
+					<td id="Player5"></td>
+					<td id="Player6"></td>
+				</tr>
+			</table>
+		</tr>
+	</table> 
   </body>
 </html>

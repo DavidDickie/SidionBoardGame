@@ -19,4 +19,5 @@ public interface GreetingService extends RemoteService {
 	String sendOrders(String name, List<Order> orders);
 	String executeSingleOrder(String name, Order order);
 	Map<String, GameComponent> getGameAttrs(String name);
+	List<String> getLatestMessagesFromServer(String game, int lastMessage);
 }
