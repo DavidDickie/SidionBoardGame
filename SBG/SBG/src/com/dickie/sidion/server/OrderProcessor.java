@@ -55,11 +55,8 @@ public class OrderProcessor {
 				if (game.shiftCurrentToNextPlayer()){
 					// if true, all players have moved
 					System.out.println("Moving to next phase");
-					if (game.getGameState() == game.MAGIC_PHASE){
-						game.setGameState(game.PHYS_PHASE);
-						for (Hero h: game.getHeros()){
-							h.setOrder(false);
-						}
+					if (game.shiftToNextGameState()){ // true if it's a new full turn
+						dao.deleteOrders(game.getName());
 					}
 				}
 					

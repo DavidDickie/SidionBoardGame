@@ -127,6 +127,17 @@ public class DAO {
 		return list;
 	}
 	
+	public void deleteOrders(String gameName) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+		Query query = new Query().setAncestor(getKey(gameName));			
+		List<Entity> entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		for (Entity e: entities){
+			GameComponent gc = (GameComponent) Class.forName(e.getKind()).newInstance();
+			if (gc instanceof Order){
+				datastore.delete(e.getKey());
+			}
+		}
+	}
+	
 	public void deleteGame(String gameName) {
 		Query query;
 		query = new Query().setAncestor(getKey(gameName));			

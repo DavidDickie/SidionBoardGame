@@ -226,12 +226,14 @@ public class Game {
 		return nextPlayer;
 	}
 
-	public void shiftToNextGameState() {
+	public boolean shiftToNextGameState() {
 		if (getGameState() == FINAL){
 			setGameState(0);
+			return true;
 		} else {
 			setGameState(getGameState() + 1);
 		}
+		return false;
 			
 	}
 

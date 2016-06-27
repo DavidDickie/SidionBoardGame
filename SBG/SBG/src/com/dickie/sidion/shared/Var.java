@@ -4,6 +4,11 @@ import java.util.Arrays;
 
 public class Var extends GameComponentImpl{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Var(){
 		validAttributes = Arrays.asList("LKEY");
 	}
