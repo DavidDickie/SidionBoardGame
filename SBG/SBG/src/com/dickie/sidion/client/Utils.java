@@ -65,7 +65,7 @@ public class Utils {
 					for (Order o : game.getOrders()) {
 						o.setPrecursors(game);
 					}
-					Utils.logMessage(count + " objects loaded to game");
+					Utils.logMessage("Client: " +count + " objects loaded to game");
 					
 					// clear the order flag... we will set it as they add orders
 					for (Hero h : game.getHeros()){
@@ -107,19 +107,16 @@ public class Utils {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Utils.logMessage("RPC call failed: " + caught.getMessage());
+				Utils.logMessage("Client: " +"RPC call failed: " + caught.getMessage());
 				displayMessage("RPC call failed: " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(String result) {
 				if (result != null) {
-					Utils.logMessage("Result of order was " + result);
-				} else {
-					// displayMessage("Order accepted");
-					Utils.logMessage("Order accepted");
-				}
-				Utils.logMessage("Order processing complete");
+					Utils.logMessage("Client: " +"Result of order was " + result);
+				} 
+				Utils.logMessage("Client: " +"Order processing complete");
 			}
 		});
 		return null;
@@ -146,22 +143,23 @@ public class Utils {
 	static int lastMessage = 0;
 
 	public static void getMessages(final String gameName, final int lastMessage, final LoadEventListener listener) {
-
-		greetingService.getLatestMessagesFromServer(gameName, lastMessage, new AsyncCallback<List<String>>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onSuccess(List<String> result) {
-				for (String s : result) {
-					listener.LoadEvent(s, null);
-				}
-			}
-
-		});
+		return;
+		
+//		greetingService.getLatestMessagesFromServer(gameName, lastMessage, new AsyncCallback<List<String>>() {
+//
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void onSuccess(List<String> result) {
+//				for (String s : result) {
+//					listener.LoadEvent(s, null);
+//				}
+//			}
+//
+//		});
 	}
 }

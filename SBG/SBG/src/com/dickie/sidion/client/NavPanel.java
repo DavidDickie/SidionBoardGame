@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -47,24 +48,22 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private MapPanel mapPanel = null;
 	private List<PlayerPanel> playerPanels = new ArrayList<PlayerPanel>();
 
-	private final static GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
-
 	enum UiState {
 		ORDER_ASSIGMENT, ADMIN, MAGIC_ORDERS, PHYS_ORDERS, RETREATS
 	};
-
-	private UiState state = null;
 	
 	private GameInfoPanel gip = null;
 
 	Button refresh = new Button("refresh");
 
 	public void initialize(Draw draw, MapPanel mapPanel, GameInfoPanel gip) {
+		this.setSize("150px", "100px");
+		this.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 		this.draw = draw;
 		this.mapPanel = mapPanel;
 		this.gip = gip;
 		mapPanel.AddClickListener(this);
-
+		initNewOrders();
 		refresh.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -100,7 +99,12 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private Map<TextBox, String> textBoxCompType = new HashMap<TextBox, String>();
 
 	public void renderOrder(final Order order) {
-		Utils.logMessage("Rendering " + order);
+		if (order instanceof StandOrder){ // this is a cheat, since we never have to rend StandOrders
+											// so it means "render an order"
+			renderPickOrder(order.getHero(game));
+			return;
+		}
+		Utils.logMessage("Client: " +"Rendering " + order);
 		if (order instanceof CreateGameOrder || order instanceof EditOrder){
 			// do nothing; these are admin orders
 		} else {
@@ -164,7 +168,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			Utils.logMessage("Client; doing " + order.toString());
 			String s = order.validateOrder(game);
 			if (s != null) {
-				Utils.logMessage("Validation failed: " + s);
+				Utils.logMessage("Client: " +"Validation failed: " + s);
 				displayMessage("Order failed: " + s);
 				return;
 			}
@@ -189,13 +193,18 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	}
 	
 	private void updateHeroOrderList() {
+		this.clear();
 		for (PlayerPanel pp : playerPanels){
 			if (pp.getPlayer().equals(player)){
-				Utils.logMessage("Display orders for player " + player);
+				Utils.logMessage("Client: " +"Display orders for player " + player);
+				if (!game.getCurrentPlayer().equals(player) && game.getGameState() != 0){
+					displayMessage("It is not your turn");
+					return;
+				}
 				if (!pp.setPossibleHeros(game, player)) { // there are no more orders
-					Utils.logMessage("Sending finish order");
+					Utils.logMessage("Client: " +"Sending finish order");
 					game.setCurrentPlayer(game.getNextPlayer().getName());
-					Utils.logMessage("Finishing turn for player " + player.getName());
+					Utils.logMessage("Client: " +"Finishing turn for player " + player.getName());
 					FinishTurn ft = new FinishTurn();
 					ft.setPlayer(player);
 					ft.execute();
@@ -203,7 +212,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 					displayMessage("You have entered all orders");
 					getMessagesFromServer();
 				} else {
-					Utils.logMessage(player.getName() + " orders displayed" );
+					Utils.logMessage("Client: " +player.getName() + " orders displayed" );
 				}
 			}
 		}
@@ -233,7 +242,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		for (TextBox tb : textBoxCompType.keySet()) {
 			if (gc.getClass().getName().equals(textBoxCompType.get(tb))) {
 				Order currentOrder = textBoxToOrder.get(tb);
-				Utils.logMessage("Precursor is " + currentOrder.getPrecursors().get(orderTextBoxMap.get(tb)));
+				Utils.logMessage("Client: " +"Precursor is " + currentOrder.getPrecursors().get(orderTextBoxMap.get(tb)));
 				currentOrder.getPrecursors().put(orderTextBoxMap.get(tb), gc);
 				tb.setText(gc.getKey());
 			}
@@ -248,7 +257,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 	@Override
 	public void LoadEvent(String event, Object loaded) {
-		Utils.logMessage("Received event " + event + " for " + loaded);
+		Utils.logMessage("Client: " +"Received event " + event + " for " + loaded);
 		if (event.equals("GAMEOBJECTS LOADED")) {
 			draw.setMp(mapPanel);
 			draw.drawMap(game);
@@ -262,7 +271,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 						pPanelRoot.add(pp);
 						pp.displayPlayer(p, game);
 					} catch (Throwable t){
-						Utils.logMessage("Could not display player panel: " + t.getMessage());
+						Utils.logMessage("Client: " +"Could not display player panel: " + t.getMessage());
 					}
 				}
 			} 
@@ -325,7 +334,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			if (passwordTextBox.getText().equals("adminpassword")) {
 				player = new Player();
 				player.setAdmin(true);
-				Utils.logMessage("Administrator logged on");
+				Utils.logMessage("Client: " +"Administrator logged on");
 				adminState();
 				return;
 			}
@@ -343,81 +352,49 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		// Utils.displayMessage("Wrong password, try again");
 		// return;
 		// };
-		Utils.logMessage("Player " + player.getName() + " logged in");
+		Utils.logMessage("Client: " +"Player " + player.getName() + " logged in");
 		playerLoggedInState();
 	}
-
-	private void addOrderState(Hero hero, String order) {
-		this.clear();
-		this.add(refresh);
-		if (order.equals("STAND")) {
-			StandOrder so = new StandOrder();
-			so.setPlayer(player);
-			so.setHero(hero);
-			so.execute();
-			Utils.sendOrderToServer(so, game);
-		}
-		if (order.equals("CONVERT")) {
-			
-			ConvertOrder co = new ConvertOrder();
-			co.setPlayer(player);
-			co.setHero(hero);
-			co.execute();
-			Utils.logMessage("Sending to server: " + co);
-			Utils.sendOrderToServer(co, game);
-		}
-		hero.setOrder(true);
-		playerOrderState();
+	
+	private Map<String, Order> newOrders = new HashMap<String, Order>();
+	
+	private void initNewOrders(){
+		newOrders.put("STAND", new StandOrder());
+		newOrders.put("CONVERT", new ConvertOrder());
+//		newOrders.put("TELEPORT", new TeleportOrder());
+//		newOrders.put("BLOCKPATH");
+//		newOrders.put("MOVE");
+//		newOrders.put("LOCK");
+//		newOrders.put("BID");
+//		newOrders.put("IMPROVETOWN");
+//		newOrders.put("IMPROVEHERO");
+//		newOrders.put("RETREAT");
 	}
 
-	private void playerOrderState() {
+	private void renderPickOrder(final Hero hero) {
 		try {
 			this.clear();
-			this.add(refresh);
-			boolean foundOne = false;
-			for (Hero h : game.getHeros()) {
-				if (!h.getOwner(game).equals(player)) {
-					continue;
-				}
-				if (h.hasOrder()) {
-					continue;
-				}
-				foundOne = true;
-				Label l = new Label(h.getName());
-				add(l);
-				final Hero hero = h;
-				final ListBox cb = new ListBox();
-				cb.addItem("STAND");
-				cb.addItem("CONVERT");
-				cb.addItem("TELEPORT");
-				cb.addItem("BLOCKPATH");
-				cb.addItem("MOVE");
-				cb.addItem("LOCK");
-				cb.addItem("BID");
-				cb.addItem("IMPROVETOWN");
-				cb.addItem("IMPROVEHERO");
-				cb.addItem("RETREAT");
-				add(cb);
-				Button exBut = new Button("EXECUTE");
-				exBut.addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						addOrderState(hero, cb.getSelectedItemText());
-					}
-
-				});
-				add(exBut);
-				state = UiState.ORDER_ASSIGMENT;
-				break;
+			Utils.logMessage("Client: " +"Rendering a select order dialog");
+			Label lb = new Label(hero.getName());
+			this.add(lb);
+			final ListBox cb = new ListBox();
+			for (String order : newOrders.keySet()) {				
+				cb.addItem(order);
 			}
-			if (!foundOne) {
-				Utils.logMessage("Finishing turn for player " + player.getName());
-				FinishTurn ft = new FinishTurn();
-				ft.setPlayer(player);
-				sendOrder(ft);
-			}
-			// Utils.displayMessage(sb.toString());
+			this.add(cb);
+			Button exBut = new Button("EXECUTE");
+			exBut.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					Order o = newOrders.get(cb.getSelectedItemText());
+					o.setOwner(player);
+					o.setHero(hero);
+					hero.setOrder(true);
+					sendOrder(o);
+				}
+			});
+			add(exBut);
 		} catch (Throwable t) {
 			displayMessage(t.getMessage());
 		}
@@ -432,7 +409,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		} catch (Exception e){
 			Utils.displayMessage("Could not enter adminstate: " + e.getMessage());
 		}
-		 state = UiState.ADMIN;
+//		 state = UiState.ADMIN;
 	}
 	
 	
@@ -440,13 +417,13 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	
 	private void playerLoggedInState() {
 		this.clear();
-		if (game.getGameState() == game.ORDER_PHASE) {
-			Utils.logMessage("Player is defining orders");
-			playerOrderState();
-		} else if (game.getGameState() == game.MAGIC_PHASE){
-			Utils.logMessage("Player is executing Magic orders");
-			state = UiState.MAGIC_ORDERS;
-		}
+//		if (game.getGameState() == game.ORDER_PHASE) {
+//			Utils.logMessage("Player is defining orders");
+//			playerOrderState();
+//		} else if (game.getGameState() == game.MAGIC_PHASE){
+//			Utils.logMessage("Player is executing Magic orders");
+//			state = UiState.MAGIC_ORDERS;
+//		}
 		updateHeroOrderList();
 	}
 

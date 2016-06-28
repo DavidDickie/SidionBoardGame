@@ -42,7 +42,7 @@ public class SBG implements EntryPoint {
 			gameInfoPanel.add(gmp);
 			vp.initialize(draw,mapPanel,gmp);
 		} catch (Throwable t){
-			Utils.logMessage(t.getMessage());
+			Utils.logMessage("Client: " +t.getMessage());
 		}
 
 	}

@@ -6,7 +6,7 @@ import com.dickie.sidion.shared.Player;
 public class StandOrder extends OrderImpl{
 	
 	public StandOrder(){
-		super.addPrecursors(false, false, false, false, false, false, false);
+		super.addPrecursors(true, false, false, false, false, false, false);
 	}
 	
 	public String validateOrder(Game game) {

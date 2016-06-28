@@ -194,23 +194,24 @@ public class Game {
 	} 
 	
 	public boolean ordersSubmitted(Player p){
+		if (p == null)
+			return false;
 		return p.isTurnFinshed();
+	}
+	
+	public void shiftPlayersToNextRound(){
+		currentPlayer = getNextPlayer().getName();
+		startingPlayer = currentPlayer;
 	}
 	
 	// returns true if all players have moved
 	public boolean shiftCurrentToNextPlayer(){
-		Player next = getNextPlayer();
-		if (next.equals(getStartingPlayer())){
-			
-			currentPlayer = next.getName(); // move to the original starting player....
-			currentPlayer = getNextPlayer().getName();  // and one beyond since who goes first will rotate
-			System.out.println("We are back to starting player, shifting two players to " + currentPlayer);
-			startingPlayer = currentPlayer;
+		currentPlayer = getNextPlayer().getName(); // move to the original starting player....
+		if (currentPlayer.equals(getStartingPlayer().getName())){
+			System.out.println("We are back to starting player");
 			return true;
 		}
-		currentPlayer = next.getName();
-		System.out.println("Shifting one player to " + currentPlayer);
-		
+		System.out.println("Shifting current player to " + currentPlayer);
 		return false;
 	}
 	
@@ -220,6 +221,7 @@ public class Game {
 		for (Player p : players.values()){
 			if (p.equals(getCurrentPlayer())){
 				i = getCurrentPlayer().getPlayerOrder();
+				break;
 			}
 		}
 		if (i == players.size()-1){
@@ -229,6 +231,7 @@ public class Game {
 		for (Player p : players.values()){
 			if (p.getPlayerOrder() == i){
 				nextPlayer = p;
+				break;
 			}
 		}
 		return nextPlayer;
@@ -237,6 +240,7 @@ public class Game {
 	public boolean shiftToNextGameState() {
 		if (getGameState() == FINAL){
 			setGameState(0);
+			shiftPlayersToNextRound();
 			return true;
 		} else {
 			setGameState(getGameState() + 1);

@@ -4,8 +4,6 @@ import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
-import com.dickie.sidion.shared.order.CreateGameOrder;
-import com.dickie.sidion.shared.order.EditOrder;
 import com.dickie.sidion.shared.order.StandOrder;
 
 public class OrderProcessor {
@@ -29,6 +27,7 @@ public class OrderProcessor {
 				}
 				if (allDone){
 					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
+					System.out.println("All orders are in, shifting to magic phase");
 					game.setGameState(game.MAGIC_PHASE);
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);
@@ -41,21 +40,31 @@ public class OrderProcessor {
 		if (order.validateOrder(game) != null){
 			return order.validateOrder(game);
 		}
+		if (!order.getPlayer(game).equals(game.getCurrentPlayer())){
+			return "it is not " + order.getPlayer(game).getName() + "'s turn; order ignored";
+		}
 		try{
 			order.executeOnServer(game);
 			if (game.ordersSubmitted(order.getPlayer(game))){
-				GreetingServiceImpl.getMessageList(game.getName()).add("Player " + order.getPlayer(game).getName() + " has all orders in, shifting to " + game.getNextPlayer().getName());
 				if (game.shiftCurrentToNextPlayer()){
 					// if true, all players have moved
 					System.out.println("Moving to next phase");
-					if (game.getGameState() == game.MAGIC_PHASE){
-						game.setGameState(game.PHYS_PHASE);
-						for (Hero h: game.getHeros()){
-							h.setOrder(false);
+					for (Player p: game.getPlayers()){
+						p.setTurnFinished(false);
+					}
+					if (game.shiftToNextGameState()){ // true if it's end of a round
+						System.out.println("Moving to next round");
+						// wipe out orders, replace with "standorder"
+						for (Hero h : game.getHeros()){
+							Order o = new StandOrder();
+							o.setOwner(h.getOwner(game));
+							o.setHero(h);
+							game.addGameComponent(o);
 						}
 					}
+				} else {
+					System.out.println("Moved to next player");
 				}
-					
 			}
 		} catch (Throwable t){
 			return t.getMessage();

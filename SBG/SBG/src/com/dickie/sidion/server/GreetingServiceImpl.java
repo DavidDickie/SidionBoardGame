@@ -9,9 +9,11 @@ import java.util.Map;
 import com.dickie.sidion.client.GreetingService;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
+import com.dickie.sidion.shared.order.StandOrder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -51,7 +53,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	
 	public String greetServer(String input) throws IllegalArgumentException {
-		dao.saveGame(Game.createGame(input));
+		Game game = Game.createGame(input);
+		// create dummy orders
+		for (Hero h : game.getHeros()){
+			Order o = new StandOrder();
+			o.setOwner(h.getOwner(game));
+			o.setHero(h);
+			game.addGameComponent(o);
+		}
+		dao.saveGame(game);
 		return input;
 	}
 	

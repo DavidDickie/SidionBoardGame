@@ -60,12 +60,19 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		hp.add(vp2);
 		VerticalPanel vp3 = new VerticalPanel();
 		vp3.setBorderWidth(3);
-		Label vp3_l1 = new Label("INF ");
+		Label vp3_l1 = new Label("INF_");
 		Label vp3_l2 = new Label(Integer.toString(p.getResource("INF")));
 		vp3.add(vp3_l1);
 		vp3.add(vp3_l2);
 		hp.add(vp3);
 		this.add(hp);
+		if (p.isTurnFinshed()){
+			Label didOrders = new Label("SUBMITTED");
+			this.add(didOrders);
+		} else {
+			Label didOrders = new Label("WAITING");
+			this.add(didOrders);
+		}
 		for (Order o : g.getOrders()){
 			heroOrderMap.put(o.getHero(g), o);
 		}
@@ -89,23 +96,29 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		boolean foundOne = false;
 		for (Hero h : g.getHeros()){
 			if (h.getOwner(g).equals(p)){
-				Utils.logMessage("Checking hero " + h);
-				if (heroOrderMap.get(h) != null && heroOrderMap.get(h) instanceof StandOrder){
-					Utils.logMessage(h.getName() + " has stand order; no need for more user input");
+				Utils.logMessage("Client:  Checking hero " + h);
+				if (g.getGameState() == g.ORDER_PHASE){
+					if (!h.hasOrder()){
+						lb.addItem(h.getName());
+						foundOne = true;
+					}
+				} else if (heroOrderMap.get(h) != null && heroOrderMap.get(h) instanceof StandOrder){
+					Utils.logMessage("Client: " + h.getName() + " has stand order; no need for more user input");
 					h.setOrder(true);
 				} else if (!h.hasOrder()){
-					Utils.logMessage(h.getName() + " has no orders");
+					Utils.logMessage("Client: " +h.getName() + " has no orders");
 					if (heroOrderMap.get(h).isExecutable(g, p)){
-						Utils.logMessage(h.getName() + " is queued for " + heroOrderMap.get(h));
+						Utils.logMessage("Client: " +h.getName() + " is queued for " + heroOrderMap.get(h));
 						lb.addItem(h.getName());
 						foundOne = true;
 					} else {
-						Utils.logMessage(h.getName() + " unexecutable order " + heroOrderMap.get(h));
+						Utils.logMessage("Client: " +h.getName() + " unexecutable order " + heroOrderMap.get(h));
 					}
 				}
 			}
 		}
-		if (!foundOne && g.getCurrentPlayer().equals(player)) {
+		if (!foundOne) {
+			Utils.logMessage("Client:  The player has no more orders, finish order should be send next");
 			return false;
 		}
 		return true;
