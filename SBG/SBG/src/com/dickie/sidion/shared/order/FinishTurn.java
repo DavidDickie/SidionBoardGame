@@ -8,8 +8,8 @@ public class FinishTurn extends OrderImpl {
 	@Override
 	public void executeOnServer(Game game) {
 		this.getOwner(game).setTurnFinished(true); 
-		if (true){
-			
+		if (game.getGameState() == game.ORDER_PHASE){
+			return;  // don't shift players in order phase
 		}
 		if (game.shiftCurrentToNextPlayer()){
 			game.shiftToNextGameState();

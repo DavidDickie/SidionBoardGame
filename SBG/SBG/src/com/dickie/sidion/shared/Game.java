@@ -17,7 +17,7 @@ public class Game {
 	private Map<String, Town> towns = new HashMap<String, Town>();
 	private Map<String, Path> paths = new HashMap<String, Path>();
 	private static Map<String, Game> games = new HashMap<String, Game>();
-	private static List<Order> orders = new ArrayList<Order>();
+	private static Map<String, Order> orders = new HashMap<String, Order>();
 	
 	private String currentPlayer;
 	private String startingPlayer;  
@@ -42,7 +42,7 @@ public class Game {
 			sb.append("\t" + p + "\n");
 		}
 		sb.append("\nOrders");
-		for (Order p: orders){
+		for (Order p: orders.values()){
 			sb.append("\t" + p + "\n");
 		}
 		return sb.toString();
@@ -65,7 +65,7 @@ public class Game {
 		} else if (gc instanceof Path){
 			paths.put(gc.getKey(), (Path)gc);
 		} else if (gc instanceof Order){
-			orders.add((Order)gc);
+			orders.put(gc.getKey(),(Order)gc);
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class Game {
 	}
 	
 	public Collection<Order> getOrders(){
-		return orders;
+		return orders.values();
 	}
 	
 	
@@ -123,6 +123,7 @@ public class Game {
 		game.heros = Hero.createHeros(game);
 		game.paths = Path.createPath(game);
 		Game.games.put(name, game);
+		game.orders.clear();
 		return game;
 	}
  
@@ -200,12 +201,16 @@ public class Game {
 	public boolean shiftCurrentToNextPlayer(){
 		Player next = getNextPlayer();
 		if (next.equals(getStartingPlayer())){
+			
 			currentPlayer = next.getName(); // move to the original starting player....
-			currentPlayer = getNextPlayer().getName();  // and one beyond
+			currentPlayer = getNextPlayer().getName();  // and one beyond since who goes first will rotate
+			System.out.println("We are back to starting player, shifting two players to " + currentPlayer);
 			startingPlayer = currentPlayer;
 			return true;
 		}
 		currentPlayer = next.getName();
+		System.out.println("Shifting one player to " + currentPlayer);
+		
 		return false;
 	}
 	
@@ -214,15 +219,18 @@ public class Game {
 		Player nextPlayer = null;
 		for (Player p : players.values()){
 			if (p.equals(getCurrentPlayer())){
-				break;
+				i = getCurrentPlayer().getPlayerOrder();
 			}
-			i++;
 		}
 		if (i == players.size()-1){
 			i = -1;
 		}
 		i++;
-		nextPlayer = (Player) players.values().toArray()[i];
+		for (Player p : players.values()){
+			if (p.getPlayerOrder() == i){
+				nextPlayer = p;
+			}
+		}
 		return nextPlayer;
 	}
 

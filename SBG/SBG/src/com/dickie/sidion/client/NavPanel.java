@@ -11,6 +11,7 @@ import com.dickie.sidion.shared.GameComponentListener;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
+import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
 import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.CreateGameOrder;
@@ -100,13 +101,17 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 	public void renderOrder(final Order order) {
 		Utils.logMessage("Rendering " + order);
-		Label heroLable = new Label(order.getHero(game).getKey());
-		this.add(heroLable);
+		if (order instanceof CreateGameOrder || order instanceof EditOrder){
+			// do nothing; these are admin orders
+		} else {
+			Label heroLable = new Label(order.getHero(game).getKey());
+			this.add(heroLable);
+		}
 		Map<String, GameComponent> parameters = order.getPrecursors();
 		for (String key : parameters.keySet()) {
 			this.add(new Label(key));
 			final TextBox tb = new TextBox();
-			if (!(parameters.get(key) instanceof VarString)) {
+			if (!(parameters.get(key) instanceof VarString || parameters.get(key) instanceof Var)) {
 				tb.setReadOnly(true);
 			} else {
 				tb.addKeyUpHandler(new KeyUpHandler() {
@@ -168,7 +173,11 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				Utils.createGame(((VarString)order.getPrecursors().get("LKEY")).getValue());
 				return;
 			}
-			order.getHero(game).setOrder(true);
+			try{
+				order.getHero(game).setOrder(true);
+			} catch(Throwable t){
+				// some orders do not have a hero
+			}
 			order.execute();
 			Utils.logMessage("Exectuted on client: " + order);
 			displayMessage(Utils.sendOrderToServer(order, game));
@@ -184,6 +193,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			if (pp.getPlayer().equals(player)){
 				Utils.logMessage("Display orders for player " + player);
 				if (!pp.setPossibleHeros(game, player)) { // there are no more orders
+					Utils.logMessage("Sending finish order");
 					game.setCurrentPlayer(game.getNextPlayer().getName());
 					Utils.logMessage("Finishing turn for player " + player.getName());
 					FinishTurn ft = new FinishTurn();

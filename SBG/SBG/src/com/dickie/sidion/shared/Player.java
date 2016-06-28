@@ -10,7 +10,17 @@ import java.util.Map;
 public class Player extends GameComponentImpl {
 	
 	public Player(){
-		validAttributes = Arrays.asList("LKEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS", "TURN_FINISHED");
+		validAttributes = Arrays.asList("LKEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS", "TURN_FINISHED", "TURNORDER");
+	}
+	
+	int playerOrder = 0;
+	
+	public int getPlayerOrder(){
+		return Integer.valueOf(getValue("TURNORDER"));
+	}
+	
+	public void setPlayerOrder(int x){
+		setValue("TURNORDER", Integer.toString(x));
 	}
 	
 	public String getColor() {
@@ -94,6 +104,7 @@ public class Player extends GameComponentImpl {
 			p.addResource("MANA", 3);
 			p.addResource("INF", 0);
 			players.put(names[count],p);
+			p.setPlayerOrder(count);
 			count++;
 		}
 		return players;

@@ -26,13 +26,17 @@ public class StandOrder extends OrderImpl{
 		if (game.getGameState() == game.ORDER_PHASE){
 			return true;
 		}
-		return game.getGameState() == game.PHYS_PHASE && game.getCurrentPlayer().equals(player);
+		// stand order can be executed during any phase...
+		// during the magic phase, it will replace the original order
+		// during the physical phase, it just leaves the hero in place
+		// during the retreat phase, it just leaves the hero where they are
+		return game.getCurrentPlayer().equals(player);
 	}
 
 	@Override
 	public void executeOnServer(Game game) {
-		// TODO Auto-generated method stub
-		
+		game.addGameComponent(this);
+		getHero(game).setOrder(true);
 	}
 
 	@Override

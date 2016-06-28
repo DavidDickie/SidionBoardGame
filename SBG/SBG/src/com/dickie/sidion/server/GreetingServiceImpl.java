@@ -56,6 +56,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	public List<String> getLatestMessagesFromServer(String game, int lastMessage){
+		System.out.println("Getting messages from " + lastMessage + "; " + gameMessages.size() + " in queue");
 		ArrayList<String> messages =  new ArrayList<String>();
 		for (int i = lastMessage + 1; i < gameMessages.get(game).size(); i++){
 			messages.add(gameMessages.get(game).get(i));

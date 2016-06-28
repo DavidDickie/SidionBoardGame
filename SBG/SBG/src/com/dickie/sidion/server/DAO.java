@@ -46,16 +46,21 @@ public class DAO {
 			game.setGameState(((Long)e.getProperty("GameState")).intValue());
 		} catch (Exception e) {
 			e.printStackTrace();
+			game.setCurrentPlayer("Player1");
+			game.setStartingPlayer("Player1");
+			game.setGameState(0);
 		}
 	}
 	
 	public void saveGame(Game game){
 		saveGameStatus(game);
-		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getPaths()));
-		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getHeros()));
-		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getTowns()));
-		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getPlayers()));
-		this.saveData(game.getName(), new ArrayList<GameComponent>(game.getOrders()));
+		// clear out old info
+		deleteGame(game.getName(), false);
+		saveData(game.getName(), new ArrayList<GameComponent>(game.getPaths()));
+		saveData(game.getName(), new ArrayList<GameComponent>(game.getHeros()));
+		saveData(game.getName(), new ArrayList<GameComponent>(game.getTowns()));
+		saveData(game.getName(), new ArrayList<GameComponent>(game.getPlayers()));
+		saveData(game.getName(), new ArrayList<GameComponent>(game.getOrders()));
 	}
 	
 	public Game loadGame(String gameName) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException{
@@ -138,12 +143,19 @@ public class DAO {
 		}
 	}
 	
-	public void deleteGame(String gameName) {
+	public void deleteGame(String gameName, boolean includeKey) {
 		Query query;
 		query = new Query().setAncestor(getKey(gameName));			
 		List<Entity> entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-		datastore.delete((Key[]) entities.toArray());
-		datastore.delete(getKey(gameName));
+		for (Entity e : entities){
+			if (e.getKey().equals(getKey(gameName))){
+				continue;
+			}
+			datastore.delete(e.getKey());
+		}
+		if (includeKey){
+			datastore.delete(getKey(gameName));
+		}
 	}
 	
 	public void saveData(String gameName, List<GameComponent> components){

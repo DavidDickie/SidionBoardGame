@@ -15,24 +15,23 @@ public class OrderProcessor {
 	public String processOrder(Order order, Game game) {
 		System.out.println("Processing " + order);
 		order.setPrecursors(game);
-		if (game.getGameState() == game.ORDER_PHASE &&
-				!(order instanceof EditOrder || order instanceof CreateGameOrder)){
+		if (game.getGameState() == game.ORDER_PHASE){
 			System.out.println("Game state is order phase; storing order");
-			game.getOrders().add(order);
-			order.getHero(game).setOrder(true);
+			order.executeOnServer(game);;
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				boolean allDone = true;
 				for (Player p : game.getPlayers()){
 					if (!game.ordersSubmitted(p)){
 						allDone = false;
+						System.out.println("Player " + p.getName() + " has not submitted orders");
 						break;
 					}
 				}
 				if (allDone){
 					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
 					game.setGameState(game.MAGIC_PHASE);
-					for (Hero h: game.getHeros()){
-						h.setOrder(false);
+					for (Player p: game.getPlayers()){
+						p.setTurnFinished(false);
 					}
 				}
 			}
@@ -43,20 +42,17 @@ public class OrderProcessor {
 			return order.validateOrder(game);
 		}
 		try{
-			if (order instanceof StandOrder && game.getGameState() == game.MAGIC_PHASE){
-				System.out.println("Replacing a magic order with a standing order");
-				dao.saveGameComponent(order, game.getName());
-				return "Stand order saved";
-			}
 			order.executeOnServer(game);
-			order.getHero(game).setOrder(true);
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				GreetingServiceImpl.getMessageList(game.getName()).add("Player " + order.getPlayer(game).getName() + " has all orders in, shifting to " + game.getNextPlayer().getName());
 				if (game.shiftCurrentToNextPlayer()){
 					// if true, all players have moved
 					System.out.println("Moving to next phase");
-					if (game.shiftToNextGameState()){ // true if it's a new full turn
-						dao.deleteOrders(game.getName());
+					if (game.getGameState() == game.MAGIC_PHASE){
+						game.setGameState(game.PHYS_PHASE);
+						for (Hero h: game.getHeros()){
+							h.setOrder(false);
+						}
 					}
 				}
 					

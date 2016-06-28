@@ -58,6 +58,11 @@ public class TeleportOrder extends OrderImpl{
 	
 	@Override
 	public void executeOnServer(Game game){
+		game.addGameComponent(this);
+		getHero(game).setOrder(true);
+		if (game.getGameState() == game.ORDER_PHASE){
+			return;
+		}
 		((Hero)precursors.get("TARGET_HERO")).setLocation(getTown());
 	}
 

@@ -9,6 +9,7 @@ import com.dickie.sidion.shared.GameComponentListener;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
+import com.dickie.sidion.shared.order.StandOrder;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -59,7 +60,7 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		hp.add(vp2);
 		VerticalPanel vp3 = new VerticalPanel();
 		vp3.setBorderWidth(3);
-		Label vp3_l1 = new Label("INF");
+		Label vp3_l1 = new Label("INF ");
 		Label vp3_l2 = new Label(Integer.toString(p.getResource("INF")));
 		vp3.add(vp3_l1);
 		vp3.add(vp3_l2);
@@ -89,7 +90,10 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		for (Hero h : g.getHeros()){
 			if (h.getOwner(g).equals(p)){
 				Utils.logMessage("Checking hero " + h);
-				if (!h.hasOrder()){
+				if (heroOrderMap.get(h) != null && heroOrderMap.get(h) instanceof StandOrder){
+					Utils.logMessage(h.getName() + " has stand order; no need for more user input");
+					h.setOrder(true);
+				} else if (!h.hasOrder()){
 					Utils.logMessage(h.getName() + " has no orders");
 					if (heroOrderMap.get(h).isExecutable(g, p)){
 						Utils.logMessage(h.getName() + " is queued for " + heroOrderMap.get(h));
