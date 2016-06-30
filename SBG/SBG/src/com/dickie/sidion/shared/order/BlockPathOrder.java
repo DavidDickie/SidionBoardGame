@@ -27,7 +27,7 @@ public class BlockPathOrder extends OrderImpl{
 			Town t = h.getLocation(game);
 			Town t1 = getPath().getTown1(game);
 			Town t2 = getPath().getTown2(game);
-			int distance = java.lang.Math.min(Town.getDistance(t1, t), Town.getDistance(t2, t));
+			int distance = java.lang.Math.max(Town.getDistance(t, t2, game), Town.getDistance(t, t1, game));
 			if (distance > h.getLevel()){
 				return "Distance " + distance + " is too far for hero level " + h.getLevel();
 			}

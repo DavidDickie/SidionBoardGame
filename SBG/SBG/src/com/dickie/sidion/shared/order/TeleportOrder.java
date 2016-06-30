@@ -2,6 +2,7 @@ package com.dickie.sidion.shared.order;
 
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
+import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Town;
 
@@ -20,9 +21,11 @@ public class TeleportOrder extends OrderImpl{
 			return null;
 		}
 		if (game.getGameState() == game.MAGIC_PHASE){
-			if (precursors.get("TARGET_HERO") == null){
+			Hero target = (Hero) precursors.get("TARGET_HERO");
+			if (target == null){
 				return "No one to teleport";
 			}
+
 			Town t = (Town) precursors.get("TOWN");
 					
 			if (t == null){
@@ -32,6 +35,13 @@ public class TeleportOrder extends OrderImpl{
 				return "Cannot teleport someone into a locked town";
 			}
 			Hero wizard = this.getHero(game);
+			for (Order order : game.getOrders()){
+				if (order.getHero(game) != null && order.getHero(game).equals(target)){
+					if (!(order instanceof StandOrder)){
+						return "Target hero must not have other orders";
+					}
+				}
+			}
 			
 			if (distance(game) > wizard.getLevel()){
 				return "Distance between towns is too great";
@@ -46,7 +56,7 @@ public class TeleportOrder extends OrderImpl{
 	private int distance(Game game){
 		Town startLoc = ((Hero)precursors.get("TARGET_HERO")).getLocation(game);
 		Town endLoc = this.getTown();
-		return Town.getDistance(startLoc, endLoc);
+		return Town.getDistance(startLoc, endLoc, game);
 	}
 	
 	@Override

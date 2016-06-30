@@ -85,11 +85,13 @@ public class Town extends GameComponentImpl {
 	
 	private static String[][] distance = new String[towner][towner];
 	
-	public static int getDistance(Town t1, Town t2){
-		
-		int distance = java.lang.Math.abs(x1 -x2) + java.lang.Math.abs(y1 - y2);
-		if (distance == 0) throw new RuntimeException("could not find towns!");
-		return distance;
+	private static ShortPath shortPath = null;
+	
+	public static int getDistance(Town t1, Town t2, Game game){
+		if (shortPath == null){
+			shortPath = new ShortPath(game);
+		}
+		return shortPath.getDistBetweenTowns(t1, t2);
 	}
 	
 	public static Map<String,Town> createTowns(Game game){
@@ -141,36 +143,43 @@ public class Town extends GameComponentImpl {
 			"Germa",
 			"Bran",
 			"Naoma",
+			
 			"Beoma",
 			"Joletta",
 			"Robbi",
 			"Jacqui",
 			"Lyndon",
+			
 			"Johannisburg",
 			"Loris",
 			"Teofila",
 			"Matha",
 			"Vernetta",
+			
 			"Star",
 			"Shaunta",
 			"Angletown",
 			"Maya",
 			"Jetta",
+			
 			"Myrle",
 			"Cristown",
 			"Juliann",
 			"Shawna",
 			"Loree",
+			
 			"Hellsbells",
 			"Talisha",
 			"Carliton",
 			"Emilia",
 			"Rosenda",
+			
 			"Garrensburg",
 			"Talisman",
 			"Diddsburg",
 			"Paddleton",
 			"Hurrfs",
+			
 			"Quentinville",
 			"Bollywood"};
 
