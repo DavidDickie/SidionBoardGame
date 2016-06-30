@@ -4,6 +4,8 @@ import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
+import com.dickie.sidion.shared.order.EditOrder;
+import com.dickie.sidion.shared.order.FinishTurn;
 import com.dickie.sidion.shared.order.StandOrder;
 
 public class OrderProcessor {
@@ -15,7 +17,12 @@ public class OrderProcessor {
 		order.setPrecursors(game);
 		if (game.getGameState() == game.ORDER_PHASE){
 			System.out.println("Game state is order phase; storing order");
-			order.executeOnServer(game);;
+			
+			if (order instanceof EditOrder || order instanceof FinishTurn){
+				order.executeOnServer(game);
+			} else {
+				game.addGameComponent(order);
+			}
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				boolean allDone = true;
 				for (Player p : game.getPlayers()){

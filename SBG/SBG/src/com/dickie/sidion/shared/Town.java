@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.dickie.sidion.client.Utils;
+
 public class Town extends GameComponentImpl {
 
 	public Town(){
@@ -84,20 +86,7 @@ public class Town extends GameComponentImpl {
 	private static String[][] distance = new String[towner][towner];
 	
 	public static int getDistance(Town t1, Town t2){
-		int x1 = 0;
-		int y1 = 0;
-		int x2 = 0;
-		int y2 = 0;
-		for (int x = 0; x < towner; x++){
-			for (int y = 0; y < towner; y++){
-				if (distance[x][y].equals(t1.getName())){
-					x1 = x; y1 = y;
-				}
-				if (distance[x][y].equals(t2.getName())){
-					x2 = x; y2 = y;
-				}
-			}
-		}
+		
 		int distance = java.lang.Math.abs(x1 -x2) + java.lang.Math.abs(y1 - y2);
 		if (distance == 0) throw new RuntimeException("could not find towns!");
 		return distance;

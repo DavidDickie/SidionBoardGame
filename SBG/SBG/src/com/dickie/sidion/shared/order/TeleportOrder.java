@@ -19,20 +19,34 @@ public class TeleportOrder extends OrderImpl{
 			}
 			return null;
 		}
-		
-		if (precursors.get("TARGET_HERO") == null){
-			return "No one to teleport";
-		}
-		if (precursors.get("TOWN") == null){
-			return "No target town selected";
-		}
-		Hero wizard = this.getHero(game);
-		Town startLoc = ((Hero)precursors.get("TARGET_HERO")).getLocation(game);
-		Town endLoc = this.getTown();
-		if (Town.getDistance(startLoc, endLoc) > wizard.getLevel()){
-			return "Distance between towns is too great";
+		if (game.getGameState() == game.MAGIC_PHASE){
+			if (precursors.get("TARGET_HERO") == null){
+				return "No one to teleport";
+			}
+			Town t = (Town) precursors.get("TOWN");
+					
+			if (t == null){
+				return "No target town selected";
+			}
+			if (t.isLocked() && t.getOwner(game) != getPlayer(game)){
+				return "Cannot teleport someone into a locked town";
+			}
+			Hero wizard = this.getHero(game);
+			
+			if (distance(game) > wizard.getLevel()){
+				return "Distance between towns is too great";
+			}
+			if (this.getPlayer(game).getResource("MANA") < 1){
+				return "Insufficient mana";
+			}
 		}
 		return null;
+	}
+	
+	private int distance(Game game){
+		Town startLoc = ((Hero)precursors.get("TARGET_HERO")).getLocation(game);
+		Town endLoc = this.getTown();
+		return Town.getDistance(startLoc, endLoc);
 	}
 	
 	@Override
@@ -64,6 +78,7 @@ public class TeleportOrder extends OrderImpl{
 			return;
 		}
 		((Hero)precursors.get("TARGET_HERO")).setLocation(getTown());
+		getPlayer(game).addResource("MANA", -distance(game));
 	}
 
 }

@@ -66,14 +66,13 @@ public class ConvertOrder extends OrderImpl{
 	
 	@Override
 	public void executeOnServer(Game game){
-		game.addGameComponent(this);
-		getHero(game).setOrder(true);
 		if (game.getGameState() == game.ORDER_PHASE){
 			return;
 		}
 		String rType = precursors.get("TYPE").getKey();
+		System.out.println("converted " + (getHero(game).getLevel().intValue()-4) + " mana into 1 " + rType);
 		getPlayer(game).addResource("MANA", getHero(game).getLevel().intValue()-4);
-		getPlayer(game).addResource(rType, 4-getHero(game).getLevel().intValue());
+		getPlayer(game).addResource(rType, 1);
 	}
 
 }

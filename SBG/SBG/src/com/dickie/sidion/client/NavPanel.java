@@ -13,11 +13,14 @@ import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
+import com.dickie.sidion.shared.order.BlockPathOrder;
 import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.CreateGameOrder;
 import com.dickie.sidion.shared.order.EditOrder;
 import com.dickie.sidion.shared.order.FinishTurn;
+import com.dickie.sidion.shared.order.MoveOrder;
 import com.dickie.sidion.shared.order.StandOrder;
+import com.dickie.sidion.shared.order.TeleportOrder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -177,14 +180,24 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				Utils.createGame(((VarString)order.getPrecursors().get("LKEY")).getValue());
 				return;
 			}
+			order.execute();
+			Order copy = null;
+			if (order instanceof ConvertOrder){
+				copy = new ConvertOrder();
+				for (String theKey :order.getKeys()){
+					copy.setValue(theKey, order.getValue(theKey));
+				}
+			} else {
+				copy = order;
+			}
+				
+			Utils.logMessage("Client:  Exectuting on client: " + copy);
+			displayMessage(Utils.sendOrderToServer(copy, game));
 			try{
-				order.getHero(game).setOrder(true);
+				copy.getHero(game).setOrder(true);
 			} catch(Throwable t){
 				// some orders do not have a hero
 			}
-			order.execute();
-			Utils.logMessage("Exectuted on client: " + order);
-			displayMessage(Utils.sendOrderToServer(order, game));
 			updateHeroOrderList();
 		} catch (Throwable t) {
 			displayMessage("error: " + t.getMessage());
@@ -361,9 +374,9 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private void initNewOrders(){
 		newOrders.put("STAND", new StandOrder());
 		newOrders.put("CONVERT", new ConvertOrder());
-//		newOrders.put("TELEPORT", new TeleportOrder());
-//		newOrders.put("BLOCKPATH");
-//		newOrders.put("MOVE");
+		newOrders.put("TELEPORT", new TeleportOrder());
+		newOrders.put("BLOCKPATH", new BlockPathOrder());
+		newOrders.put("MOVE", new MoveOrder());
 //		newOrders.put("LOCK");
 //		newOrders.put("BID");
 //		newOrders.put("IMPROVETOWN");
@@ -399,7 +412,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			displayMessage(t.getMessage());
 		}
 	}
-
+	
 	private void adminState() {
 		this.clear();
 		this.add(refresh);

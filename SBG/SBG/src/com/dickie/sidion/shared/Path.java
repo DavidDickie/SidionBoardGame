@@ -82,5 +82,17 @@ public class Path extends GameComponentImpl{
 		return paths;
 		
 	}
+	
+	public static Path getPath(Town t1, Town t2, Game game){
+		for (Path p : game.getPaths()){
+			if (p.getTown1(game) == t1 && p.getTown2(game) == t2){
+				return p;
+			}
+			if (p.getTown1(game) == t2 && p.getTown2(game) == t1){
+				return p;
+			}
+		}
+		return null;
+	}
 
 }
