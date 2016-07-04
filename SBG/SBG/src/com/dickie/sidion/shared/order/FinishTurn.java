@@ -11,7 +11,7 @@ public class FinishTurn extends OrderImpl {
 	}
 
 	@Override
-	public boolean isExecutable(Game game, Player player) {
+	public boolean isExecutable(Game game) {
 		return true;
 	}
 

@@ -8,7 +8,18 @@ import java.util.Map;
 public class Hero extends GameComponentImpl {
 
 	public Hero() {
-		validAttributes = Arrays.asList("PLAYER", "LOC", "IS_PRINCE", "LEVEL", "LKEY", "HASORDER");
+		validAttributes = Arrays.asList("PLAYER", "LOC", "IS_PRINCE", "LEVEL", "LKEY", "HASORDER", "MUST_RETREAT");
+	}
+	
+	public void setMustRetreat(boolean retreat){
+		setValue("MUST_RETREAT", Boolean.toString(retreat));
+	}
+	
+	public boolean mustRetreat(){
+		if (attributes.containsKey("MUST_RETREAT")){
+			return Boolean.valueOf(getValue("MUST_RETREAT"));
+		}
+		return false;
 	}
 
 	public Town getLocation(Game game) {

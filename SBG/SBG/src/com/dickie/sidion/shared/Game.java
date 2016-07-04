@@ -69,6 +69,20 @@ public class Game {
 		}
 	}
 	
+	public void removeGameComponent(GameComponent gc){
+		if (gc instanceof Player){
+			players.remove(gc.getKey());
+		} else if (gc instanceof Hero){
+			heros.remove(gc.getKey());
+		} else if (gc instanceof Town){
+			towns.remove(gc.getKey());
+		} else if (gc instanceof Path){
+			paths.remove(gc.getKey());
+		} else if (gc instanceof Order){
+			orders.remove(gc.getKey());
+		}
+	}
+	
 	public Collection<Path> getPaths(){
 		return paths.values();
 	}
@@ -81,6 +95,10 @@ public class Game {
 	
 	public Collection<Order> getOrders(){
 		return orders.values();
+	}
+	
+	public Order getOrder(String hero){
+		return orders.get(hero);
 	}
 	
 	
@@ -143,10 +161,12 @@ public class Game {
 		return heros.values();
 	}
 	
-	public final int ORDER_PHASE = 0;
-	public final int MAGIC_PHASE = 1;
-	public final int PHYS_PHASE = 2;
-	public final int FINAL = 2;
+	public final static int ORDER_PHASE = 0;
+	public final static int MAGIC_PHASE = 1;
+	public final static int PHYS_PHASE = 2;
+	public final static int RETREAT = 3;
+	
+	public final static int FINAL = 3;
 	
 	private int gameState = ORDER_PHASE;
 	
@@ -162,7 +182,7 @@ public class Game {
 	}
 
 	public void setGameState(int gameState) {
-		if (gameState < ORDER_PHASE || gameState > PHYS_PHASE){
+		if (gameState < ORDER_PHASE || gameState > FINAL){
 			throw new RuntimeException("Illegal game state");
 		}
 		this.gameState = gameState;

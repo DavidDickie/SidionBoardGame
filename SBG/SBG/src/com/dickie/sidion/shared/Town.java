@@ -12,7 +12,7 @@ import com.dickie.sidion.client.Utils;
 public class Town extends GameComponentImpl {
 
 	public Town(){
-		validAttributes = Arrays.asList("LKEY", "X", "Y", "GOLD", "MANA", "INF", "PLAYER");
+		validAttributes = Arrays.asList("LKEY", "X", "Y", "GOLD", "MANA", "INF", "PLAYER", "TEMP_OWNER");
 	}
 
 
@@ -64,6 +64,37 @@ public class Town extends GameComponentImpl {
 		setValue("LKEY", town);
 	}
 
+	public void setTempOwner(Player p){
+		if (p == null){
+			attributes.remove("TEMP_OWNER");
+			return;
+		}
+		setValue("TEMP_OWNER", p.getName());
+	}
+	
+	public List<Town> getNeighbors(Game game){
+		ArrayList<Town> towns = new ArrayList<Town>();
+		for (Path p : game.getPaths()){
+			if (p.getTown1(game).equals(this)){
+				towns.add(p.getTown2(game));
+			} 
+			if (p.getTown2(game).equals(this)){
+				towns.add(p.getTown1(game));
+			} 
+		}
+		return towns;
+	}
+	
+	public int getLevel(){
+		return this.getGold() + getInf() + getMana();
+	}
+	
+	public Player getTempOwner(Game game){
+		if (getValue("TEMP_OWNER") == null){
+			return null;
+		}
+		return game.getPlayer(getValue("TEMP_OWNER"));
+	}
 	
 	public boolean isLocked(){
 		return getValue("PLAYER") != null;

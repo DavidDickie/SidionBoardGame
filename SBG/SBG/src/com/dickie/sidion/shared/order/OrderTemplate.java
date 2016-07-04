@@ -24,14 +24,11 @@ public class OrderTemplate extends OrderImpl {
 	}
 	
 	@Override
-	public boolean isExecutable(Game game, Player player) {
-		if (player.isAdmin()){
-			return false;
-		}
+	public boolean isExecutable(Game game) {
 		if (game.getGameState() == game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.MAGIC_PHASE && player.equals(game.getCurrentPlayer())){
+		if (game.getGameState() == game.MAGIC_PHASE ){
 			addDoOrderParams();
 			return true;
 		}

@@ -18,7 +18,10 @@ import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.CreateGameOrder;
 import com.dickie.sidion.shared.order.EditOrder;
 import com.dickie.sidion.shared.order.FinishTurn;
+import com.dickie.sidion.shared.order.ImproveOrder;
+import com.dickie.sidion.shared.order.ImproveTownOrder;
 import com.dickie.sidion.shared.order.MoveOrder;
+import com.dickie.sidion.shared.order.RecruitOrder;
 import com.dickie.sidion.shared.order.StandOrder;
 import com.dickie.sidion.shared.order.TeleportOrder;
 import com.google.gwt.core.client.GWT;
@@ -29,6 +32,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -59,7 +63,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 	Button refresh = new Button("refresh");
 
-	public void initialize(Draw draw, MapPanel mapPanel, GameInfoPanel gip) {
+	public void initialize(Draw draw, final MapPanel mapPanel, GameInfoPanel gip) {
 		this.setSize("150px", "100px");
 		this.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 		this.draw = draw;
@@ -102,6 +106,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private Map<TextBox, String> textBoxCompType = new HashMap<TextBox, String>();
 
 	public void renderOrder(final Order order) {
+		this.clear();
 		if (order instanceof StandOrder){ // this is a cheat, since we never have to rend StandOrders
 											// so it means "render an order"
 			renderPickOrder(order.getHero(game));
@@ -111,7 +116,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		if (order instanceof CreateGameOrder || order instanceof EditOrder){
 			// do nothing; these are admin orders
 		} else {
-			Label heroLable = new Label(order.getHero(game).getKey());
+			Label heroLable = new Label(order.getHero(game).getKey() + " - " + order.getClass().getSimpleName());
 			this.add(heroLable);
 		}
 		Map<String, GameComponent> parameters = order.getPrecursors();
@@ -174,21 +179,38 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				Utils.logMessage("Client: " +"Validation failed: " + s);
 				displayMessage("Order failed: " + s);
 				return;
+			} else {
+				Utils.logMessage("Client: order validated");
 			}
 			// one special case
 			if (order instanceof CreateGameOrder){
 				Utils.createGame(((VarString)order.getPrecursors().get("LKEY")).getValue());
 				return;
 			}
+			// make changes to local copy if this is not order assignment phase
+			if (game.getGameState() != Game.ORDER_PHASE){
+				order.executeOnServer(game);
+			}
+			
 			order.execute();
 			Order copy = null;
 			if (order instanceof ConvertOrder){
 				copy = new ConvertOrder();
-				for (String theKey :order.getKeys()){
-					copy.setValue(theKey, order.getValue(theKey));
-				}
+			} else if (order instanceof BlockPathOrder){
+				copy = new ImproveOrder();
+			} else if (order instanceof ImproveOrder){
+				copy = new MoveOrder();
+			} else if (order instanceof MoveOrder){
+				copy = new MoveOrder();
+			} else if (order instanceof RecruitOrder){
+				copy = new RecruitOrder();
+			} else if (order instanceof TeleportOrder){
+				copy = new TeleportOrder();
 			} else {
 				copy = order;
+			}
+			for (String theKey : order.getKeys()){
+				copy.setValue(theKey, order.getValue(theKey));
 			}
 				
 			Utils.logMessage("Client:  Exectuting on client: " + copy);
@@ -207,6 +229,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	
 	private void updateHeroOrderList() {
 		this.clear();
+		this.add(refresh);
 		for (PlayerPanel pp : playerPanels){
 			if (pp.getPlayer().equals(player)){
 				Utils.logMessage("Client: " +"Display orders for player " + player);
@@ -215,7 +238,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 					return;
 				}
 				if (!pp.setPossibleHeros(game, player)) { // there are no more orders
-					Utils.logMessage("Client: " +"Sending finish order");
+					Utils.logMessage("Client: " +"Sending finish order for " + pp.getPlayer().getName());
 					game.setCurrentPlayer(game.getNextPlayer().getName());
 					Utils.logMessage("Client: " +"Finishing turn for player " + player.getName());
 					FinishTurn ft = new FinishTurn();
@@ -223,7 +246,17 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 					ft.execute();
 					displayMessage(Utils.sendOrderToServer(ft, game));
 					displayMessage("You have entered all orders");
-					getMessagesFromServer();
+					Timer timer = new Timer()
+			        {
+			            @Override
+			            public void run()
+			            {
+			            	Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
+			            }
+			        };
+
+			        timer.schedule(2000);
+					
 				} else {
 					Utils.logMessage("Client: " +player.getName() + " orders displayed" );
 				}
@@ -270,11 +303,19 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 	@Override
 	public void LoadEvent(String event, Object loaded) {
-		Utils.logMessage("Client: " +"Received event " + event + " for " + loaded);
+//		Utils.logMessage("Client: " +"Received event " + event + " for " + loaded);
 		if (event.equals("GAMEOBJECTS LOADED")) {
+			mapPanel.clear();
 			draw.setMp(mapPanel);
 			draw.drawMap(game);
+			if (player != null){
+				player = game.getPlayer(player.getName());
+			} else {
+				player = game.getPlayer(userTextBox.getText());
+			}
+			gip.ta.setText("");
 			gip.getMessages(game.getName());
+			
 			if (playerPanels.size() == 0){
 				for (Player p : game.getPlayers()){
 					try{
@@ -287,10 +328,12 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 						Utils.logMessage("Client: " +"Could not display player panel: " + t.getMessage());
 					}
 				}
-			} 
-
+			} else {
+				for (PlayerPanel pp : NavPanel.this.playerPanels){
+					pp.displayPlayer(game.getPlayer(pp.getPlayer().getName()), game);
+				}
+			}
 			updateHeroOrderList();
-
 			
 			this.gip.LoadEvent("Game loaded; " + game.getCurrentPlayerAsString() + " is the current player", null);
 			switch (game.getGameState()){
@@ -352,7 +395,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				return;
 			}
 		}
-		player = game.getPlayer(userTextBox.getText());
+		
 		if (player == null) {
 			String s = "";
 			for (Player p2 : game.getPlayers()) {
@@ -366,27 +409,28 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		// return;
 		// };
 		Utils.logMessage("Client: " +"Player " + player.getName() + " logged in");
-		playerLoggedInState();
+		updateHeroOrderList();
 	}
 	
 	private Map<String, Order> newOrders = new HashMap<String, Order>();
 	
 	private void initNewOrders(){
 		newOrders.put("STAND", new StandOrder());
-		newOrders.put("CONVERT", new ConvertOrder());
-		newOrders.put("TELEPORT", new TeleportOrder());
-		newOrders.put("BLOCKPATH", new BlockPathOrder());
-		newOrders.put("MOVE", new MoveOrder());
-//		newOrders.put("LOCK");
+		newOrders.put("Convert", new ConvertOrder());
+		newOrders.put("Teleport", new TeleportOrder());
+		newOrders.put("Block path", new BlockPathOrder());
+		newOrders.put("Move", new MoveOrder());
+		newOrders.put("Recruit", new RecruitOrder());
 //		newOrders.put("BID");
-//		newOrders.put("IMPROVETOWN");
-//		newOrders.put("IMPROVEHERO");
+		newOrders.put("Improve Town", new ImproveTownOrder());
+		newOrders.put("Improve Hero", new ImproveOrder());
 //		newOrders.put("RETREAT");
 	}
 
 	private void renderPickOrder(final Hero hero) {
 		try {
 			this.clear();
+			this.add(refresh);
 			Utils.logMessage("Client: " +"Rendering a select order dialog");
 			Label lb = new Label(hero.getName());
 			this.add(lb);
@@ -423,21 +467,6 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			Utils.displayMessage("Could not enter adminstate: " + e.getMessage());
 		}
 //		 state = UiState.ADMIN;
-	}
-	
-	
-
-	
-	private void playerLoggedInState() {
-		this.clear();
-//		if (game.getGameState() == game.ORDER_PHASE) {
-//			Utils.logMessage("Player is defining orders");
-//			playerOrderState();
-//		} else if (game.getGameState() == game.MAGIC_PHASE){
-//			Utils.logMessage("Player is executing Magic orders");
-//			state = UiState.MAGIC_ORDERS;
-//		}
-		updateHeroOrderList();
 	}
 
 }

@@ -55,9 +55,8 @@ public class EditOrder extends OrderImpl implements Order {
 	}
 	
 	@Override
-	public boolean isExecutable(Game game, Player player) {
-		if (player.isAdmin()) return true;
-		return false;
+	public boolean isExecutable(Game game) {
+		return true;
 	}
 
 	@Override

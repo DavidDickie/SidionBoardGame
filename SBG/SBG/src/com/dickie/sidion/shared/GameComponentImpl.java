@@ -49,6 +49,9 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 		if (!validAttributes.contains(field)){
 			throw new RuntimeException(field + " is not a valid field for " + this.getClass().getName());
 		}
+		if (value == null){
+			attributes.remove(field);
+		}
 		attributes.put(field, value);
 	}
 

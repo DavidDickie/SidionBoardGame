@@ -42,6 +42,7 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		}
 		Label l = new Label(s);
 		l.setStyleName("H1", true);
+		l.getElement().getStyle().setBackgroundColor(p.getColor());
 		this.add(l);
 		HorizontalPanel hp = new HorizontalPanel();
 		VerticalPanel vp1 = new VerticalPanel();
@@ -93,11 +94,17 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 	
 	public boolean setPossibleHeros(Game g, Player p){
 		lb.clear();
+		if (!g.getCurrentPlayer().equals(p) && g.getGameState() != Game.ORDER_PHASE){
+			return true;  // not this player's turn, so return but don't return false or it will look like a finish turn
+		}
 		boolean foundOne = false;
 		for (Hero h : g.getHeros()){
 			if (h.getOwner(g).equals(p)){
 				Utils.logMessage("Client:  Checking hero " + h);
-				if (g.getGameState() == g.ORDER_PHASE){
+				if (heroOrderMap.get(h) == null){
+					Utils.logMessage("Hero " + h.getName() + " has no orders!!!!!");
+					h.setOrder(true);
+				} else if (g.getGameState() == g.ORDER_PHASE){
 					if (!h.hasOrder()){
 						lb.addItem(h.getName());
 						foundOne = true;
@@ -107,14 +114,14 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 					h.setOrder(true);
 				} else if (!h.hasOrder()){
 					Utils.logMessage("Client: " +h.getName() + " has no orders");
-					if (heroOrderMap.get(h).isExecutable(g, p)){
+					if (heroOrderMap.get(h).isExecutable(g)){
 						Utils.logMessage("Client: " +h.getName() + " is queued for " + heroOrderMap.get(h));
 						lb.addItem(h.getName());
 						foundOne = true;
 					} else {
 						Utils.logMessage("Client: " +h.getName() + " unexecutable order " + heroOrderMap.get(h));
 					}
-				}
+				} 
 			}
 		}
 		if (!foundOne) {

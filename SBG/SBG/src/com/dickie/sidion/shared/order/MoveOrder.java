@@ -34,14 +34,11 @@ public class MoveOrder  extends OrderImpl {
 	}
 	
 	@Override
-	public boolean isExecutable(Game game, Player player) {
-		if (player.isAdmin()){
-			return false;
-		}
+	public boolean isExecutable(Game game) {
 		if (game.getGameState() == game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.PHYS_PHASE && player.equals(game.getCurrentPlayer())){
+		if (game.getGameState() == game.PHYS_PHASE){
 			addDoOrderParams();
 			return true;
 		}
@@ -56,6 +53,9 @@ public class MoveOrder  extends OrderImpl {
 	@Override
 	public void executeOnServer(Game game){
 		getHero(game).setLocation(getTown());
+		if (getTown().getTempOwner(game) == null){
+			getTown().setTempOwner(getHero(game).getOwner(game));
+		}
 		getPlayer(game).addResource("GOLD", -1);
 		System.out.println("Moved " + getHero(game).getName() + " to " + getTown().getName());
 	}

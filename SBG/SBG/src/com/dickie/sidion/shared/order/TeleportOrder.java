@@ -60,14 +60,11 @@ public class TeleportOrder extends OrderImpl{
 	}
 	
 	@Override
-	public boolean isExecutable(Game game, Player player) {
-		if (player.isAdmin()){
-			return false;
-		}
+	public boolean isExecutable(Game game) {
 		if (game.getGameState() == game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.MAGIC_PHASE && player.equals(game.getCurrentPlayer())){
+		if (game.getGameState() == game.MAGIC_PHASE){
 			addDoOrderParams();
 			return true;
 		}
@@ -82,12 +79,11 @@ public class TeleportOrder extends OrderImpl{
 	
 	@Override
 	public void executeOnServer(Game game){
-		game.addGameComponent(this);
-		getHero(game).setOrder(true);
-		if (game.getGameState() == game.ORDER_PHASE){
-			return;
+		Hero target = ((Hero)precursors.get("TARGET_HERO"));
+		target.setLocation(getTown());
+		if (getTown().getTempOwner(game) == null){
+			getTown().setTempOwner(target.getOwner(game));
 		}
-		((Hero)precursors.get("TARGET_HERO")).setLocation(getTown());
 		getPlayer(game).addResource("MANA", -distance(game));
 	}
 

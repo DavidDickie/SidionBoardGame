@@ -19,18 +19,12 @@ public class StandOrder extends OrderImpl{
 	}
 	
 	@Override
-	public boolean isExecutable(Game game, Player player) {
-		if (player.isAdmin()){
-			return false;
-		}
-		if (game.getGameState() == game.ORDER_PHASE){
-			return true;
-		}
+	public boolean isExecutable(Game game) {
 		// stand order can be executed during any phase...
 		// during the magic phase, it will replace the original order
 		// during the physical phase, it just leaves the hero in place
 		// during the retreat phase, it just leaves the hero where they are
-		return game.getCurrentPlayer().equals(player);
+		return true;
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	public Void logMessage(String input){
-		System.out.println(input);
+//		System.out.println(input);
 		return null;
 	}
 	
@@ -94,7 +94,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			OrderProcessor op = new OrderProcessor();
 			op.processOrder(order, Game.getInstance(name));
 			dao.saveGame(Game.getInstance(name));
-			return "order executed";
+			Hero heroName = order.getHero(Game.getInstance(name));
+			if (heroName == null){
+				heroName = new Hero();
+				heroName.setName("[NOBODY]");
+			}
+			return "order " + order.getClass().getSimpleName() + " executed for " + heroName.getName();
 		} catch (Throwable t){
 			t.printStackTrace();
 			return("ERROR: " + t.getMessage());

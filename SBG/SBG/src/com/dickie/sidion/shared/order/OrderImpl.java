@@ -48,7 +48,11 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 		StringBuffer sb = new StringBuffer();
 		for (String key : precursors.keySet()) {
 			GameComponent gc = precursors.get(key);
-			sb.append(gc.getClass()).append(";").append(key).append(";").append(gc.getKey()).append("|");
+			if (gc == null){
+				System.out.println("[could not find precursor for " + key + " on " + getClass().getSimpleName() + "]");
+			} else {
+				sb.append(gc.getClass()).append(";").append(key).append(";").append(gc.getKey()).append("|");
+			}
 		}
 
 		return sb.toString();

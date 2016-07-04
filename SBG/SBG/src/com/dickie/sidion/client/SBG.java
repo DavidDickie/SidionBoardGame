@@ -38,6 +38,7 @@ public class SBG implements EntryPoint {
 			RootPanel navPanel = RootPanel.get("navbar");
 			navPanel.add(vp);
 			GameInfoPanel gmp = new GameInfoPanel();
+			gmp.setSize("100px", "100px");
 			RootPanel gameInfoPanel = RootPanel.get("messages");
 			gameInfoPanel.add(gmp);
 			vp.initialize(draw,mapPanel,gmp);

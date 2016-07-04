@@ -25,7 +25,8 @@ public interface Order extends GameComponent{
 	public void executeOnServer(Game game);
 	public void setPrecursors(Game game);
 	public String getPrecursorsAsString();
-	public boolean isExecutable(Game game, Player player);
+	public boolean isExecutable(Game game);
 	public void addDoOrderParams();
 	public void clearAttrs();
+	
 }
