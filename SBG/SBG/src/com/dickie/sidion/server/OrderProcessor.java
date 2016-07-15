@@ -1,5 +1,8 @@
 package com.dickie.sidion.server;
 
+import java.util.List;
+
+import com.dickie.sidion.npc.GenNpcOrders;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
@@ -16,10 +19,14 @@ public class OrderProcessor {
 	public String processOrder(Order order, Game game) {
 		System.out.println("Processing " + order);
 		order.setPrecursors(game);
-		if (order instanceof EditOrder || order instanceof FinishTurn){
+		if (order instanceof EditOrder ){
 			order.executeOnServer(game);
 			return "order executed";
 		} else if (game.getGameState() == game.ORDER_PHASE){
+			if (order instanceof FinishTurn){
+				System.out.println("Finish turn")
+				order.executeOnServer(game);
+			}
 			System.out.println("Game state is order phase; storing order");
 			game.addGameComponent(order);
 			if (game.ordersSubmitted(order.getPlayer(game))){
@@ -90,6 +97,12 @@ public class OrderProcessor {
 						// produce
 						
 						ge.produce(game);
+						GenNpcOrders gno = new GenNpcOrders();
+						for (Player p : game.getPlayers()){
+							if (p.isNpc()){
+								List<Order> orders = gno.genNpcOrders(p, game);
+							}
+						}
 					} else {
 						// set player to orders submitted  if the player has no executable orders for this phase
 						clearPlayerWithNoExecOrders(game);
@@ -97,6 +110,7 @@ public class OrderProcessor {
 						if (game.getGameState() == Game.RETREAT){
 							ge.resolveCombat(game);
 						}
+						
 					}
 				} else {
 					System.out.println("Moved to next player");
