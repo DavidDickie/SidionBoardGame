@@ -106,9 +106,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private Map<TextBox, String> textBoxCompType = new HashMap<TextBox, String>();
 
 	public void renderOrder(final Order order) {
-		this.clear();
-		if (order instanceof StandOrder){ // this is a cheat, since we never have to rend StandOrders
-											// so it means "render an order"
+		if (order instanceof StandOrder){ // this is a cheat, since we never have to render StandOrders
+											// so it means "pick an order for a hero"
 			renderPickOrder(order.getHero(game));
 			return;
 		}
@@ -116,7 +115,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		if (order instanceof CreateGameOrder || order instanceof EditOrder){
 			// do nothing; these are admin orders
 		} else {
-			Label heroLable = new Label(order.getHero(game).getKey() + " - " + order.getClass().getSimpleName());
+			Label heroLable = new Label(order.getHero(game).getKey() + 
+					" [" + order.getHero(game).getLocation(game).getName() + "] - " + order.getClass().getSimpleName());
 			this.add(heroLable);
 		}
 		Map<String, GameComponent> parameters = order.getPrecursors();
@@ -282,6 +282,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	public void componentEvent(String event, GameComponent gc) {
 		
 		if (event.equals("SELECTED_FOR_ORDER")){
+			this.clear();
 			renderOrder((Order)gc);
 		}
 		gc.addObserver(gip);

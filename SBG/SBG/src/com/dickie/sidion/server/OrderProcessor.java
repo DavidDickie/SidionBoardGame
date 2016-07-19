@@ -24,11 +24,12 @@ public class OrderProcessor {
 			return "order executed";
 		} else if (game.getGameState() == game.ORDER_PHASE){
 			if (order instanceof FinishTurn){
-				System.out.println("Finish turn")
+				System.out.println("Finish turn order");
 				order.executeOnServer(game);
+			} else { 
+				System.out.println("Game state is order phase; storing order");
+				game.addGameComponent(order);
 			}
-			System.out.println("Game state is order phase; storing order");
-			game.addGameComponent(order);
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				boolean allDone = true;
 				for (Player p : game.getPlayers()){
@@ -39,7 +40,7 @@ public class OrderProcessor {
 					}
 				}
 				if (allDone){
-					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
+//					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
 					System.out.println("All orders are in, shifting to magic phase");
 					System.out.println("Orders are" + game.getOrders());
 					game.setGameState(game.MAGIC_PHASE);

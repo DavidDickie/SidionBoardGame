@@ -10,10 +10,11 @@ import java.util.Map;
 public class Player extends GameComponentImpl {
 	
 	public Player(){
-		validAttributes = Arrays.asList("LKEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS", "TURN_FINISHED", "TURNORDER");
+		validAttributes = Arrays.asList("LKEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS", "TURN_FINISHED", "TURNORDER", "NPC");
 	}
 	
 	int playerOrder = 0;
+	
 	
 	public int getPlayerOrder(){
 		return Integer.valueOf(getValue("TURNORDER"));
@@ -97,6 +98,11 @@ public class Player extends GameComponentImpl {
 		int count=0;
 		for (String name : names){
 			Player p = new Player();
+			if (count == 0){
+				p.setValue("NPC", "false");
+			} else {
+				p.setValue("NPC", "true");
+			}
 			p.setColor(colors[count]);
 			p.setName(name);
 			p.setAdmin(false);
@@ -105,6 +111,7 @@ public class Player extends GameComponentImpl {
 			p.addResource("INF", 0);
 			players.put(names[count],p);
 			p.setPlayerOrder(count);
+			System.out.println(p);
 			count++;
 		}
 		return players;
@@ -122,6 +129,10 @@ public class Player extends GameComponentImpl {
 
 	public boolean isAdmin() {
 		return Boolean.valueOf(getValue("IS_ADMIN"));
+	}
+
+	public boolean isNpc() {
+		return Boolean.valueOf(getValue("NPC"));
 	}
 	
 

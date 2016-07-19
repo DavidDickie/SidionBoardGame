@@ -12,9 +12,16 @@ import com.dickie.sidion.client.Utils;
 public class Town extends GameComponentImpl {
 
 	public Town(){
-		validAttributes = Arrays.asList("LKEY", "X", "Y", "GOLD", "MANA", "INF", "PLAYER", "TEMP_OWNER");
+		validAttributes = Arrays.asList("LKEY", "X", "Y", "GOLD", "MANA", "INF", "PLAYER", "TEMP_OWNER", "HASHERO");
 	}
 
+	public boolean hasHero(){
+		return Boolean.valueOf(getValue("HASHERO"));	
+	}
+	
+	public void setHasHero(boolean has){
+		setValue("HASHERO", Boolean.toString(has));
+	}
 
 	public Integer getX() {
 		return Integer.valueOf(getValue("X"));
@@ -131,6 +138,7 @@ public class Town extends GameComponentImpl {
 		for (int x = 0; x < towner; x++){
 			for (int y = 0; y < towner; y++){
 				Town t = new Town();
+				t.setHasHero(true);
 				t.setX(100 + x * 100);
 				t.setY(100 + y * 100);
 				t.setName(townNames[count]);

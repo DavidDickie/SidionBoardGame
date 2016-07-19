@@ -11,19 +11,19 @@ public class RecruitOrder  extends OrderImpl {
 	}
 	
 	public String validateOrder(Game game) {
-		
+		Hero prince = getHero(game);
 		super.validateOrder(game);
-		if (getHero(game) == null){
+		if (prince == null){
 			return "No hero is set";
 		}
-		if (!getHero(game).isPrince()){
+		if (!prince.isPrince()){
 			return "Only princes may recruit";
 		}
 		if (getOwner(game).getResource("GOLD") < 1){
 			return "Insufficient funds";
 		}
-		if (getHero(game).getLocation(game).getHeros(game).size() > 1){
-			return "You can only recruit in an empty town";
+		if (!prince.getLocation(game).hasHero()){
+			return "There is no nuetral hero to recruit";
 		}
 
 		return null;
@@ -57,9 +57,10 @@ public class RecruitOrder  extends OrderImpl {
 		maxInt++;
 		Hero hero = new Hero();
 		hero.setKey("Hero_" + maxInt);
-		hero.setLevel(0);
+		hero.setLevel(1);
 		hero.setLocation(this.getHero(game).getLocation(game));
 		hero.setOwner(getOwner(game));
+		getHero(game).getLocation(game).setHasHero(false);
 		game.addGameComponent(hero);
 		getOwner(game).addResource("GOLD", -1);
 	}

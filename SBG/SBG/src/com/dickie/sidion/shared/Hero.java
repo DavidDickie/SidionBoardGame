@@ -67,48 +67,35 @@ public class Hero extends GameComponentImpl {
 
 	public static Map<String, Hero> createHeros(Game game) {
 		Map<String, Hero> heros = new HashMap<String, Hero>();
-		int count = 0;
 		int count2 = 0;
 		int playerCount = 0;
-
-		int towner = (int) java.lang.Math.sqrt(game.getTowns().size());
-		Iterator<Town> iTown = game.getTowns().iterator();
-		for (int x = 0; x < towner; x++) {
-			for (int y = 0; y < towner; y++) {
-				if (!iTown.hasNext()) {
-					break;
-				}
-				Town t = iTown.next();
-				if ((x == 1 && y == 1) || (x == towner - 2 && y == towner - 2) || (x == towner - 2 && y == 1)
-						|| (x == 1 && y == towner - 2)) {
-					count = 0;
-					Hero hero = new Hero();
-					hero.setName("Prince_" + count2++);
-					hero.setLevel(3);
-					hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
-					hero.setIsPrince(true);
-					hero.setLocation(t);
-					t.setGold(1);
-					t.setMana(1);
-					;
-					t.setInf(1);
-					;
-					t.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
-					heros.put(hero.getName(), hero);
-					hero = new Hero();
-					hero.setName("Hero_" + count2++);
-					hero.setLevel(0);
-					hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
-					hero.setIsPrince(false);
-					hero.setLocation(t);
-					heros.put(hero.getName(), hero);
-					playerCount++;
-				}
-			}
+		for (; playerCount < 4; playerCount++){
+			Town t = game.getTown(startTowns[playerCount]);
+			t.setHasHero(false);
+			Hero hero = new Hero();
+			hero.setName("Prince_" + count2++);
+			hero.setLevel(3);
+			hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
+			hero.setIsPrince(true);
+			hero.setLocation(t);
+			t.setGold(1);
+			t.setMana(1);
+			t.setInf(1);
+			t.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
+			heros.put(hero.getName(), hero);
+			hero = new Hero();
+			hero.setName("Hero_" + count2++);
+			hero.setLevel(0);
+			hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
+			hero.setIsPrince(false);
+			hero.setLocation(t);
+			heros.put(hero.getName(), hero);
 		}
 
 		return heros;
 
 	}
+	
+	private static String[] startTowns = {"Joletta", "Shaunta", "Jacqui", "Maya"};
 
 }

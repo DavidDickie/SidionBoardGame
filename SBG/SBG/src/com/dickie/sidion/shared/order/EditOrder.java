@@ -43,7 +43,7 @@ public class EditOrder extends OrderImpl implements Order {
 	@Override
 	public void executeOnServer(Game game) {
 		String orderType = ((VarString)precursors.get("EDIT_TYPE")).getValue();
-		if (orderType == null || orderType.equals("") || orderType.equals("TOWN")){
+		if (orderType.equals("undefined") || orderType.equals("TOWN")){
 			Town t = getTown();
 			t.setX(getX());
 			t.setY(getY());
