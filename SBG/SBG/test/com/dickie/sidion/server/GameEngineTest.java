@@ -47,7 +47,7 @@ public class GameEngineTest {
 	@Test
 	public void tieTest() {
 		Game game = Game.createGame("junit");
-		System.out.println(game);
+		//System.out.println(game);
 		System.out.println(game.getTown("Vonnie").getHeros(game));
 		System.out.println(game.getTown("Vonnie").getNeighbors(game));
 		
@@ -56,6 +56,9 @@ public class GameEngineTest {
 		hero1.setLocation(game.getTown("Mira"));
 		Hero prince = game.getHero("Prince_0");
 		prince.setLocation(game.getTown("Mira"));
+		
+		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));
+		game.getHero("Prince_6").setLocation(game.getTown("Vonnie"));
 		
 		int gold = hero1.getOwner(game).getResource("GOLD");
 		
@@ -104,7 +107,7 @@ public class GameEngineTest {
 		hero1.setLocation(game.getTown("Mira"));
 		Hero prince = game.getHero("Prince_0");
 		prince.setLocation(game.getTown("Mira"));
-		
+		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));		
 		int gold = hero1.getOwner(game).getResource("GOLD");
 		
 		

@@ -98,6 +98,7 @@ public class GameEngine {
 								if (ro.validateOrder(game) != null){
 									System.out.println("  " + ro.validateOrder(game));
 									game.removeGameComponent(h2);
+									continue;
 								}
 								game.addGameComponent(ro);
 								h2.setMustRetreat(true);
