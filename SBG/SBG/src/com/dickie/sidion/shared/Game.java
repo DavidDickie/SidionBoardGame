@@ -166,6 +166,8 @@ public class Game {
 	public final static int PHYS_PHASE = 2;
 	public final static int RETREAT = 3;
 	
+	public final static String[] phaseDef = {"ORDER", "MAGIC", "PHYSICAL", "RETREAT"};
+	
 	public final static int FINAL = 3;
 	
 	private int gameState = ORDER_PHASE;
@@ -251,6 +253,17 @@ public class Game {
 		for (Player p : players.values()){
 			if (p.getPlayerOrder() == i){
 				nextPlayer = p;
+				if (!nextPlayer.equals(currentPlayer)){
+					if (!nextPlayer.hasExcecutableOrders(this)){
+						System.out.println(nextPlayer.getName() + " has no executable orders, setting to turn finished");
+						nextPlayer.setTurnFinished(true);
+					}
+					if (nextPlayer.isTurnFinshed()){
+						System.out.println(nextPlayer.getName() + " is finished skipping to next player");
+						currentPlayer = nextPlayer.getName();
+						return getNextPlayer();
+					}
+				}
 				break;
 			}
 		}

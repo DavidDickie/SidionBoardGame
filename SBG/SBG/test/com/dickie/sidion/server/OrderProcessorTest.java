@@ -59,7 +59,7 @@ public class OrderProcessorTest {
 			
 			
 		}
-		// game should be ready to go to magic orders
+		// game should be ready to go to physical orders
 		game.setCurrentPlayer("Player4");
 		Player p = game.getPlayer("Player4");
 		Hero h = game.getHero("Prince_0");

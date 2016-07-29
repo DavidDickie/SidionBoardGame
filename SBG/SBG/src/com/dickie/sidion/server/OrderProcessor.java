@@ -65,7 +65,7 @@ public class OrderProcessor {
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				if (game.shiftCurrentToNextPlayer()){
 					// if true, all players have moved
-					System.out.println("Moving to next phase from " + game.getGameState());
+					System.out.println("Moving to next phase from " + Game.phaseDef[game.getGameState()]);
 					// start by clearing flags
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);

@@ -17,6 +17,9 @@ public class GameEngineTest {
 		System.out.println(game.getTown("Vonnie").getHeros(game));
 		System.out.println(game.getTown("Vonnie").getNeighbors(game));
 		
+		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));
+		game.getHero("Prince_6").setLocation(game.getTown("Vonnie"));
+		
 		Hero hero1 = game.getHero("Hero_1");
 		hero1.setLocation(game.getTown("Mira"));
 		

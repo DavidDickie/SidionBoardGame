@@ -69,6 +69,15 @@ public class Player extends GameComponentImpl {
 	public void setTurnFinished(boolean b){
 		setValue("TURN_FINISHED", Boolean.toString(b));
 	}
+	
+	public boolean hasExcecutableOrders(Game g){
+		for (Order o : g.getOrders()){
+			if (o.getPlayer(g) == this && o.isExecutable(g)){
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 	public String getName() {
