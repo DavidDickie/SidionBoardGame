@@ -57,21 +57,17 @@ public class OrderProcessorTest {
 		mo.setPlayer(player);
 		op.processOrder(mo, game);
 		
-		game.setGameState(Game.MAGIC_PHASE);
-		
-		// mark everyone but the last player as having moved
+		// mark everyone as having moved
 		for (Player p : game.getPlayers()){
 			if (p.getPlayerOrder() != 4){
 				FinishTurn fo = new FinishTurn();
 				fo.setPlayer(p);
 				op.processOrder(fo, game);
 			}
-			
-			
 		}
 		
-		
-		// game should be ready to go to physical orders
+		// with the final finish order for order entry, we should shift to the magic phase
+		// and roll right through it to physical orders
 		assertTrue(game.getGameState() == Game.PHYS_PHASE);
 		
 		// so now do the move order and we should go through retreat and end up back in the order phase

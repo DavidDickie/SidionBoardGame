@@ -47,6 +47,7 @@ public class OrderProcessor {
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);
 					}
+					postOrderCheck(game, game.getStartingPlayer());
 				}
 			}
 			return "order accepted";
@@ -63,68 +64,84 @@ public class OrderProcessor {
 			// after each order, see if a town is conflicted and zero out player orders accordingly
 			ge.resetOrderOnConflict(game);
 			if (game.ordersSubmitted(order.getPlayer(game))){
-				if (game.shiftCurrentToNextPlayer()){
-					// if true, all players have moved
-					System.out.println("Moving to next phase from " + Game.phaseDef[game.getGameState()]);
-					// start by clearing flags
-					for (Player p: game.getPlayers()){
-						p.setTurnFinished(false);
-					}
-
-					
-					if (game.shiftToNextGameState()){ // true if it's end of a round
-						System.out.println("Moving to next round");
-						
-						// wipe out heros that did not retreat
-						System.out.println("Determining results of retreats");
-						for (Hero h: game.getHeros()){
-							
-							if (h.mustRetreat()){
-								System.out.println("Hero " + h.getName() + " did not retreat, removed");
-								game.removeGameComponent(h);
-							}
-						}
-						// wipe out orders, replace with "standorder"
-						for (Hero h : game.getHeros()){
-							Order o = new StandOrder();
-							o.setOwner(h.getOwner(game));
-							o.setHero(h);
-							game.addGameComponent(o);
-						}
-						// set the original owners for the next combat round
-						
-						ge.flagOriginalOwner(game);
-						
-						// produce
-						
-						ge.produce(game);
-						GenNpcOrders gno = new GenNpcOrders();
-						for (Player p : game.getPlayers()){
-							if (p.isNpc()){
-								List<Order> orders = gno.genNpcOrders(p, game);
-							}
-						}
-					} else {
-						if (game.getGameState() == Game.RETREAT){
-							// should queue up retreat orders if there's been combat
-							ge.resolveCombat(game);
-						}
-						// check if the first player has no orders for this phase and if so, 
-						// move on!
-						if (!game.getCurrentPlayer().hasExcecutableOrders(game)){
-							game.shiftCurrentToNextPlayer();
-						}
-						
-						
-					}
-				} else {
-					System.out.println("Moved to next player");
-				}
+				// see if we can shift to the next player / phase / turn
+				postOrderCheck(game, order.getPlayer(game));
 			}
 		} catch (Throwable t){
 			return t.getMessage();
 		}
 		return "Order executed";
+	}
+	
+	private void postOrderCheck(Game game, Player player){
+	
+		if (game.shiftCurrentToNextPlayer()){
+			shiftToNextPhase(game, player);
+		} else {
+			System.out.println("Moved to next player");
+		}
+	}
+	
+	private void shiftToNextPhase(Game game, Player player){
+		// if true, all players have moved
+		System.out.println("Moving to next phase from " + Game.phaseDef[game.getGameState()]);
+		// start by clearing flags
+		for (Player p: game.getPlayers()){
+			p.setTurnFinished(false);
+		}
+
+		
+		if (game.shiftToNextGameState()){ // true if it's end of a round
+			shiftToNextRound(game, player);
+		} else {
+			if (game.getGameState() == Game.RETREAT){
+				// should queue up retreat orders if there's been combat
+				ge.resolveCombat(game);
+			}
+			// check if the first player has no orders for this phase and if so, 
+			// move on!  This will always end if we move to the next turn
+			if (!game.getCurrentPlayer().hasExcecutableOrders(game)){
+				if (game.shiftCurrentToNextPlayer()){
+					shiftToNextPhase(game, player);
+				}
+			}
+			
+			
+		}
+	}
+	
+	private void shiftToNextRound(Game game, Player player){
+		System.out.println("Moving to next round");
+		
+		// wipe out heros that did not retreat
+		System.out.println("Determining results of retreats");
+		for (Hero h: game.getHeros()){
+			
+			if (h.mustRetreat()){
+				System.out.println("Hero " + h.getName() + " did not retreat, removed");
+				game.removeGameComponent(h);
+			}
+		}
+		// wipe out orders, replace with "standorder"
+		for (Hero h : game.getHeros()){
+			Order o = new StandOrder();
+			o.setOwner(h.getOwner(game));
+			o.setHero(h);
+			game.addGameComponent(o);
+		}
+		// set the original owners for the next combat round
+		
+		ge.flagOriginalOwner(game);
+		
+		// produce
+		
+		ge.produce(game);
+		GenNpcOrders gno = new GenNpcOrders();
+		for (Player p : game.getPlayers()){
+			if (p.isNpc()){
+				List<Order> orders = gno.genNpcOrders(p, game);
+			}
+		}
 	}
 	
 	private void clearPlayerWithNoExecOrders(Game game){
