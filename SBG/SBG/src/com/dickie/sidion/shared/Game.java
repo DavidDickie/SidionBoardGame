@@ -253,7 +253,7 @@ public class Game {
 		for (Player p : players.values()){
 			if (p.getPlayerOrder() == i){
 				nextPlayer = p;
-				if (!nextPlayer.equals(currentPlayer)){
+				if (!nextPlayer.getName().equals(startingPlayer)){
 					if (!nextPlayer.hasExcecutableOrders(this)){
 						System.out.println(nextPlayer.getName() + " has no executable orders, setting to turn finished");
 						nextPlayer.setTurnFinished(true);

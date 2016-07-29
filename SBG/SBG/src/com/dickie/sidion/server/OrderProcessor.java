@@ -105,12 +105,16 @@ public class OrderProcessor {
 							}
 						}
 					} else {
-						// set player to orders submitted  if the player has no executable orders for this phase
-						clearPlayerWithNoExecOrders(game);
-						// if it is the end of the physical round, do combat
 						if (game.getGameState() == Game.RETREAT){
+							// should queue up retreat orders if there's been combat
 							ge.resolveCombat(game);
 						}
+						// check if the first player has no orders for this phase and if so, 
+						// move on!
+						if (!game.getCurrentPlayer().hasExcecutableOrders(game)){
+							game.shiftCurrentToNextPlayer();
+						}
+						
 						
 					}
 				} else {

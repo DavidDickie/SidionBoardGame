@@ -47,6 +47,16 @@ public class OrderProcessorTest {
 	public void test2() {
 		Game game = Game.createGame("junit");
 		OrderProcessor op = new OrderProcessor();
+		
+		// queue up a move order to stop on that player during the "physical" round
+		
+		Player player = game.getPlayer("Player4");
+		Hero h = game.getHero("Prince_0");
+		MoveOrder mo = new MoveOrder();
+		mo.setHero(h);
+		mo.setPlayer(player);
+		op.processOrder(mo, game);
+		
 		game.setGameState(Game.MAGIC_PHASE);
 		
 		// mark everyone but the last player as having moved
@@ -59,21 +69,20 @@ public class OrderProcessorTest {
 			
 			
 		}
+		
+		
 		// game should be ready to go to physical orders
-		game.setCurrentPlayer("Player4");
-		Player p = game.getPlayer("Player4");
-		Hero h = game.getHero("Prince_0");
-		MoveOrder mo = new MoveOrder();
-		mo.setHero(h);
-		mo.setPlayer(p);
+		assertTrue(game.getGameState() == Game.PHYS_PHASE);
+		
+		// so now do the move order and we should go through retreat and end up back in the order phase
 		mo.setTown(game.getTown("Beoma"));
 		op.processOrder(mo, game);
 		FinishTurn fo = new FinishTurn();
-		fo.setPlayer(p);
+		fo.setPlayer(player);
 		op.processOrder(fo, game);
-		// game should be in magic orders
-		assertTrue(game.getGameState() == Game.PHYS_PHASE);
+		// game should be in generate order
 		
+		assertTrue(game.getGameState() == Game.ORDER_PHASE);
 		// 
 	}
 
