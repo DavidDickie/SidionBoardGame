@@ -13,6 +13,20 @@ import com.dickie.sidion.shared.order.RecruitOrder;
 import com.dickie.sidion.shared.order.StandOrder;
 
 public class GenNpcOrders {
+	
+	public void genNpcOrders(Game game){
+		for (Player p : game.getPlayers()){
+			if (!p.isNpc()){
+				continue;
+			}
+			List<Order> list = genNpcOrders(p, game);
+			for (Order o : list){
+				o.execute();  // serialize the order
+				game.addGameComponent(o);
+			}
+			p.setTurnFinished(true);
+		}
+	}
 
 	public List<Order> genNpcOrders(Player player, Game game){
 		ArrayList<Order> list = new ArrayList<Order>();
@@ -73,6 +87,9 @@ public class GenNpcOrders {
 		}
 		List<Town> close = town.getNeighbors(g);
 		for (Town t : close){
+			if (t == null){
+				throw new RuntimeException("The town is null???");
+			}
 			if (t.hasHero()){
 				MoveOrder mo = new MoveOrder();
 				mo.setHero(h);
@@ -84,7 +101,11 @@ public class GenNpcOrders {
 			}
 		}
 		if (town.getHeros(g).size() > 1){
+			
 			for (Town t : close){
+				if (t == null){
+					throw new RuntimeException("The town is null???");
+				}
 				MoveOrder mo = new MoveOrder();
 				mo.setHero(h);
 				mo.setOwner(h.getOwner(g));

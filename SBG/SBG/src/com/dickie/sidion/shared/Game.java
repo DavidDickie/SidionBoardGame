@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.dickie.sidion.npc.GenNpcOrders;
+
 public class Game {
 	
 	private String name;

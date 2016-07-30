@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dickie.sidion.client.GreetingService;
+import com.dickie.sidion.npc.GenNpcOrders;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Hero;
@@ -61,6 +62,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			o.setHero(h);
 			game.addGameComponent(o);
 		}
+		GenNpcOrders gno = new GenNpcOrders();
+		gno.genNpcOrders(game);
+		System.out.println(game);
 		dao.saveGame(game);
 		return input;
 	}

@@ -78,7 +78,28 @@ public class OrderProcessor {
 		if (game.shiftCurrentToNextPlayer()){
 			shiftToNextPhase(game, player);
 		} else {
-			System.out.println("Moved to next player");
+			npcCheck(game);
+		}
+	}
+	
+	private void npcCheck(Game game){
+		System.out.println("Checking if " + game.getCurrentPlayer().getName() + " is a NPC");
+		if (game.getCurrentPlayer().isNpc()){
+			System.out.println("Next player is a NPC, executing the orders and moving on");
+			for (Order o : game.getOrders()){
+				if (o.getPlayer(game) == game.getCurrentPlayer()){
+					if (o.isExecutable(game)){
+						if (o.validateOrder(game) == null){
+							o.executeOnServer(game);
+						} else {
+							System.out.println("NPC order failed: " + o.validateOrder(game) + " " + o.toString());
+						}
+					}
+				}
+			}
+			FinishTurn fo = new FinishTurn();
+			fo.setPlayer(game.getCurrentPlayer());
+			this.processOrder(fo, game);
 		}
 	}
 	
@@ -101,12 +122,17 @@ public class OrderProcessor {
 			// check if the first player has no orders for this phase and if so, 
 			// move on!  This will always end if we move to the next turn
 			if (!game.getCurrentPlayer().hasExcecutableOrders(game)){
+				System.out.println("No executable orders for " + game.getCurrentPlayer().getName());
 				if (game.shiftCurrentToNextPlayer()){
 					shiftToNextPhase(game, player);
+				} else {
+					System.out.println("Waiting for " + game.getCurrentPlayer().getName());
+					npcCheck(game);
 				}
+			} else {
+				System.out.println("Waiting on " + game.getCurrentPlayer().getName());
+				npcCheck(game);
 			}
-			
-			
 		}
 	}
 	
@@ -140,25 +166,16 @@ public class OrderProcessor {
 		for (Player p : game.getPlayers()){
 			if (p.isNpc()){
 				List<Order> orders = gno.genNpcOrders(p, game);
+				System.out.println("Generated NPC Order");
+				for (Order o : orders){
+					o.execute();  // serialize the order
+					game.addGameComponent(o);
+					o.getPlayer(game).setTurnFinished(true);
+					System.out.println(o);
+				}
 			}
 		}
 	}
 	
-	private void clearPlayerWithNoExecOrders(Game game){
-		for (Player p : game.getPlayers()){
-			boolean finished = true;
-			for (Order o : game.getOrders()){
-				if (!(o instanceof StandOrder) && 
-						o.getOwner(game) == game.getCurrentPlayer() && 
-						o.isExecutable(game)){
-					finished = false;
-					break;
-				}
-			}
-			if (finished){
-				p.setTurnFinished(true);
-			}
-		}
-	}
 
 }

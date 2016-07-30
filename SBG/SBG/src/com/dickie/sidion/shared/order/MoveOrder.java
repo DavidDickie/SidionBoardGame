@@ -19,7 +19,11 @@ public class MoveOrder  extends OrderImpl {
 		}
 
 		if (game.getGameState() == game.PHYS_PHASE){
+			if (getTown() == null){
+				return "No town?";
+			}
 			Path p = Path.getPath(getTown(), getHero(game).getLocation(game), game);
+			
 			if (p == null){
 				return "You can only move to a connected town";
 			}

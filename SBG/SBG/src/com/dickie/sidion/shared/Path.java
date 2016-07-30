@@ -84,6 +84,7 @@ public class Path extends GameComponentImpl{
 	}
 	
 	public static Path getPath(Town t1, Town t2, Game game){
+
 		for (Path p : game.getPaths()){
 			if (p.getTown1(game) == t1 && p.getTown2(game) == t2){
 				return p;
@@ -92,6 +93,7 @@ public class Path extends GameComponentImpl{
 				return p;
 			}
 		}
+		System.out.println("Could not find path from " + t1.getName() + " to " + t2.getName());
 		return null;
 	}
 

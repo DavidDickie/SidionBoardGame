@@ -40,6 +40,9 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		if (g.getStartingPlayer() == p){
 			s += "[+]";
 		}
+		if (p.isNpc()){
+			s += "[NPC]";
+		}
 		Label l = new Label(s);
 		l.setStyleName("H1", true);
 		l.getElement().getStyle().setBackgroundColor(p.getColor());

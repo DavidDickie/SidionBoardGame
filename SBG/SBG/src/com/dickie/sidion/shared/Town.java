@@ -83,10 +83,20 @@ public class Town extends GameComponentImpl {
 		ArrayList<Town> towns = new ArrayList<Town>();
 		for (Path p : game.getPaths()){
 			if (p.getTown1(game).equals(this)){
-				towns.add(p.getTown2(game));
+				Town tt = p.getTown2(game);
+				if (tt == null){
+					throw new RuntimeException("Trying to add a null town");
+				} else {
+					towns.add(tt);
+				}
 			} 
 			if (p.getTown2(game).equals(this)){
-				towns.add(p.getTown1(game));
+				Town tt = p.getTown1(game);
+				if (tt == null){
+					throw new RuntimeException("Trying to add a null town");
+				} else {
+					towns.add(tt);
+				}
 			} 
 		}
 		return towns;
