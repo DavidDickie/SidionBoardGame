@@ -54,6 +54,10 @@ public class MoveOrder  extends OrderImpl {
 		precursors.put("TOWN", new Town());
 	}
 	
+	public void setTown(Town town){
+		precursors.put("TOWN", town);
+	}
+	
 	@Override
 	public void executeOnServer(Game game){
 		getHero(game).setLocation(getTown());

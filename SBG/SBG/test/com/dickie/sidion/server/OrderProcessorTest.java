@@ -17,30 +17,36 @@ public class OrderProcessorTest {
 	public void test() {
 		Game game = Game.createGame("junit");
 		OrderProcessor op = new OrderProcessor();
+		// normally the game create command creates npc orders, but that's in the higher level routine
 		for (Player p : game.getPlayers()){
-			if (p.isNpc()){
+			if (p.getPlayerOrder() != 0){
 				FinishTurn fo = new FinishTurn();
 				fo.setPlayer(p);
 				op.processOrder(fo, game);
 			}
-			
-			
 		}
-		// game should be ready to go to magic orders
+		
 		assertTrue(game.getGameState() == Game.ORDER_PHASE);
 		Player p = game.getPlayer("Player1");
 		Hero h = game.getHero("Prince_6");
 		ConvertOrder mo = new ConvertOrder();
 		mo.setHero(h);
 		mo.setPlayer(p);
+		mo.addType("GOLD");
+		mo.execute();
 		op.processOrder(mo, game);
 		FinishTurn fo = new FinishTurn();
 		fo.setPlayer(p);
 		op.processOrder(fo, game);
 		// game should be in magic orders
 		assertTrue(game.getGameState() == Game.MAGIC_PHASE);
-		
-		// 
+		// now, execute player1's orders... the other guys
+		// are NPCs and we should cycle through them 
+		// and end up back at the order entry phse
+		op.processOrder(mo, game);
+		op.processOrder(fo, game);
+		assertTrue(game.getGameState() == Game.ORDER_PHASE);
+	
 	}
 	
 	@Test
@@ -50,8 +56,8 @@ public class OrderProcessorTest {
 		
 		// queue up a move order to stop on that player during the "physical" round
 		
-		Player player = game.getPlayer("Player4");
-		Hero h = game.getHero("Prince_0");
+		Player player = game.getPlayer("Player1");
+		Hero h = game.getHero("Prince_6");
 		MoveOrder mo = new MoveOrder();
 		mo.setHero(h);
 		mo.setPlayer(player);

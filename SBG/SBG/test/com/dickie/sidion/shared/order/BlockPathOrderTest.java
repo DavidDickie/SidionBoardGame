@@ -19,8 +19,11 @@ public class BlockPathOrderTest {
 		assertTrue(Town.getDistance(game.getTown("Vonnie"), game.getTown("Germa"), game) == 2);
 		assertTrue(Town.getDistance(game.getTown("Mira"), game.getTown("Teofila"), game) == 3);
 		assertTrue(Town.getDistance(game.getTown("Mira"), game.getTown("Joletta"), game) == 1);
+		assertTrue(Town.getDistance(game.getTown("Maya"), game.getTown("Maya"), game) == 0);
 
 		Hero h = game.getHero("Prince_0");
+		h.setLocation(game.getTown("Bran"));
+
 		game.setGameState(game.MAGIC_PHASE);
 		BlockPathOrder bpo = new BlockPathOrder();
 		bpo.setHero(h);

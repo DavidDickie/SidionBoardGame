@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.dickie.sidion.shared.order.StandOrder;
+
 public class Player extends GameComponentImpl {
 	
 	public Player(){
@@ -72,7 +74,7 @@ public class Player extends GameComponentImpl {
 	
 	public boolean hasExcecutableOrders(Game g){
 		for (Order o : g.getOrders()){
-			if (o.getPlayer(g) == this && o.isExecutable(g)){
+			if (o.getPlayer(g) == this && o.isExecutable(g) && !(o instanceof StandOrder)){
 				return true;
 			}
 		}

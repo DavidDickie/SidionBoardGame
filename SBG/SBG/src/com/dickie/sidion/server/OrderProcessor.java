@@ -47,8 +47,8 @@ public class OrderProcessor {
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);
 					}
-					postOrderCheck(game, game.getStartingPlayer());
 				}
+				postOrderCheck(game, game.getCurrentPlayer(), false);
 			}
 			return "order accepted";
 		}
@@ -60,12 +60,14 @@ public class OrderProcessor {
 			return "it is not " + order.getPlayer(game).getName() + "'s turn; order ignored";
 		}
 		try{
-			order.executeOnServer(game);
+			order.executeOnServer(game);//
 			// after each order, see if a town is conflicted and zero out player orders accordingly
 			ge.resetOrderOnConflict(game);
 			if (game.ordersSubmitted(order.getPlayer(game))){
 				// see if we can shift to the next player / phase / turn
-				postOrderCheck(game, order.getPlayer(game));
+				// we know the current player is done, so skip the check
+				// to see if they still have orders
+				postOrderCheck(game, order.getPlayer(game), true);
 			}
 		} catch (Throwable t){
 			return t.getMessage();
@@ -73,8 +75,11 @@ public class OrderProcessor {
 		return "Order executed";
 	}
 	
-	private void postOrderCheck(Game game, Player player){
-	
+	private void postOrderCheck(Game game, Player player, boolean forceIt){
+		if (player.hasExcecutableOrders(game) && !forceIt){
+			// there's something for this player to do, don't move on
+			return;
+		}
 		if (game.shiftCurrentToNextPlayer()){
 			shiftToNextPhase(game, player);
 		} else {
@@ -87,6 +92,7 @@ public class OrderProcessor {
 		if (game.getCurrentPlayer().isNpc()){
 			System.out.println("Next player is a NPC, executing the orders and moving on");
 			for (Order o : game.getOrders()){
+				o.setPrecursors(game);
 				if (o.getPlayer(game) == game.getCurrentPlayer()){
 					if (o.isExecutable(game)){
 						if (o.validateOrder(game) == null){

@@ -63,6 +63,7 @@ public class GenNpcOrders {
 					mo.setHero(h);
 					mo.setOwner(h.getOwner(g));
 					mo.setTown(t);
+					mo.execute();
 					if (mo.validateOrder(g) == null){
 						return mo;
 					}
@@ -95,6 +96,7 @@ public class GenNpcOrders {
 				mo.setHero(h);
 				mo.setOwner(h.getOwner(g));
 				mo.setTown(t);
+				mo.execute();
 				if (mo.validateOrder(g) == null){
 					return mo;
 				}
@@ -110,6 +112,7 @@ public class GenNpcOrders {
 				mo.setHero(h);
 				mo.setOwner(h.getOwner(g));
 				mo.setTown(t);
+				mo.execute();
 				if (mo.validateOrder(g) == null){
 					return mo;
 				}

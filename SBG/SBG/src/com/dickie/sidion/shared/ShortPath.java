@@ -28,6 +28,9 @@ public class ShortPath {
 	}
 	
 	public int getDistBetweenTowns(Town t, Town t2){
+		if (t == t2){
+			return 0;
+		}
 		execute(t);
 		LinkedList<Town> path = getPath(t2);
 		if (path == null){

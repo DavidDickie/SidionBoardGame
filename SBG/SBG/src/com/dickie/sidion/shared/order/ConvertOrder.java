@@ -39,6 +39,12 @@ public class ConvertOrder extends OrderImpl{
 		return null;
 	}
 	
+	public void addType(String type){
+		VarString vs = new VarString();
+		vs.setValue(type);
+		precursors.put(type, vs);
+	}
+	
 	@Override
 	public void execute() {
 		super.execute(); 
@@ -58,7 +64,7 @@ public class ConvertOrder extends OrderImpl{
 
 	@Override
 	public void addDoOrderParams() {
-		precursors.put("TYPE", new VarString());
+		precursors.put("RESOURCE", new VarString());
 	}
 	
 	@Override
@@ -66,7 +72,7 @@ public class ConvertOrder extends OrderImpl{
 		if (game.getGameState() == game.ORDER_PHASE){
 			return;
 		}
-		String rType = precursors.get("TYPE").getKey();
+		String rType = precursors.get("RESOURCE").getKey();
 		System.out.println("converted " + (getHero(game).getLevel().intValue()-4) + " mana into 1 " + rType);
 		getPlayer(game).addResource("MANA", getHero(game).getLevel().intValue()-4);
 		getPlayer(game).addResource(rType, 1);
