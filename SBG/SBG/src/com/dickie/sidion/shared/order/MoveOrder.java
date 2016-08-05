@@ -65,7 +65,8 @@ public class MoveOrder  extends OrderImpl {
 			getTown().setTempOwner(getHero(game).getOwner(game));
 		}
 		getPlayer(game).addResource("GOLD", -1);
-		System.out.println("Moved " + getHero(game).getName() + " to " + getTown().getName());
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] Moved to " + getTown().getName());
 	}
 	
 	

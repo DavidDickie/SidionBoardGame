@@ -18,7 +18,11 @@ public class GameEngine {
 	public void flagOriginalOwner(Game game){
 		
 		for (Town t : game.getTowns()){
-			t.setTempOwner(null);
+			if (t.hasOwner(game)){
+				t.setTempOwner(t.getOwner(game));
+			} else {
+				t.setTempOwner(null);
+			}
 			for (Hero h : t.getHeros(game)){
 				t.setTempOwner(h.getOwner(game));
 			}
@@ -100,13 +104,22 @@ public class GameEngine {
 									game.removeGameComponent(h2);
 									continue;
 								}
+								if (h2.getOwner(game).isNpc()){
+									List<Town> towns = h2.getLocation(game).getNeighbors(game);
+									for (Town t3 : towns){
+										if (t3.getTempOwner(game) == null || t3.getTempOwner(game).equals(h2.getOwner(game))){
+											ro.setTown(t3);
+											break;
+										}
+									}
+								}
 								game.addGameComponent(ro);
 								h2.setMustRetreat(true);
 							}		
 						}
 					}
 				}
-				
+				System.out.println("Game state after combat:\n" + game);
 			} else {
 //				System.out.println("There is no combat");
 			}

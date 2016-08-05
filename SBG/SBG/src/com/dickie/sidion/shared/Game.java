@@ -19,10 +19,15 @@ public class Game {
 	private Map<String, Town> towns = new HashMap<String, Town>();
 	private Map<String, Path> paths = new HashMap<String, Path>();
 	private static Map<String, Game> games = new HashMap<String, Game>();
-	private static Map<String, Order> orders = new HashMap<String, Order>();
+	private Map<String, Order> orders = new HashMap<String, Order>();
+	private Map<String, Message> messages = new HashMap<String, Message>();
 	
 	private String currentPlayer;
 	private String startingPlayer;  
+	
+	public Message getMessage(String key){
+		return messages.get(key);
+	}
 	
 	public Path getPath(String key){
 		return paths.get(key);
@@ -68,6 +73,8 @@ public class Game {
 			paths.put(gc.getKey(), (Path)gc);
 		} else if (gc instanceof Order){
 			orders.put(gc.getKey(),(Order)gc);
+		} else if (gc instanceof Message){
+			messages.put(gc.getKey(), (Message) gc);
 		}
 	}
 	
@@ -82,7 +89,17 @@ public class Game {
 			paths.remove(gc.getKey());
 		} else if (gc instanceof Order){
 			orders.remove(gc.getKey());
+		} else if (gc instanceof Message){
+			messages.remove(gc.getKey());
 		}
+	}
+	
+	public List<Message>getMessages(){
+		ArrayList<Message> mList = new ArrayList<Message>();
+		for (Message m : messages.values()){
+			mList.add(m);
+		}
+		return mList;
 	}
 	
 	public Collection<Path> getPaths(){
@@ -142,11 +159,32 @@ public class Game {
 		game.towns = Town.createTowns(game);
 		game.heros = Hero.createHeros(game);
 		game.paths = Path.createPath(game);
+		game.messages = new HashMap<String,Message>();
+		Message m = new Message();
+		m.setKey("MESS1");
+		m.setMessage("Game " + name + " created");
+		game.addGameComponent(m);
 		Game.games.put(name, game);
+		
 		game.orders.clear();
 		return game;
 	}
- 
+	
+	public  void clear(){
+		Game game = new Game(name);
+		game.players.clear();
+		game.towns.clear();
+		game.heros.clear();
+		game.paths.clear();
+		game.orders.clear();
+	}
+	
+	public void addMessage(String message){
+		Message m = new Message();
+		m.setKey(Message.getNextKey(this));
+		m.setMessage(message);
+		this.addGameComponent(m);
+	}
 
 	public Game() {
 	}
@@ -282,6 +320,11 @@ public class Game {
 		}
 		return false;
 			
+	}
+
+	public void clearMessages() {
+		messages.clear();
+		Message m = new Message(this, "Starting new turn");
 	}
 
 }

@@ -56,7 +56,9 @@ public class BlockPathOrder extends OrderImpl{
 	@Override
 	public void executeOnServer(Game game){
 		getPath().setBlocked(true);
-		System.out.println("Blocked path between" + getPath().getTown1(game).getName() + " and " +  getPath().getTown2(game).getName());
+		game.addMessage(getHero(game).getName() + " [" + 
+		getPlayer(game).getName() + "] Blocked path between" + getPath().getTown1(game).getName() + 
+		" and " +  getPath().getTown2(game).getName());
 	}
 
 }

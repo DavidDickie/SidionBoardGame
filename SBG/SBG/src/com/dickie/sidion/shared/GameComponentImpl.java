@@ -27,6 +27,11 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 	public void setKey(String key) {
 		setValue("LKEY", key);
 	}
+	
+	public boolean hasOwner(Game game){
+		Player p =  game.getPlayer(getValue("PLAYER"));
+		return p != null;
+	}
 
 
 	@Override

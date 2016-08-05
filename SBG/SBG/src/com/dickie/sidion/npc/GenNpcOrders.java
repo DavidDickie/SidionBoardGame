@@ -21,7 +21,7 @@ public class GenNpcOrders {
 			}
 			List<Order> list = genNpcOrders(p, game);
 			for (Order o : list){
-				o.execute();  // serialize the order
+				//o.execute();  // serialize the order
 				game.addGameComponent(o);
 			}
 			p.setTurnFinished(true);
@@ -63,7 +63,7 @@ public class GenNpcOrders {
 					mo.setHero(h);
 					mo.setOwner(h.getOwner(g));
 					mo.setTown(t);
-					mo.execute();
+//					mo.execute();
 					if (mo.validateOrder(g) == null){
 						return mo;
 					}
@@ -96,7 +96,7 @@ public class GenNpcOrders {
 				mo.setHero(h);
 				mo.setOwner(h.getOwner(g));
 				mo.setTown(t);
-				mo.execute();
+//				mo.execute();
 				if (mo.validateOrder(g) == null){
 					return mo;
 				}
@@ -112,7 +112,7 @@ public class GenNpcOrders {
 				mo.setHero(h);
 				mo.setOwner(h.getOwner(g));
 				mo.setTown(t);
-				mo.execute();
+//				mo.execute();
 				if (mo.validateOrder(g) == null){
 					return mo;
 				}

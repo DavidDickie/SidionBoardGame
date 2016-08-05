@@ -190,7 +190,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 	}
 	
 	public void addPrecursors(boolean hero, boolean town, boolean path, boolean resource, boolean x, boolean y, boolean number){
-		if (hero) precursors.put("HERO", new Hero());
+//		if (hero) precursors.put("HERO", new Hero());  don't need it, the key for an order is the hero
 		if (town) precursors.put("TOWN", new Town());
 		if (path) precursors.put("PATH", new Path());
 		if (resource) precursors.put("RESOURCE", new Resource());

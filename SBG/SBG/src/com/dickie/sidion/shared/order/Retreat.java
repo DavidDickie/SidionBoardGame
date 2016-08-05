@@ -32,7 +32,7 @@ public class Retreat  extends OrderImpl {
 		if (!retreatSite){
 			return "No place to retreat to";
 		}
-		if (game.getGameState() == game.RETREAT){
+		if (game.getGameState() == game.RETREAT && getTown() != null){
 			retreatSite = false;
 			for (Town t : towns){
 				if (t.equals(getTown())){
@@ -66,6 +66,8 @@ public class Retreat  extends OrderImpl {
 		getHero(game).setLocation(getTown());
 		getHero(game).getOwner(game).addResource("GOLD", -1);
 		getHero(game).setMustRetreat(false);
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] retreated to " + getTown().getName());
 	}
 	
 }

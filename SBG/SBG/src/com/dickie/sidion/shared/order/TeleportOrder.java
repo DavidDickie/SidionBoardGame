@@ -85,6 +85,8 @@ public class TeleportOrder extends OrderImpl{
 			getTown().setTempOwner(target.getOwner(game));
 		}
 		getPlayer(game).addResource("MANA", -distance(game));
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] teleported " + target.getName() + " to " + getTown());
 	}
 
 }

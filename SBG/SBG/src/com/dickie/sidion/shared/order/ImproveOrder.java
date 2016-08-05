@@ -59,6 +59,9 @@ public class ImproveOrder extends OrderImpl {
 	public void executeOnServer(Game game){
 		Hero target = (Hero)precursors.get("TARGET_HERO");
 		target.setLevel(target.getLevel() + 1);
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] increases level of " + target.getName() + 
+				" to level " + target.getLevel());
 	}
 
 }

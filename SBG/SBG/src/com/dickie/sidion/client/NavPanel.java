@@ -20,6 +20,7 @@ import com.dickie.sidion.shared.order.EditOrder;
 import com.dickie.sidion.shared.order.FinishTurn;
 import com.dickie.sidion.shared.order.ImproveOrder;
 import com.dickie.sidion.shared.order.ImproveTownOrder;
+import com.dickie.sidion.shared.order.LockOrder;
 import com.dickie.sidion.shared.order.MoveOrder;
 import com.dickie.sidion.shared.order.RecruitOrder;
 import com.dickie.sidion.shared.order.StandOrder;
@@ -75,6 +76,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 			@Override
 			public void onClick(ClickEvent event) {
+				game.clear();
 				Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
 				Utils.setGameAttrs(game, NavPanel.this);
 			}
@@ -177,7 +179,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			String s = order.validateOrder(game);
 			if (s != null) {
 				Utils.logMessage("Client: " +"Validation failed: " + s);
-				displayMessage("Order failed: " + s);
+				Utils.displayMessage("Order failed: " + s);
 				return;
 			} else {
 				Utils.logMessage("Client: order validated");
@@ -206,6 +208,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				copy = new RecruitOrder();
 			} else if (order instanceof TeleportOrder){
 				copy = new TeleportOrder();
+			} else if (order instanceof LockOrder){
+				copy = new LockOrder();
 			} else {
 				copy = order;
 			}
@@ -266,7 +270,11 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	}
 
 	public void getMessagesFromServer(){
-		gip.getMessages(game.getName());
+		gip.addMessage("Messages from game " + game.getName());
+		gip.addMessage("Game is in " + Game.phaseDef[game.getGameState()]);
+		gip.addMessage("Player up is : " + game.getCurrentPlayer().getName());
+		gip.addMessage("");
+		gip.addMessages(game.getMessages());
 	}
 	
 	
@@ -285,7 +293,6 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			this.clear();
 			renderOrder((Order)gc);
 		}
-		gc.addObserver(gip);
 		for (TextBox tb : textBoxCompType.keySet()) {
 			if (gc.getClass().getName().equals(textBoxCompType.get(tb))) {
 				Order currentOrder = textBoxToOrder.get(tb);
@@ -297,7 +304,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	}
 	
 	public void displayMessage(String s){
-		NavPanel.this.gip.LoadEvent(s,null);
+		gip.addMessage(s);
 	}
 	
 	
@@ -314,8 +321,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			} else {
 				player = game.getPlayer(userTextBox.getText());
 			}
-			gip.ta.setText("");
-			gip.getMessages(game.getName());
+			gip.clear();
+			getMessagesFromServer();
 			
 			if (playerPanels.size() == 0){
 				for (Player p : game.getPlayers()){
@@ -336,19 +343,18 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			}
 			updateHeroOrderList();
 			
-			this.gip.LoadEvent("Game loaded; " + game.getCurrentPlayerAsString() + " is the current player", null);
 			switch (game.getGameState()){
 				case 0:  
-					this.gip.LoadEvent("Assigning orders to heros", null);
+					gip.addMessage("Assigning orders to heros");
 					break;
 				case 1:
-					this.gip.LoadEvent("Executing magic orders", null);
+					gip.addMessage("Executing magic orders");
 					break;
 				case 2:
-					this.gip.LoadEvent("Executing physical orders", null);
+					gip.addMessage("Executing physical orders");
 					break;
 				case 3:
-					this.gip.LoadEvent("Doing retreats (if any)", null);
+					gip.addMessage("Doing retreats (if any)");
 					break;
 			}
 			userLoginState();
@@ -425,6 +431,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 //		newOrders.put("BID");
 		newOrders.put("Improve Town", new ImproveTownOrder());
 		newOrders.put("Improve Hero", new ImproveOrder());
+		newOrders.put("Lock Town", new LockOrder());
 //		newOrders.put("RETREAT");
 	}
 
@@ -433,7 +440,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			this.clear();
 			this.add(refresh);
 			Utils.logMessage("Client: " +"Rendering a select order dialog");
-			Label lb = new Label(hero.getName());
+			Label lb = new Label(hero.getName() + "[" + hero.getLocation(game).getName() + "]");
 			this.add(lb);
 			final ListBox cb = new ListBox();
 			for (String order : newOrders.keySet()) {				

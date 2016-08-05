@@ -45,11 +45,12 @@ public class Draw {
 		}
 		mp.drawRec(t.getX(), t.getY(), defaultSize, t.getName(), t);
 		mp.setLineColor("white");
-		if (t.isLocked()){
-			mp.setFillColor(t.getOwner(game).getColor());
-		} else {
+		if (t.hasHero()){
 			mp.setFillColor("gray");
+		} else {
+			mp.setFillColor("black");
 		}
+		
 		mp.drawCircle(t.getX(), t.getY(), defaultSize/4, null, t);
 		int scaler = 8;
 		

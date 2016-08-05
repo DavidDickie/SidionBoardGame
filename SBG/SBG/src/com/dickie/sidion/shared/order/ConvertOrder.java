@@ -73,7 +73,8 @@ public class ConvertOrder extends OrderImpl{
 			return;
 		}
 		String rType = precursors.get("RESOURCE").getKey();
-		System.out.println("converted " + (getHero(game).getLevel().intValue()-4) + " mana into 1 " + rType);
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] converted " + (getHero(game).getLevel().intValue()-4) + " mana into 1 " + rType);
 		getPlayer(game).addResource("MANA", getHero(game).getLevel().intValue()-4);
 		getPlayer(game).addResource(rType, 1);
 	}

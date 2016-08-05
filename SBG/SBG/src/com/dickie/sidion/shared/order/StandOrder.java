@@ -31,6 +31,8 @@ public class StandOrder extends OrderImpl{
 	public void executeOnServer(Game game) {
 		game.addGameComponent(this);
 		getHero(game).setOrder(true);
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] did nothing");
 	}
 
 	@Override

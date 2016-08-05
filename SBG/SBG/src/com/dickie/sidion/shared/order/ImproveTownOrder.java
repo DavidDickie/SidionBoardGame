@@ -65,9 +65,9 @@ public class ImproveTownOrder extends OrderImpl{
 		if (t.getInf() == 0){
 			options.add("INF");
 		}
-		System.out.println("Options for town improvement are: " + options);
 		int i = (int) (java.lang.Math.random()* options.size());
-		System.out.println("  Option is " + options.get(i));
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] improved " + t.getName() + " to produce " +  options.get(i));
 		t.setValue(options.get(i), "1");
 	}
 }

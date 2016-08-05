@@ -63,6 +63,8 @@ public class RecruitOrder  extends OrderImpl {
 		getHero(game).getLocation(game).setHasHero(false);
 		game.addGameComponent(hero);
 		getOwner(game).addResource("GOLD", -1);
+		game.addMessage(getHero(game).getName() + " [" + 
+				getPlayer(game).getName() + "] recuited a new hero in " + getHero(game).getLocation(game)); 
 	}
 	
 

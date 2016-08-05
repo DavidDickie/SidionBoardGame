@@ -20,11 +20,11 @@ public class DisplayHtmlDialog extends DialogBox{
 		return dialog;
 	}
 	private DisplayHtmlDialog() {
-		setWidth("600px");
+		setWidth("400px");
 		
 		VerticalPanel verticalPanel = new VerticalPanel();
 		setWidget(verticalPanel);
-		verticalPanel.setSize("726px", "350px");
+		verticalPanel.setSize("400px", "350px");
 		lblNewLabel.setStyleName("ms-color2-main");
 		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		verticalPanel.add(lblNewLabel);

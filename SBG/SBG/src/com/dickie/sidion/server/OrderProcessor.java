@@ -43,6 +43,7 @@ public class OrderProcessor {
 //					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
 					System.out.println("All orders are in, shifting to magic phase");
 					System.out.println("Orders are" + game.getOrders());
+					game.clearMessages();
 					game.setGameState(game.MAGIC_PHASE);
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);
@@ -70,6 +71,7 @@ public class OrderProcessor {
 				postOrderCheck(game, order.getPlayer(game), true);
 			}
 		} catch (Throwable t){
+			t.printStackTrace();
 			return t.getMessage();
 		}
 		return "Order executed";
@@ -92,9 +94,15 @@ public class OrderProcessor {
 		if (game.getCurrentPlayer().isNpc()){
 			System.out.println("Next player is a NPC, executing the orders and moving on");
 			for (Order o : game.getOrders()){
-				o.setPrecursors(game);
+				System.out.println("checking " + o);
 				if (o.getPlayer(game) == game.getCurrentPlayer()){
+					System.out.println("current player for order " + o);
 					if (o.isExecutable(game)){
+						// and isExecutable is going to add the order params,
+						// so we need to reset the precursors
+						System.out.println("after isExec" + o);
+						o.setPrecursors(game);
+						System.out.println("after set: " + o);
 						if (o.validateOrder(game) == null){
 							o.executeOnServer(game);
 						} else {

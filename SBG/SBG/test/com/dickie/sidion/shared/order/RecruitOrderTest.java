@@ -18,7 +18,7 @@ public class RecruitOrderTest {
 		ro.setOwner(prince.getOwner(game));
 		System.out.println(ro.validateOrder(game));
 		assertTrue(ro.validateOrder(game) != null);
-		game.getHero("Hero_3").setLocation(game.getTown("Beoma"));
+		prince.setLocation(game.getTown("Vonnie"));
 		assertTrue(ro.validateOrder(game) == null);
 		game.setGameState(game.RETREAT);
 		assertTrue(ro.validateOrder(game) == null);
