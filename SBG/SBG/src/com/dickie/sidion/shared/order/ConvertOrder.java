@@ -2,6 +2,7 @@ package com.dickie.sidion.shared.order;
 
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Player;
+import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
 
 public class ConvertOrder extends OrderImpl{
@@ -26,14 +27,19 @@ public class ConvertOrder extends OrderImpl{
 		}
 		if (game.getGameState() == game.MAGIC_PHASE){
 			VarString vs = (VarString) precursors.get("TYPE");
+			Var numToConvert = (Var) precursors.get("NUM_TO_CONVERT");
+			if (numToConvert == null){
+				return "No number to convert set";
+			}
+			int iNumToConvert = Integer.parseInt(precursors.get("NUM_TO_CONVERT").getKey());
 			if (vs == null){
 				return "No type to convert mana to";
 			}
 			if (!(vs.getValue().equals("GOLD") || vs.getValue().equals("INF"))){
 				return "Invalid type " + precursors.get("TYPE").getKey();
 			}
-			if (getPlayer(game).getResource(vs.getValue()) - 3 + getHero(game).getLevel() < 0){
-				return "insufficient mana to do transfer; need " + (4 - getHero(game).getLevel());
+			if ((getHero(game).getLevel().intValue()-4)*iNumToConvert - getHero(game).getOwner(game).getResource("MANA") < 0){
+				return "insufficient mana to do transfer; need " + (getHero(game).getLevel().intValue()-4)*iNumToConvert;
 			}
 		}
 		return null;
@@ -65,6 +71,7 @@ public class ConvertOrder extends OrderImpl{
 	@Override
 	public void addDoOrderParams() {
 		precursors.put("RESOURCE", new VarString());
+		precursors.put("NUM_TO_CONVERT", new Var());
 	}
 	
 	@Override
@@ -73,10 +80,11 @@ public class ConvertOrder extends OrderImpl{
 			return;
 		}
 		String rType = precursors.get("RESOURCE").getKey();
+		int numToConvert = Integer.parseInt(precursors.get("NUM_TO_CONVERT").getKey());
 		game.addMessage(getHero(game).getName() + " [" + 
 				getPlayer(game).getName() + "] converted " + (getHero(game).getLevel().intValue()-4) + " mana into 1 " + rType);
-		getPlayer(game).addResource("MANA", getHero(game).getLevel().intValue()-4);
-		getPlayer(game).addResource(rType, 1);
+		getPlayer(game).addResource("MANA", (getHero(game).getLevel().intValue()-4)*numToConvert);
+		getPlayer(game).addResource(rType, numToConvert);
 	}
 
 }

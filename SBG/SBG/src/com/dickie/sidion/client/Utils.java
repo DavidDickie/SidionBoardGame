@@ -95,6 +95,7 @@ public class Utils {
 				game.setCurrentPlayer(((VarString) result.get("CURRENTPLAYER")).getValue());
 				game.setGameState(((Var) result.get("GAMESTATE")).getValue());
 				game.setStartingPlayer(((VarString) result.get("STARTINGPLAYER")).getValue());
+				game.setArtifactUp(Boolean.valueOf(((VarString) result.get("ARTIFACT")).getValue()));
 				listener.LoadEvent("GAMEATTRS LOADED", game);
 			}
 

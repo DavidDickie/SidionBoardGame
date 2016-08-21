@@ -64,11 +64,18 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		hp.add(vp2);
 		VerticalPanel vp3 = new VerticalPanel();
 		vp3.setBorderWidth(3);
-		Label vp3_l1 = new Label("_INF_");
+		Label vp3_l1 = new Label("INF");
 		Label vp3_l2 = new Label(Integer.toString(p.getResource("INF")));
 		vp3.add(vp3_l1);
 		vp3.add(vp3_l2);
 		hp.add(vp3);
+		VerticalPanel vp4 = new VerticalPanel();
+		vp4.setBorderWidth(3);
+		Label vp4_l1 = new Label("ARTF");
+		Label vp4_l2 = new Label(Integer.toString(p.getResource("ARTIFACTS")));
+		vp4.add(vp4_l1);
+		vp4.add(vp4_l2);
+		hp.add(vp4);
 		this.add(hp);
 		if (p.isTurnFinshed()){
 			Label didOrders = new Label("SUBMITTED");

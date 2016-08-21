@@ -134,6 +134,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		map.put("CURRENTPLAYER", var2);
 		VarString var3 = new VarString(game.getStartingPlayer().getName());
 		map.put("STARTINGPLAYER", var3);
+		VarString var4= new VarString(Boolean.toString(game.isArtifactUp()));
+		map.put("ARTIFACT", var4);
 		return map;
 	}
 	

@@ -273,6 +273,9 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		gip.addMessage("Messages from game " + game.getName());
 		gip.addMessage("Game is in " + Game.phaseDef[game.getGameState()]);
 		gip.addMessage("Player up is : " + game.getCurrentPlayer().getName());
+		if (game.isArtifactUp()){
+			gip.addMessage("Artifact is AVAILABLE");
+		}
 		gip.addMessage("");
 		gip.addMessages(game.getMessages());
 	}

@@ -30,6 +30,7 @@ public class DAO {
 			e.setProperty("CurrentPlayer", game.getCurrentPlayer().getName());
 			e.setProperty("StartingPlayer", game.getStartingPlayer().getName());
 			e.setProperty("GameState", game.getGameState());
+			e.setProperty("Artifact", game.isArtifactUp());
 			datastore.put(e);
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -44,6 +45,7 @@ public class DAO {
 			game.setCurrentPlayer((String)e.getProperty("CurrentPlayer"));
 			game.setStartingPlayer((String)e.getProperty("StartingPlayer"));
 			game.setGameState(((Long)e.getProperty("GameState")).intValue());
+			game.setArtifactUp(((Boolean)e.getProperty("Artifact")).booleanValue());
 		} catch (Exception e) {
 			e.printStackTrace();
 			game.setCurrentPlayer("Player1");

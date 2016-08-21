@@ -24,7 +24,25 @@ public class Game {
 	
 	private String currentPlayer;
 	private String startingPlayer;  
+	private boolean artifactUp = false;
 	
+	public boolean isArtifactUp() {
+		return artifactUp;
+	}
+
+	public void setArtifactUp() {
+		int i = (int) (java.lang.Math.random()*100);
+		if (i < 33){
+			this.artifactUp = true;
+		} else {
+			artifactUp = false;
+		}
+	}
+	
+	public void setArtifactUp(boolean artifact) {
+		this.artifactUp = artifact;
+	}
+
 	public Message getMessage(String key){
 		return messages.get(key);
 	}
@@ -314,6 +332,7 @@ public class Game {
 		if (getGameState() == FINAL){
 			setGameState(0);
 			shiftPlayersToNextRound();
+			setArtifactUp();
 			return true;
 		} else {
 			setGameState(getGameState() + 1);
