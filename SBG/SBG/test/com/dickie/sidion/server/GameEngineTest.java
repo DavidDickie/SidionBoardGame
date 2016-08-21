@@ -132,8 +132,6 @@ public class GameEngineTest {
 		
 		
 		ge.resolveCombat(game);
-		
-		
 	}
 
 

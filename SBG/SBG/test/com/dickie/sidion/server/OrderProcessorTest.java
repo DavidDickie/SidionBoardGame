@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.dickie.sidion.npc.GenNpcOrders;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
+import com.dickie.sidion.shared.Message;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.FinishTurn;
@@ -18,14 +20,8 @@ public class OrderProcessorTest {
 		Game game = Game.createGame("junit");
 		OrderProcessor op = new OrderProcessor();
 		// normally the game create command creates npc orders, but that's in the higher level routine
-		for (Player p : game.getPlayers()){
-			if (p.getPlayerOrder() != 0){
-				FinishTurn fo = new FinishTurn();
-				fo.setPlayer(p);
-				op.processOrder(fo, game);
-			}
-		}
-		
+		GenNpcOrders gno = new GenNpcOrders();
+			gno.genNpcOrders(game);
 		assertTrue(game.getGameState() == Game.ORDER_PHASE);
 		Player p = game.getPlayer("Player1");
 		Hero h = game.getHero("Prince_6");
@@ -33,6 +29,7 @@ public class OrderProcessorTest {
 		mo.setHero(h);
 		mo.setPlayer(p);
 		mo.addType("GOLD");
+		mo.addAmountToConvert(1);
 		mo.execute();
 		op.processOrder(mo, game);
 		FinishTurn fo = new FinishTurn();
@@ -86,6 +83,61 @@ public class OrderProcessorTest {
 		
 		assertTrue(game.getGameState() == Game.ORDER_PHASE);
 		// 
+	}
+	
+	@Test
+	public void fullTurnTest(){
+		Game game = Game.createGame("junit");
+		OrderProcessor op = new OrderProcessor();
+		// normally the game create command creates npc orders, but that's in the higher level routine
+		// normally the game create command creates npc orders, but that's in the higher level routine
+		GenNpcOrders gno = new GenNpcOrders();
+			gno.genNpcOrders(game);
+		
+		game.getHero("Hero_3").setLocation(game.getTown("Beoma"));
+		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));		
+		
+		Player p = game.getPlayer("Player1");
+		Hero h = game.getHero("Prince_6");
+		ConvertOrder co = new ConvertOrder();
+		co.setHero(h);
+		co.setPlayer(p);
+		co.addType("GOLD");
+		co.addAmountToConvert(1);
+		co.execute();
+		// queue up a process order
+		op.processOrder(co, game);
+		
+		Hero hero1 = game.getHero("Hero_1");
+		hero1.setLocation(game.getTown("Mira"));
+		Hero prince = game.getHero("Prince_0");
+		prince.setLocation(game.getTown("Mira"));
+		MoveOrder mo = new MoveOrder();
+		mo.setPlayer(hero1.getOwner(game));
+		mo.setHero(hero1);
+		mo.setTown(game.getTown("Vonnie"));
+		mo.setHero(prince);
+		mo.execute();
+		// queue up a move order
+		op.processOrder(mo, game);
+
+
+		FinishTurn fo = new FinishTurn();
+		fo.setPlayer(p);
+		op.processOrder(fo, game);
+		// game should be in magic orders
+		assertTrue(game.getGameState() == Game.MAGIC_PHASE);
+		// now, execute player1's orders... the other guys
+		// are NPCs and we should cycle through them 
+		// and end up back at the order entry phse
+		op.processOrder(co, game);
+		op.processOrder(fo, game);
+		// after this, only NPC moves are queued, so we should shift through
+		// the physical phase, do combat, produce resources, etc
+		assertTrue(game.getGameState() == Game.ORDER_PHASE);
+		for (Message m : game.getMessages()){
+			System.out.println(m);
+		}
 	}
 
 }

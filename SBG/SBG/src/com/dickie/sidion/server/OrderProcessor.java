@@ -42,7 +42,14 @@ public class OrderProcessor {
 				if (allDone){
 //					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
 					System.out.println("All orders are in, shifting to magic phase");
-					System.out.println("Orders are" + game.getOrders());
+					System.out.print("Orders are:" );
+					for (Order o : game.getOrders()){
+						System.out.println("\t" + o);
+					}
+					// set the original owners for the next combat round
+					
+					ge.flagOriginalOwner(game);
+					
 					game.clearMessages();
 					game.setGameState(game.MAGIC_PHASE);
 					for (Player p: game.getPlayers()){
@@ -90,19 +97,19 @@ public class OrderProcessor {
 	}
 	
 	private void npcCheck(Game game){
-		System.out.println("Checking if " + game.getCurrentPlayer().getName() + " is a NPC");
+		//System.out.println("Checking if " + game.getCurrentPlayer().getName() + " is a NPC");
 		if (game.getCurrentPlayer().isNpc()){
-			System.out.println("Next player is a NPC, executing the orders and moving on");
+			System.out.println("Player " + game.getCurrentPlayer().getName() + " is a NPC, executing  orders and moving on");
 			for (Order o : game.getOrders()){
-				System.out.println("checking " + o);
+				//System.out.println("checking " + o);
 				if (o.getPlayer(game) == game.getCurrentPlayer()){
 					System.out.println("current player for order " + o);
 					if (o.isExecutable(game)){
 						// and isExecutable is going to add the order params,
 						// so we need to reset the precursors
-						System.out.println("after isExec" + o);
+						//System.out.println("after isExec" + o);
 						o.setPrecursors(game);
-						System.out.println("after set: " + o);
+						//System.out.println("after set: " + o);
 						if (o.validateOrder(game) == null){
 							o.executeOnServer(game);
 						} else {
@@ -169,9 +176,6 @@ public class OrderProcessor {
 			o.setHero(h);
 			game.addGameComponent(o);
 		}
-		// set the original owners for the next combat round
-		
-		ge.flagOriginalOwner(game);
 		
 		// produce
 		

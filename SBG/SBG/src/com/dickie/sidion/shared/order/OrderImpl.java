@@ -89,7 +89,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 				throw new RuntimeException("Could not figure out what to do with '" + strings[i] + "' for " + this);
 			}
 		}
-		attributes.remove("PRECURSORS");
+		//attributes.remove("PRECURSORS");
 	}
 	
 	public Player getPlayer(Game game){

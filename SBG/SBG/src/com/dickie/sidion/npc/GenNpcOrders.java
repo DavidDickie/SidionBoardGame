@@ -21,7 +21,7 @@ public class GenNpcOrders {
 			}
 			List<Order> list = genNpcOrders(p, game);
 			for (Order o : list){
-				//o.execute();  // serialize the order
+				o.execute();  
 				game.addGameComponent(o);
 			}
 			p.setTurnFinished(true);
@@ -51,6 +51,7 @@ public class GenNpcOrders {
 					StandOrder so = new StandOrder();
 					so.setHero(h);
 					so.setOwner(h.getOwner(g));
+					System.out.println("NPC ORDER: " + so);
 					return so;
 				}
 			}
@@ -65,6 +66,7 @@ public class GenNpcOrders {
 					mo.setTown(t);
 //					mo.execute();
 					if (mo.validateOrder(g) == null){
+						System.out.println("NPC ORDER: " + mo);
 						return mo;
 					}
 				}
@@ -73,6 +75,7 @@ public class GenNpcOrders {
 		StandOrder so = new StandOrder();
 		so.setHero(h);
 		so.setOwner(h.getOwner(g));
+		System.out.println("NPC ORDER: " + so);
 		return so;
 	}
 
@@ -83,6 +86,7 @@ public class GenNpcOrders {
 			ro.setHero(h);
 			ro.setOwner(h.getOwner(g));
 			if (ro.validateOrder(g) == null){
+				System.out.println("NPC ORDER: " + ro);
 				return ro;
 			}
 		}
@@ -98,6 +102,7 @@ public class GenNpcOrders {
 				mo.setTown(t);
 //				mo.execute();
 				if (mo.validateOrder(g) == null){
+					System.out.println("NPC ORDER: " + mo);
 					return mo;
 				}
 			}
@@ -114,6 +119,7 @@ public class GenNpcOrders {
 				mo.setTown(t);
 //				mo.execute();
 				if (mo.validateOrder(g) == null){
+					System.out.println("NPC ORDER: " + mo);
 					return mo;
 				}
 			}
@@ -121,6 +127,7 @@ public class GenNpcOrders {
 		StandOrder so = new StandOrder();
 		so.setHero(h);
 		so.setOwner(h.getOwner(g));
+		System.out.println("NPC ORDER: " + so);
 		return so;
 	}
 }

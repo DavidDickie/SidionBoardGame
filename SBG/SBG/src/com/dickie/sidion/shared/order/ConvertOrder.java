@@ -31,7 +31,7 @@ public class ConvertOrder extends OrderImpl{
 			if (numToConvert == null){
 				return "No number to convert set";
 			}
-			int iNumToConvert = Integer.parseInt(precursors.get("NUM_TO_CONVERT").getKey());
+			int iNumToConvert = numToConvert.getValue();
 			if (vs == null){
 				return "No type to convert mana to";
 			}
@@ -49,6 +49,12 @@ public class ConvertOrder extends OrderImpl{
 		VarString vs = new VarString();
 		vs.setValue(type);
 		precursors.put(type, vs);
+	}
+	
+	public void addAmountToConvert(int amount){
+		Var v = new Var();
+		v.setValue(amount);
+		precursors.put("NUM_TO_CONVERT", v);
 	}
 	
 	@Override

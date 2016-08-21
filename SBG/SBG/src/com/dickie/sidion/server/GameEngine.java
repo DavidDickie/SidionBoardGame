@@ -140,10 +140,13 @@ public class GameEngine {
 			if (occupiers.keySet().size() > 1){
 				// town has a conflict, set everyone to "stand"
 				for (Hero h : t.getHeros(game)){
+					if (!(game.getOrder(h.getName()) instanceof StandOrder)){
+						game.addMessage(h.getName() + " [" + h.getOwner(game).getName() + "] orders lost due to conflict");
+					}
 					Order o = new StandOrder();
 					o.setOwner(h.getOwner(game));
 					o.setHero(h);
-					game.addGameComponent(o);
+					game.addGameComponent(o);					
 				}
 			}
 		}
