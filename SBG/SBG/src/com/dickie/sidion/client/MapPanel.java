@@ -48,7 +48,7 @@ public class MapPanel extends DecoratorPanel {
 	
 	public void drawBackgroundImage(){
 		Image image = new Image(0, 0, 800, 800, "Project1.png");
-		canvas.add(image);
+//		canvas.add(image);
 	}
 	
 	public void drawMapBackground(){

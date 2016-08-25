@@ -62,7 +62,13 @@ public class GameEngine {
 				occupiers.put(h.getOwner(game), hs);
 			}
 			if (occupiers.keySet().size() > 1){
-				System.out.println("  There is combat");
+				System.out.println("  There is combat :");
+				for (Player tp: occupiers.keySet()){
+					System.out.println("    " + tp.getName());
+					for (Hero th : occupiers.get(tp)){
+						System.out.println("      " + th);
+					}
+				}
 				int maxPoints = -1;
 				Player winner = null;
 				boolean tie = false;
@@ -85,9 +91,11 @@ public class GameEngine {
 					tie = false;
 					winner = originalOwner;
 					System.out.println("There was a tie, original owner wins");
+					game.addMessage("There was a combat in " + t.getName() +", the original owner " + winner.getName() + " wins on a tie");
 				}
 				if (!tie){
 					System.out.println("  Town was won by " + winner.getName() + " with " + maxPoints + " combat points");
+					game.addMessage("There was a combat in " + t.getName() +", " + winner.getName() + " wins with " + maxPoints + " combat points");
 					for (Hero h2 : t.getHeros(game)){
 						if (h2.getOwner(game).equals(originalOwner)){
 							// they are ok

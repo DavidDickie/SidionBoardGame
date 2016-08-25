@@ -48,7 +48,7 @@ public class ConvertOrder extends OrderImpl{
 	public void addType(String type){
 		VarString vs = new VarString();
 		vs.setValue(type);
-		precursors.put(type, vs);
+		precursors.put("TYPE", vs);
 	}
 	
 	public void addAmountToConvert(int amount){
