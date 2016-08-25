@@ -1,5 +1,6 @@
 package com.dickie.sidion.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dickie.sidion.npc.GenNpcOrders;
@@ -41,8 +42,8 @@ public class OrderProcessor {
 				}
 				if (allDone){
 //					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
-					System.out.println("All orders are in, shifting to magic phase");
-					System.out.print("Orders are:" );
+					game.addMessage("All orders are in, shifting to magic phase");
+					System.out.print("All orders in, orders are:" );
 					for (Order o : game.getOrders()){
 						System.out.println("\t" + o);
 					}
@@ -162,7 +163,8 @@ public class OrderProcessor {
 		
 		// wipe out heros that did not retreat
 		System.out.println("Determining results of retreats");
-		for (Hero h: game.getHeros()){
+		ArrayList<Hero> heros = new ArrayList<Hero>(game.getHeros());
+		for (Hero h: heros){
 			
 			if (h.mustRetreat()){
 				System.out.println("Hero " + h.getName() + " did not retreat, removed");

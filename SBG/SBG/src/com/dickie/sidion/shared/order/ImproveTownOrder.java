@@ -25,7 +25,7 @@ public class ImproveTownOrder extends OrderImpl{
 		
 		if (game.getGameState() == Game.PHYS_PHASE){
 			Town t = hero.getLocation(game);
-			if (hero.getLevel() > t.getLevel() - 1){
+			if (hero.getLevel() <= t.getLevel()){
 				return "This hero cannot improve a town that is level " + t.getLevel();
 			}
 			int cost = (t.getLevel() + 1) * (t.getLevel() + 1);

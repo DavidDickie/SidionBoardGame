@@ -8,6 +8,11 @@ import com.dickie.sidion.shared.Town;
 
 public class Retreat  extends OrderImpl {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Retreat(){
 		super.addPrecursors(true, false, false, false, false, false, false);
 	}

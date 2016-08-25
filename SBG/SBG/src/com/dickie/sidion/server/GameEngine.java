@@ -101,6 +101,7 @@ public class GameEngine {
 								ro.setHero(h2);
 								if (ro.validateOrder(game) != null){
 									System.out.println("  " + ro.validateOrder(game));
+									game.addMessage(h2.getName() + " has no place to retreat, eliminated");
 									game.removeGameComponent(h2);
 									continue;
 								}
@@ -109,6 +110,8 @@ public class GameEngine {
 									for (Town t3 : towns){
 										if (t3.getTempOwner(game) == null || t3.getTempOwner(game).equals(h2.getOwner(game))){
 											ro.setTown(t3);
+											System.out.println("Queued NPC retreat: " + ro);
+											game.addGameComponent(ro);
 											break;
 										}
 									}
@@ -127,7 +130,8 @@ public class GameEngine {
 	}
 	
 	public void resetOrderOnConflict(Game game){
-		for (Town t: game.getTowns()){
+		ArrayList<Town> towns = new ArrayList<Town>(game.getTowns());
+		for (Town t: towns){
 			Map<Player, List<Hero>> occupiers = new HashMap<Player, List<Hero>>();
 			for (Hero h : t.getHeros(game)){
 				List<Hero> hs = new ArrayList<Hero>();

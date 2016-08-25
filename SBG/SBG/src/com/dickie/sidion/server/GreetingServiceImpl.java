@@ -79,7 +79,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	public Void logMessage(String input){
-//		System.out.println(input);
+		System.out.println(input);
 		return null;
 	}
 	

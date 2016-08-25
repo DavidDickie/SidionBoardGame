@@ -15,7 +15,7 @@ public class LockOrder extends OrderImpl {
 		if (getHero(game) == null){
 			return "No hero is set";
 		}
-		if (getHero(game).getOwner(game).getResource("INF") < getInfCost(getHero(game).getLocation(game))){
+		if (game.getGameState() == Game.RETREAT && getHero(game).getOwner(game).getResource("INF") < getInfCost(getHero(game).getLocation(game))){
 			return "You do not have "  + getInfCost(getHero(game).getLocation(game)) + " influence";
 		}
 		return null;
@@ -48,9 +48,10 @@ public class LockOrder extends OrderImpl {
 	public void executeOnServer(Game game){
 		Town t = this.getHero(game).getLocation(game);
 		t.setOwner(getHero(game).getOwner(game));
-		getHero(game).getOwner(game).addResource("INF", -getInfCost(getHero(game).getLocation(game)));
+//		getHero(game).getOwner(game).addResource("INF", -getInfCost(t));
+//		game.removeGameComponent(getHero(game));
+//		game.addMessage(getHero(game).getName() + "[" + getPlayer(game).getName() + "] locks " + t.getName());
 		game.removeGameComponent(getHero(game));
-		game.addMessage(getHero(game).getName() + "[" + getPlayer(game).getName() + "] locks " + t.getName());
 	}
 
 }
