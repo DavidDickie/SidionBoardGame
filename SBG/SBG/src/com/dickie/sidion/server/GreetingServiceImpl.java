@@ -29,8 +29,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	private static Map<String, ArrayList<String>> gameMessages = new HashMap<String, ArrayList<String>>();
 	
-	{
-		
+	public GreetingServiceImpl(){
+		GreetingServiceImpl(true);
+	}
+	
+	public  GreetingServiceImpl(boolean b){
+		GreetingServiceImpl(b);
+	}
+
+	public void GreetingServiceImpl(boolean init) {
+		if (!init){
+			return;
+		}
 		List<String> games = dao.getGames();
 		if (games.size() == 0){
 			System.out.println("No games loaded????");
@@ -96,8 +106,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		try{	
 			System.out.println("received new order: " + order);
 			OrderProcessor op = new OrderProcessor();
-			op.processOrder(order, Game.getInstance(name));
-			dao.saveGame(Game.getInstance(name));
+			Game g = Game.getInstance(name);
+			String s = op.processOrder(order, g);
+			if (s!= null){
+				g.addMessage("Order failed: " + s);
+			}
+			if (!name.equals("junit")){
+				dao.saveGame(Game.getInstance(name));
+			}
 			Hero heroName = order.getHero(Game.getInstance(name));
 			if (heroName == null){
 				heroName = new Hero();

@@ -51,6 +51,7 @@ public class DAO {
 			e.printStackTrace();
 			game.setCurrentPlayer("Player1");
 			game.setStartingPlayer("Player1");
+			game.setArtifactUp(false);
 			game.setGameState(0);
 		}
 	}

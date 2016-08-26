@@ -76,7 +76,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 			} else if (param[0].equals(Hero.class.getName())){
 				precursors.put(param[1], game.getHero(param[2]));
 			} else if (param[0].equals(Path.class.getName())){
-				precursors.put(param[1], game.getHero(param[2]));
+				precursors.put(param[1], game.getPath(param[2]));
 			} else if (param[0].equals(Var.class.getName())){
 				Var v = new Var();
 				v.setKey(param[2]);

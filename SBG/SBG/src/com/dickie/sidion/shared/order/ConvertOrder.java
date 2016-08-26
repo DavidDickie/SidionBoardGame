@@ -38,8 +38,8 @@ public class ConvertOrder extends OrderImpl{
 			if (!(vs.getValue().equals("GOLD") || vs.getValue().equals("INF"))){
 				return "Invalid type " + precursors.get("TYPE").getKey();
 			}
-			if (ratio(game)*iNumToConvert - getHero(game).getOwner(game).getResource("MANA") < 0){
-				return "insufficient mana to do transfer; need " + ((int)ratio(game))*iNumToConvert;
+			if (getHero(game).getOwner(game).getResource("MANA") < iNumToConvert){
+				return "insufficient mana to do transfer; need " + (int) (ratio(game)*iNumToConvert);
 			}
 		}
 		return null;
@@ -95,7 +95,7 @@ public class ConvertOrder extends OrderImpl{
 		if (game.getGameState() == game.ORDER_PHASE){
 			return;
 		}
-		String rType = precursors.get("RESOURCE").getKey();
+		String rType = precursors.get("TYPE").getKey();
 		int numToConvert = Integer.parseInt(precursors.get("NUM_TO_CONVERT").getKey());
 		int converted = (int) (numToConvert*ratio(game));
 		game.addMessage(getHero(game).getName() + " [" + 
