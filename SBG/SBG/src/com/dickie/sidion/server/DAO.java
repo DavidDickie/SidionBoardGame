@@ -11,6 +11,7 @@ import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
+import com.dickie.sidion.shared.order.StandOrder;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -78,6 +79,12 @@ public class DAO {
 		}
 		for (Hero h: game.getHeros()){
 			h.setOrder(false);
+			if (game.getOrder(h.getName()) == null){
+				StandOrder so = new StandOrder();
+				so.setHero(h);
+				so.setOwner(h.getOwner(game));
+				game.addGameComponent(so);
+			}
 		}
 		game.addGame(game);
 		return game;

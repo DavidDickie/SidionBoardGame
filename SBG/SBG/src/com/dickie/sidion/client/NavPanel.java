@@ -63,6 +63,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private GameInfoPanel gip = null;
 
 	Button refresh = new Button("refresh");
+	Button turnOnClientLogButton = new Button("Client log off");
 
 	public void initialize(Draw draw, final MapPanel mapPanel, GameInfoPanel gip) {
 		this.setSize("150px", "100px");
@@ -79,6 +80,18 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				game.clear();
 				Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
 				Utils.setGameAttrs(game, NavPanel.this);
+			}
+		});
+		turnOnClientLogButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Utils.sendClientLogMessages = !Utils.sendClientLogMessages;
+				if (Utils.sendClientLogMessages){
+					turnOnClientLogButton.setText("Client log on");
+				} else {
+					turnOnClientLogButton.setText("Client log off");
+				}
 			}
 		});
 		initialState();
@@ -234,6 +247,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private void updateHeroOrderList() {
 		this.clear();
 		this.add(refresh);
+		this.add(turnOnClientLogButton);
 		for (PlayerPanel pp : playerPanels){
 			if (pp.getPlayer().equals(player)){
 				Utils.logMessage("Client: " +"Display orders for player " + player);
@@ -278,6 +292,9 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		}
 		gip.addMessage("");
 		gip.addMessages(game.getMessages());
+//		for (Order o: game.getOrders()){
+//			gip.addMessage(o.toString());
+//		}
 	}
 	
 	

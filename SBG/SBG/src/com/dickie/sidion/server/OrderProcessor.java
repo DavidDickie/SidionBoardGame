@@ -98,19 +98,19 @@ public class OrderProcessor {
 	}
 	
 	private void npcCheck(Game game){
-		//System.out.println("Checking if " + game.getCurrentPlayer().getName() + " is a NPC");
+//	System.out.println("Checking if " + game.getCurrentPlayer().getName() + " is a NPC");
 		if (game.getCurrentPlayer().isNpc()){
 			System.out.println("Player " + game.getCurrentPlayer().getName() + " is a NPC, executing  orders and moving on");
 			for (Order o : game.getOrders()){
-				//System.out.println("checking " + o);
+//				System.out.println("checking " + o);
 				if (o.getPlayer(game) == game.getCurrentPlayer()){
-					System.out.println("current player for order " + o);
+//					System.out.println("current player for order " + o);
 					if (o.isExecutable(game)){
 						// and isExecutable is going to add the order params,
 						// so we need to reset the precursors
-						//System.out.println("after isExec" + o);
+//						System.out.println("after isExec" + o);
 						o.setPrecursors(game);
-						//System.out.println("after set: " + o);
+//						System.out.println("after set: " + o);
 						if (o.validateOrder(game) == null){
 							o.executeOnServer(game);
 						} else {
@@ -168,6 +168,7 @@ public class OrderProcessor {
 			
 			if (h.mustRetreat()){
 				System.out.println("Hero " + h.getName() + " did not retreat, removed");
+				game.addMessage("Hero " + h.getName() + " did not retreat, eliminated");
 				game.removeGameComponent(h);
 			}
 		}
@@ -195,6 +196,10 @@ public class OrderProcessor {
 				}
 			}
 		}
+		
+		//
+		
+		System.out.println("New turn.  Gamestate is:\n" + game);
 	}
 	
 

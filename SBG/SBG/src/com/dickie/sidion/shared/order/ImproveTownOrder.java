@@ -29,7 +29,7 @@ public class ImproveTownOrder extends OrderImpl{
 				return "This hero cannot improve a town that is level " + t.getLevel();
 			}
 			int cost = (t.getLevel() + 1) * (t.getLevel() + 1);
-			if (getOwner(game).getResource("GOLD") < cost){
+			if (hero.getOwner(game).getResource("GOLD") < cost){
 				return "You do not have " + cost + " gold";
 			}
 		}

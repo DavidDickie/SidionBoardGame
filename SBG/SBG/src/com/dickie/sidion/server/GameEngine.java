@@ -50,7 +50,7 @@ public class GameEngine {
 		for (Town t : game.getTowns()){
 			Player originalOwner = t.getTempOwner(game);
 			if (originalOwner != null){
-				System.out.println("Town " + t.getName() + " original owner is " + originalOwner);
+//				System.out.println("Town " + t.getName() + " original owner is " + originalOwner);
 			}
 			Map<Player, List<Hero>> occupiers = new HashMap<Player, List<Hero>>();
 			for (Hero h : t.getHeros(game)){
@@ -77,7 +77,7 @@ public class GameEngine {
 					int curPoints = 0;
 					List<Hero> list = occupiers.get(curP);
 					for (Hero h2 : list){
-						curPoints += h2.getLevel() + 1;
+						curPoints += h2.getLevel();
 					}
 					if (curPoints > maxPoints){
 						winner = curP;
@@ -130,7 +130,7 @@ public class GameEngine {
 						}
 					}
 				}
-				System.out.println("Game state after combat:\n" + game);
+//				System.out.println("Game state after combat:\n" + game);
 			} else {
 //				System.out.println("There is no combat");
 			}
@@ -168,10 +168,12 @@ public class GameEngine {
 	public void produce(Game game){
 		flagOriginalOwner(game);
 		for (Town t: game.getTowns()){
-			StringBuffer sb = new StringBuffer();
-			sb.append("Producing for " + t.getName());
+			
+
 			Player p = t.getTempOwner(game);
 			if (p != null){
+				StringBuffer sb = new StringBuffer();
+				sb.append("Producing for " + t.getName() +"[" + p.getName() + "]: ");
 				if (t.getGold() == 1){
 					p.addResource("GOLD", 1);
 					sb.append("GOLD ");
@@ -184,11 +186,9 @@ public class GameEngine {
 					p.addResource("INF", 1);
 					sb.append("INF ");
 				}
-				sb.append("Producted");
-			} else {
-				sb.append("  No Owner");
-			}
-			System.out.println(sb);
+				System.out.println(sb);
+			} 
+			
 		}
 	}
 

@@ -40,7 +40,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			messages.add("Start");
 			gameMessages.put(gameName, messages);
 			try {
-				System.out.println("Loaded " + gameName);
+				System.out.println("Loading " + gameName);
 				dao.loadGame(gameName);
 			} catch (Exception e) {
 				e.printStackTrace();

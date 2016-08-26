@@ -17,12 +17,15 @@ public class Utils {
 
 	private final static GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 	private static DisplayHtmlDialog popupDialog = DisplayHtmlDialog.getInstance();
+	
+	public static boolean sendClientLogMessages = false;
 
 	public static void displayMessage(String message) {
 		popupDialog.display("Notification", message);
 	}
 
 	public static void logMessage(String s) {
+		if (sendClientLogMessages)
 		greetingService.logMessage(s, new AsyncCallback<Void>() {
 
 			@Override

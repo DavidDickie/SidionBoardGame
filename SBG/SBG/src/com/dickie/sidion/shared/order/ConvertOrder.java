@@ -38,11 +38,21 @@ public class ConvertOrder extends OrderImpl{
 			if (!(vs.getValue().equals("GOLD") || vs.getValue().equals("INF"))){
 				return "Invalid type " + precursors.get("TYPE").getKey();
 			}
-			if ((4-getHero(game).getLevel().intValue())*iNumToConvert - getHero(game).getOwner(game).getResource("MANA") < 0){
-				return "insufficient mana to do transfer; need " + (4-getHero(game).getLevel().intValue())*iNumToConvert;
+			if (ratio(game)*iNumToConvert - getHero(game).getOwner(game).getResource("MANA") < 0){
+				return "insufficient mana to do transfer; need " + ((int)ratio(game))*iNumToConvert;
 			}
 		}
 		return null;
+	}
+	
+	private double ratio(Game game){
+		if (getHero(game).getLevel() == 3){
+			return 0.5;		
+		} else if  (getHero(game).getLevel() == 2){
+			return 0.333;		
+		} else {
+			return 0.25;		
+		} 
 	}
 	
 	public void addType(String type){
@@ -87,10 +97,11 @@ public class ConvertOrder extends OrderImpl{
 		}
 		String rType = precursors.get("RESOURCE").getKey();
 		int numToConvert = Integer.parseInt(precursors.get("NUM_TO_CONVERT").getKey());
+		int converted = (int) (numToConvert*ratio(game));
 		game.addMessage(getHero(game).getName() + " [" + 
-				getPlayer(game).getName() + "] converted " + (getHero(game).getLevel().intValue()-4) + " mana into 1 " + rType);
-		getPlayer(game).addResource("MANA", (getHero(game).getLevel().intValue()-4)*numToConvert);
-		getPlayer(game).addResource(rType, numToConvert);
+				getPlayer(game).getName() + "] converted " + numToConvert + " mana into " + converted + " " + rType);
+		getPlayer(game).addResource("MANA", -numToConvert);
+		getPlayer(game).addResource(rType, converted);
 	}
 
 }
