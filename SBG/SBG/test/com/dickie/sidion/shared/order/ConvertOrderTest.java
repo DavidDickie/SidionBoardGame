@@ -21,7 +21,7 @@ public class ConvertOrderTest {
 		Hero prince = game.getHero("Prince_2");
 		game.setGameState(Game.MAGIC_PHASE);
 		int gold = prince.getOwner(game).getResource("GOLD");
-		int mana = 4;
+		int mana = 7;
 		prince.getOwner(game).addResource("MANA",4);
 		System.out.println(prince.getOwner(game));
 		HashMap<String, GameComponent> ht = new HashMap<String, GameComponent>();

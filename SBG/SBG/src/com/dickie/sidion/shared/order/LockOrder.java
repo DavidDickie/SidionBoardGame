@@ -1,6 +1,7 @@
 package com.dickie.sidion.shared.order;
 
 import com.dickie.sidion.shared.Game;
+import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Town;
 
 public class LockOrder extends OrderImpl {
@@ -21,7 +22,7 @@ public class LockOrder extends OrderImpl {
 		return null;
 	}
 	
-	private int getInfCost(Town t){
+	public int getInfCost(Town t){
 		if (t.getInf() > 0)
 			return 10;
 		return 5;
@@ -46,11 +47,11 @@ public class LockOrder extends OrderImpl {
 	
 	@Override
 	public void executeOnServer(Game game){
+		Hero h = getHero(game);
 		Town t = this.getHero(game).getLocation(game);
 		t.setOwner(getHero(game).getOwner(game));
 		getHero(game).getOwner(game).addResource("INF", -getInfCost(t));
-		game.removeGameComponent(getHero(game));
-		game.addMessage(getHero(game).getName() + "[" + getHero(game).getOwner(game).getName() + "] locks " + t.getName());
+		game.addMessage(h.getName() + "[" + h.getOwner(game).getName() + "] locks " + t.getName());
 		game.removeGameComponent(getHero(game)); 
 	}
 

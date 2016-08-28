@@ -26,6 +26,7 @@ public class BidOrderTest {
 		ht.put("GOLD", new Var(4));
 		ht.put("INF", new Var(0));
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
+		System.out.println(prince.getOwner(game).getResource("GOLD") + " " + gold);
 		assertTrue(prince.getOwner(game).getResource("GOLD") == gold-4);
 	}
 

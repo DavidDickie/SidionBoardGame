@@ -56,6 +56,8 @@ public class ImproveTownOrder extends OrderImpl{
 	public void executeOnServer(Game game){
 		Town t = getHero(game).getLocation(game);
 		ArrayList<String> options = new ArrayList<String>();
+		int newLev = t.getLevel() + 1;
+		getHero(game).getOwner(game).addResource("GOLD", -newLev*newLev);
 		if (t.getGold() == 0){
 			options.add("GOLD");
 		}

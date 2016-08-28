@@ -27,6 +27,9 @@ public class ImproveOrder extends OrderImpl {
 			if (hero == null){
 				return "No target hero set";
 			}
+			if (getHero(game).getOwner(game) != hero.getOwner(game)){
+				return "You can only improve your own heroes";
+			}
 			if (hero.getLevel() > 2){
 				return "You cannot improve a hero past level 3";
 			}
@@ -58,7 +61,9 @@ public class ImproveOrder extends OrderImpl {
 	@Override
 	public void executeOnServer(Game game){
 		Hero target = (Hero)precursors.get("TARGET_HERO");
-		target.setLevel(target.getLevel() + 1);
+		int newLevel = target.getLevel() + 1;
+		target.setLevel(newLevel);
+		getHero(game).getOwner(game).addResource("GOLD",-newLevel*newLevel);
 		game.addMessage(getHero(game).getName() + " [" + 
 				getPlayer(game).getName() + "] increases level of " + target.getName() + 
 				" to level " + target.getLevel());

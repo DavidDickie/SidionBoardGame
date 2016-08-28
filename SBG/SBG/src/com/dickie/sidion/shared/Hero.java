@@ -85,7 +85,7 @@ public class Hero extends GameComponentImpl {
 			heros.put(hero.getName(), hero);
 			hero = new Hero();
 			hero.setName("Hero_" + count2++);
-			hero.setLevel(0);
+			hero.setLevel(1);
 			hero.setOwner(game.getPlayers().toArray(new Player[0])[playerCount]);
 			hero.setIsPrince(false);
 			hero.setLocation(t);

@@ -42,9 +42,13 @@ public class TeleportOrder extends OrderImpl{
 					}
 				}
 			}
+			int dist = distance(game);
 			
-			if (distance(game) > wizard.getLevel()){
+			if (dist > wizard.getLevel()){
 				return "Distance between towns is too great";
+			}
+			if (dist > wizard.getOwner(game).getResource("MANA")){
+				return "insufficent mana";
 			}
 			if (this.getPlayer(game).getResource("MANA") < 1){
 				return "Insufficient mana";
@@ -80,11 +84,12 @@ public class TeleportOrder extends OrderImpl{
 	@Override
 	public void executeOnServer(Game game){
 		Hero target = ((Hero)precursors.get("TARGET_HERO"));
+		int dist = distance(game);
 		target.setLocation(getTown());
 		if (getTown().getTempOwner(game) == null){
 			getTown().setTempOwner(target.getOwner(game));
 		}
-		getPlayer(game).addResource("MANA", -distance(game));
+		getPlayer(game).addResource("MANA", -dist);
 		game.addMessage(getHero(game).getName() + " [" + 
 				getPlayer(game).getName() + "] teleported " + target.getName() + " to " + getTown());
 	}

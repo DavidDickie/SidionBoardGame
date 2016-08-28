@@ -18,13 +18,6 @@ public class BlockPathOrderTest {
 	@Test
 	public void test() {
 		Game game = Game.createGame("junit");
-		//assertTrue(Town.getDistance(game.getTown("Vonnie"), game.getTown("Vonnie"), game) == 0);
-		assertTrue(Town.getDistance(game.getTown("Vonnie"), game.getTown("Mira"), game) == 1);
-		assertTrue(Town.getDistance(game.getTown("Vonnie"), game.getTown("Germa"), game) == 2);
-		assertTrue(Town.getDistance(game.getTown("Mira"), game.getTown("Teofila"), game) == 3);
-		assertTrue(Town.getDistance(game.getTown("Mira"), game.getTown("Joletta"), game) == 1);
-		assertTrue(Town.getDistance(game.getTown("Maya"), game.getTown("Maya"), game) == 0);
-
 		Hero h = game.getHero("Prince_0");
 		h.setLocation(game.getTown("Bran"));
 
@@ -35,8 +28,6 @@ public class BlockPathOrderTest {
 		ht.put("PATH",Path.getPath(game.getTown("Maya"), game.getTown("Shawna"), game));
 		OrderTestUtil.executeOrder(bpo, h, game, ht);
 		assertTrue(Path.getPath(game.getTown("Maya"), game.getTown("Shawna"), game).getBlocked());
-			
-
 	}
 
 }
