@@ -106,6 +106,10 @@ public class Town extends GameComponentImpl {
 		return this.getGold() + getInf() + getMana();
 	}
 	
+	public int getUpgradeCost(){
+		return (getLevel() + 1) * (getLevel() + 1);
+	}
+	
 	public Player getTempOwner(Game game){
 		if (getValue("TEMP_OWNER") == null){
 			return null;

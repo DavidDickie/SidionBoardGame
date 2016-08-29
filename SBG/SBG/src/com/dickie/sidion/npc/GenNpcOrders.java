@@ -8,6 +8,10 @@ import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Town;
+import com.dickie.sidion.shared.order.ConvertOrder;
+import com.dickie.sidion.shared.order.ImproveOrder;
+import com.dickie.sidion.shared.order.ImproveTownOrder;
+import com.dickie.sidion.shared.order.LockOrder;
 import com.dickie.sidion.shared.order.MoveOrder;
 import com.dickie.sidion.shared.order.RecruitOrder;
 import com.dickie.sidion.shared.order.StandOrder;
@@ -56,6 +60,11 @@ public class GenNpcOrders {
 				}
 			}
 		}
+		if (h.getOwner(g).getResource("INF") > 10){
+			LockOrder lo = new LockOrder();
+			lo.setHero(h);
+			return lo;
+		}
 		List<Town> close = town.getNeighbors(g);
 		if (!town.getHeros(g).get(0).equals(h)){
 			for (Town t : close){
@@ -64,7 +73,6 @@ public class GenNpcOrders {
 					mo.setHero(h);
 					mo.setOwner(h.getOwner(g));
 					mo.setTown(t);
-//					mo.execute();
 					if (mo.validateOrder(g) == null){
 						System.out.println("NPC ORDER: " + mo);
 						return mo;
@@ -88,6 +96,34 @@ public class GenNpcOrders {
 			if (ro.validateOrder(g) == null){
 				System.out.println("NPC ORDER: " + ro);
 				return ro;
+			}
+		}
+		if (h.getLocation(g).getUpgradeCost() < h.getOwner(g).getResource("GOLD")){
+			ImproveTownOrder ito = new ImproveTownOrder();
+			ito.setHero(h);
+			ito.setPlayer(h.getOwner(g));
+			return ito;
+		}
+		if (h.getOwner(g).getResource("MANA") > 8){
+			ConvertOrder co = new ConvertOrder();
+			co.setHero(h);
+			co.setNumber(h.getOwner(g).getResource("MANA"));
+			co.addType("INF");
+		}
+		if (h.getLocation(g).getHeros(g).size() > 1){
+			Hero h2 = null;
+			for (Hero htemp: h.getLocation(g).getHeros(g)){
+				if (htemp != h){
+					h2 = htemp;
+					break;
+				}
+			}
+			if (h2.getLevel() < 2 && h.getOwner(g).getResource("GOLD") > 4){
+				ImproveOrder ito = new ImproveOrder();
+				ito.setHero(h);
+				ito.setPlayer(h.getOwner(g));
+				ito.addTargetHero(h2);
+				return ito;
 			}
 		}
 		List<Town> close = town.getNeighbors(g);

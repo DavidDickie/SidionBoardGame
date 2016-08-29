@@ -28,7 +28,7 @@ public class ImproveTownOrder extends OrderImpl{
 			if (hero.getLevel() <= t.getLevel()){
 				return "This hero cannot improve a town that is level " + t.getLevel();
 			}
-			int cost = (t.getLevel() + 1) * (t.getLevel() + 1);
+			int cost =t.getUpgradeCost();
 			if (hero.getOwner(game).getResource("GOLD") < cost){
 				return "You do not have " + cost + " gold";
 			}
@@ -56,8 +56,8 @@ public class ImproveTownOrder extends OrderImpl{
 	public void executeOnServer(Game game){
 		Town t = getHero(game).getLocation(game);
 		ArrayList<String> options = new ArrayList<String>();
-		int newLev = t.getLevel() + 1;
-		getHero(game).getOwner(game).addResource("GOLD", -newLev*newLev);
+		int cost = t.getUpgradeCost();
+		getHero(game).getOwner(game).addResource("GOLD", -cost);
 		if (t.getGold() == 0){
 			options.add("GOLD");
 		}

@@ -114,7 +114,7 @@ public class OrderProcessor {
 						if (o.validateOrder(game) == null){
 							o.executeOnServer(game);
 						} else {
-							System.out.println("NPC order failed: " + o.validateOrder(game) + " " + o.toString());
+							System.out.println("*********NPC order failed: " + o.validateOrder(game) + " " + o.toString());
 						}
 					}
 				}
@@ -199,7 +199,7 @@ public class OrderProcessor {
 		
 		//
 		
-		System.out.println("New turn.  Gamestate is:\n" + game);
+		System.out.println("******************************************\nNew turn******************************************\n\nGamestate is:\n" + game);
 	}
 	
 

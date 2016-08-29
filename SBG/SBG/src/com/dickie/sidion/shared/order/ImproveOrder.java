@@ -52,6 +52,10 @@ public class ImproveOrder extends OrderImpl {
 		}
 		return false;
 	}
+	
+	public void addTargetHero(Hero h){
+		precursors.put("TARGET_HERO", h);
+	}
 
 	@Override
 	public void addDoOrderParams() {
