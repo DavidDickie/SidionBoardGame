@@ -456,7 +456,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		newOrders.put("Improve Town", new ImproveTownOrder());
 		newOrders.put("Improve Hero", new ImproveOrder());
 		newOrders.put("Lock Town", new LockOrder());
-//		newOrders.put("RETREAT");
+//		newOrders.put("RETREAT"); 
 	}
 
 	private void renderPickOrder(final Hero hero) {
