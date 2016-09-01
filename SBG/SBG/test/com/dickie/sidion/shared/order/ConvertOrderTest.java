@@ -31,6 +31,6 @@ public class ConvertOrderTest {
 		System.out.println(prince.getOwner(game));
 		assertTrue(prince.getOwner(game).getResource("GOLD") == gold+2);
 		assertTrue(prince.getOwner(game).getResource("MANA") == mana-4);
-	}
+	} 
 
 }

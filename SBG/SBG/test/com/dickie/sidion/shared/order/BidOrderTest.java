@@ -28,6 +28,6 @@ public class BidOrderTest {
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
 		System.out.println(prince.getOwner(game).getResource("GOLD") + " " + gold);
 		assertTrue(prince.getOwner(game).getResource("GOLD") == gold-4);
-	}
+	} 
 
 }

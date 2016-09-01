@@ -31,6 +31,6 @@ public class TeleportOrderTest {
 		OrderTestUtil.executeOrder(ro, hero, game, ht);
 		assertTrue(hero.getOwner(game).getResource("MANA") == mana-d);	
 		assertTrue(target.getLocation(game) == targetTown);
-	}
+	} 
 
 }

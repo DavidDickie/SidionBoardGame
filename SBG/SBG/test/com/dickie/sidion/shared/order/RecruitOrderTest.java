@@ -23,6 +23,6 @@ public class RecruitOrderTest {
 		HashMap <String, GameComponent> ht = new HashMap<String, GameComponent>();
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
 		assertTrue(game.getHeros().size() == noHeros + 1);
-	}
+	} 
 
 }

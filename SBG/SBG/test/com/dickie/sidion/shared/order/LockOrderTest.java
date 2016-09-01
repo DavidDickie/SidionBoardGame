@@ -29,7 +29,7 @@ public class LockOrderTest {
 		OrderTestUtil.executeOrder(ro, hero, game, ht);
 		assertTrue(hero.getOwner(game).getResource("INF") == inf-ro.getInfCost(target));
 		assertTrue(game.getHero(hero.getName()) == null);
-		assertTrue(target.getOwner(game) == p);
+		assertTrue(target.getOwner(game) == p); 
 	}
 
 }

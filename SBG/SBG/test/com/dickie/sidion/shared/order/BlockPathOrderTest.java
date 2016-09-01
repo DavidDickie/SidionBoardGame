@@ -28,6 +28,6 @@ public class BlockPathOrderTest {
 		ht.put("PATH",Path.getPath(game.getTown("Maya"), game.getTown("Shawna"), game));
 		OrderTestUtil.executeOrder(bpo, h, game, ht);
 		assertTrue(Path.getPath(game.getTown("Maya"), game.getTown("Shawna"), game).getBlocked());
-	}
+	} 
 
 }

@@ -27,6 +27,6 @@ public class OrderTestUtil {
 		bpo.execute();
 		GreetingServiceImpl gsi = new GreetingServiceImpl(false);
 		gsi.executeSingleOrder("junit", bpo);
-	}
+	} 
 
 }

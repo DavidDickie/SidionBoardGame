@@ -29,7 +29,7 @@ public class ImproveTownOrderTest {
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
 		System.out.println(gold + " " + prince.getOwner(game).getResource("GOLD"));
 		assertTrue(prince.getOwner(game).getResource("GOLD") == gold-((townLev+1)*(townLev+1)));
-		assertTrue(target.getLevel() == townLev + 1);
+		assertTrue(target.getLevel() == townLev + 1); 
 	}
 
 }
