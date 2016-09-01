@@ -30,6 +30,11 @@ public class MoveOrder  extends OrderImpl {
 			if (p.getBlocked()){
 				return "Path is blocked, you cannot move here";
 			}
+			if (getTown().isLocked()){
+				if (getTown().getOwner(game) != getHero(game).getOwner(game)){
+					return "you may not move to a town owned by another player";
+				}
+			}
 			if (getPlayer(game).getResource("GOLD") < 1){
 				return "Insufficient gold for move";
 			}

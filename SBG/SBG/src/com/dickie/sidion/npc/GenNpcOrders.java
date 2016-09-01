@@ -9,6 +9,7 @@ import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Town;
+import com.dickie.sidion.shared.order.BidOrder;
 import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.ImproveOrder;
 import com.dickie.sidion.shared.order.ImproveTownOrder;
@@ -35,8 +36,10 @@ public class GenNpcOrders {
 	}
 
 	boolean didOneLock = false;
+	boolean bidOnArt = false;
 	public List<Order> genNpcOrders(Player player, Game game){
 		didOneLock=false;
+		bidOnArt = false;
 		ArrayList<Order> list = new ArrayList<Order>();
 		for (Hero h : game.getHeros()){
 			if (h.getOwner(game) != player){
@@ -55,6 +58,16 @@ public class GenNpcOrders {
 	}
 
 	private Order heroOrders(Hero h, Game g) {
+		if (g.isArtifactUp() && !bidOnArt){
+			BidOrder bo = new BidOrder();
+			bo.setHero(h);
+			Player p = h.getOwner(g);
+			bo.setOwner(p);
+			bo.addBid(
+					(int) (p.getResource("GOLD") * java.lang.Math.random()), 
+					(int) (p.getResource("INF") * java.lang.Math.random()), 
+					(int) (p.getResource("MANA") * java.lang.Math.random()));
+		}
 		Town town = h.getLocation(g);
 		if (town.getHeros(g).size() > 1){
 			for (Hero lHero : town.getHeros(g)){
@@ -66,18 +79,18 @@ public class GenNpcOrders {
 				}
 			}
 		}
+		if (h.getLocation(g).getLevel() < h.getLevel() && h.getOwner(g).getResource("GOLD") < h.getLocation(g).getUpgradeCost()){
+			ImproveTownOrder ito = new ImproveTownOrder();
+			ito.setHero(h);
+			ito.setPlayer(h.getOwner(g));
+			return ito;
+		}
 		if (h.getOwner(g).getResource("INF") > 10 && !didOneLock){
 			LockOrder lo = new LockOrder();
 			lo.setHero(h);
 			lo.setPlayer(h.getOwner(g));
 			didOneLock = true;
 			return lo;
-		}
-		if (h.getLocation(g).getLevel() < h.getLevel() && h.getOwner(g).getResource("GOLD") < h.getLocation(g).getUpgradeCost()){
-			ImproveTownOrder ito = new ImproveTownOrder();
-			ito.setHero(h);
-			ito.setPlayer(h.getOwner(g));
-			return ito;
 		}
 		List<Town> close = town.getNeighbors(g);
 		if (!town.getHeros(g).get(0).equals(h)){

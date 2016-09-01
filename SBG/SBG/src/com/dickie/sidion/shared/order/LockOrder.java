@@ -23,9 +23,7 @@ public class LockOrder extends OrderImpl {
 	}
 	
 	public int getInfCost(Town t){
-		if (t.getInf() > 0)
-			return 10;
-		return 5;
+		return t.getLevel() * 5;
 	}
 	
 	@Override
