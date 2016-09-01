@@ -109,7 +109,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			Game g = Game.getInstance(name);
 			String s = op.processOrder(order, g);
 			if (s!= null){
-				g.addMessage("Order failed: " + s);
+				g.addMessage("Order " + order + " failed: " + s);
 			}
 			if (!name.equals("junit")){
 				dao.saveGame(Game.getInstance(name));

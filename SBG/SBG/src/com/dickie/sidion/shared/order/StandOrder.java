@@ -1,10 +1,14 @@
 package com.dickie.sidion.shared.order;
 
 import com.dickie.sidion.shared.Game;
-import com.dickie.sidion.shared.Player;
 
 public class StandOrder extends OrderImpl{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public StandOrder(){
 		super.addPrecursors(true, false, false, false, false, false, false);
 	}
@@ -12,8 +16,8 @@ public class StandOrder extends OrderImpl{
 	public String validateOrder(Game game) {
 		
 		super.validateOrder(game);
-		if (getHero(game) == null){
-			return "No hero is set";
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
 		return null;
 	}

@@ -15,10 +15,11 @@ public class BlockPathOrder extends OrderImpl{
 	public String validateOrder(Game game) {
 		
 		super.validateOrder(game);
-		Hero h = getHero(game);
-		if (h == null){
-			return "No hero is set";
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
+		Hero h = getHero(game);
+		
 
 		if (game.getGameState() == game.MAGIC_PHASE){
 			if (getPath() == null){

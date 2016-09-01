@@ -17,11 +17,10 @@ public class Retreat  extends OrderImpl {
 		super.addPrecursors(true, false, false, false, false, false, false);
 	}
 	
-	public String validateOrder(Game game) {
-		
+	public String validateOrder(Game game) {	
 		super.validateOrder(game);
-		if (getHero(game) == null){
-			return "No hero is set";
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
 		if (getOwner(game).getResource("GOLD") < 1){
 			return "Player has no gold";

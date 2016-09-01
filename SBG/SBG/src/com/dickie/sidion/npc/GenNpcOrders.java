@@ -1,6 +1,7 @@
 package com.dickie.sidion.npc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.dickie.sidion.shared.Game;
@@ -25,6 +26,7 @@ public class GenNpcOrders {
 			}
 			List<Order> list = genNpcOrders(p, game);
 			for (Order o : list){
+				System.out.println("NPC ORDER: " + o);
 				o.execute();  
 				game.addGameComponent(o);
 			}
@@ -32,7 +34,9 @@ public class GenNpcOrders {
 		}
 	}
 
+	boolean didOneLock = false;
 	public List<Order> genNpcOrders(Player player, Game game){
+		didOneLock=false;
 		ArrayList<Order> list = new ArrayList<Order>();
 		for (Hero h : game.getHeros()){
 			if (h.getOwner(game) != player){
@@ -43,6 +47,9 @@ public class GenNpcOrders {
 			} else {
 				list.add(heroOrders(h, game));
 			}
+		}
+		for (Order o : list){
+			System.out.println("NPC ORDER: " + o);
 		}
 		return list;
 	}
@@ -55,15 +62,22 @@ public class GenNpcOrders {
 					StandOrder so = new StandOrder();
 					so.setHero(h);
 					so.setOwner(h.getOwner(g));
-					System.out.println("NPC ORDER: " + so);
 					return so;
 				}
 			}
 		}
-		if (h.getOwner(g).getResource("INF") > 10){
+		if (h.getOwner(g).getResource("INF") > 10 && !didOneLock){
 			LockOrder lo = new LockOrder();
 			lo.setHero(h);
+			lo.setPlayer(h.getOwner(g));
+			didOneLock = true;
 			return lo;
+		}
+		if (h.getLocation(g).getLevel() < h.getLevel() && h.getOwner(g).getResource("GOLD") < h.getLocation(g).getUpgradeCost()){
+			ImproveTownOrder ito = new ImproveTownOrder();
+			ito.setHero(h);
+			ito.setPlayer(h.getOwner(g));
+			return ito;
 		}
 		List<Town> close = town.getNeighbors(g);
 		if (!town.getHeros(g).get(0).equals(h)){
@@ -74,7 +88,6 @@ public class GenNpcOrders {
 					mo.setOwner(h.getOwner(g));
 					mo.setTown(t);
 					if (mo.validateOrder(g) == null){
-						System.out.println("NPC ORDER: " + mo);
 						return mo;
 					}
 				}
@@ -83,7 +96,6 @@ public class GenNpcOrders {
 		StandOrder so = new StandOrder();
 		so.setHero(h);
 		so.setOwner(h.getOwner(g));
-		System.out.println("NPC ORDER: " + so);
 		return so;
 	}
 
@@ -94,11 +106,10 @@ public class GenNpcOrders {
 			ro.setHero(h);
 			ro.setOwner(h.getOwner(g));
 			if (ro.validateOrder(g) == null){
-				System.out.println("NPC ORDER: " + ro);
 				return ro;
 			}
 		}
-		if (h.getLocation(g).getUpgradeCost() < h.getOwner(g).getResource("GOLD")){
+		if (h.getLocation(g).getLevel() < 3 && h.getLocation(g).getUpgradeCost() < h.getOwner(g).getResource("GOLD")){
 			ImproveTownOrder ito = new ImproveTownOrder();
 			ito.setHero(h);
 			ito.setPlayer(h.getOwner(g));
@@ -127,18 +138,22 @@ public class GenNpcOrders {
 			}
 		}
 		List<Town> close = town.getNeighbors(g);
+		Collections.shuffle(close);
 		for (Town t : close){
 			if (t == null){
 				throw new RuntimeException("The town is null???");
 			}
-			if (t.hasHero()){
+			List<Hero> tHeros= t.getHeros(g);
+			int totalThere = 0;
+			for (Hero tHero : tHeros){
+				totalThere+= tHero.getLevel();
+			}
+			if (t.hasHero() && totalThere < 3){
 				MoveOrder mo = new MoveOrder();
 				mo.setHero(h);
 				mo.setOwner(h.getOwner(g));
 				mo.setTown(t);
-//				mo.execute();
 				if (mo.validateOrder(g) == null){
-					System.out.println("NPC ORDER: " + mo);
 					return mo;
 				}
 			}
@@ -155,7 +170,6 @@ public class GenNpcOrders {
 				mo.setTown(t);
 //				mo.execute();
 				if (mo.validateOrder(g) == null){
-					System.out.println("NPC ORDER: " + mo);
 					return mo;
 				}
 			}
@@ -163,7 +177,6 @@ public class GenNpcOrders {
 		StandOrder so = new StandOrder();
 		so.setHero(h);
 		so.setOwner(h.getOwner(g));
-		System.out.println("NPC ORDER: " + so);
 		return so;
 	}
 }

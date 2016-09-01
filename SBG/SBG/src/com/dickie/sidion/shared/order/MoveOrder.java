@@ -14,8 +14,8 @@ public class MoveOrder  extends OrderImpl {
 	public String validateOrder(Game game) {
 		
 		super.validateOrder(game);
-		if (getHero(game) == null){
-			return "No hero is set";
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
 
 		if (game.getGameState() == game.PHYS_PHASE){

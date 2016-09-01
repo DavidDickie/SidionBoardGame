@@ -78,6 +78,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			@Override
 			public void onClick(ClickEvent event) {
 				game.clear();
+				mapPanel.clearCanvas();
 				Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
 				Utils.setGameAttrs(game, NavPanel.this);
 			}

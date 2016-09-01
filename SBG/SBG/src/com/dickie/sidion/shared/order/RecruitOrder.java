@@ -11,15 +11,16 @@ public class RecruitOrder  extends OrderImpl {
 	}
 	
 	public String validateOrder(Game game) {
-		Hero prince = getHero(game);
+		
 		super.validateOrder(game);
-		if (prince == null){
-			return "No hero is set";
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
+		Hero prince = getHero(game);
 		if (!prince.isPrince()){
 			return "Only princes may recruit";
 		}
-		if (getOwner(game).getResource("GOLD") < 1){
+		if (getOwner(game).getResource("GOLD") < 5){
 			return "Insufficient funds";
 		}
 		if (!prince.getLocation(game).hasHero()){
@@ -62,7 +63,7 @@ public class RecruitOrder  extends OrderImpl {
 		hero.setOwner(getOwner(game));
 		getHero(game).getLocation(game).setHasHero(false);
 		game.addGameComponent(hero);
-		getOwner(game).addResource("GOLD", -1);
+		getOwner(game).addResource("GOLD", -5);
 		game.addMessage(getHero(game).getName() + " [" + 
 				getPlayer(game).getName() + "] recuited a new hero in " + getHero(game).getLocation(game).getName()); 
 	}

@@ -70,6 +70,10 @@ public class Game {
 		for (Order p: orders.values()){
 			sb.append("\t" + p + "\n");
 		}
+		sb.append("\nMessages");
+		for (Message p: messages.values()){
+			sb.append("\t" + p + "\n");
+		}
 		return sb.toString();
 	}
 	
@@ -198,6 +202,7 @@ public class Game {
 	}
 	
 	public void addMessage(String message){
+		System.out.println(message);
 		Message m = new Message();
 		m.setKey(Message.getNextKey(this));
 		m.setMessage(message);

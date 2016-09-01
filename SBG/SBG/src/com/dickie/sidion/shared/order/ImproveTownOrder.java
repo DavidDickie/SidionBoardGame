@@ -18,10 +18,10 @@ public class ImproveTownOrder extends OrderImpl{
 	public String validateOrder(Game game) {
 		
 		super.validateOrder(game);
-		Hero hero = getHero(game);
-		if (hero == null){
-			return "No hero is set";
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
+		Hero hero = getHero(game);
 		
 		if (game.getGameState() == Game.PHYS_PHASE){
 			Town t = hero.getLocation(game);

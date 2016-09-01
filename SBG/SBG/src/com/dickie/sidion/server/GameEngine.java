@@ -94,22 +94,20 @@ public class GameEngine {
 					game.addMessage("There was a combat in " + t.getName() +", the original owner " + winner.getName() + " wins on a tie");
 				}
 				if (!tie){
-					System.out.println("  Town was won by " + winner.getName() + " with " + maxPoints + " combat points");
 					game.addMessage("There was a combat in " + t.getName() +", " + winner.getName() + " wins with " + maxPoints + " combat points");
 					for (Hero h2 : t.getHeros(game)){
 						if (h2.getOwner(game).equals(originalOwner)){
 							// they are ok
 						} else {
 							if (h2.getOwner(game).getResource("GOLD") == 0){
-								System.out.println("  Player " + h2.getOwner(game).getName() + " has Nn gold");
+								game.addMessage(h2.getName() + " [" + h2.getOwner(game).getName() + "] cannot retreat (no gold) ... removed from game");
 								game.removeGameComponent(h2);
 							} else {
 								Retreat ro = new Retreat();
 								ro.setPlayer(h2.getOwner(game));
 								ro.setHero(h2);
 								if (ro.validateOrder(game) != null){
-									System.out.println("  " + ro.validateOrder(game));
-									game.addMessage(h2.getName() + " has no place to retreat, eliminated");
+									game.addMessage(h2.getName() + " [" + h2.getOwner(game).getName() + "] cannot retreat; " + ro.validateOrder(game));
 									game.removeGameComponent(h2);
 									continue;
 								}
@@ -141,7 +139,8 @@ public class GameEngine {
 		ArrayList<Town> towns = new ArrayList<Town>(game.getTowns());
 		for (Town t: towns){
 			Map<Player, List<Hero>> occupiers = new HashMap<Player, List<Hero>>();
-			for (Hero h : t.getHeros(game)){
+			ArrayList<Hero> heroes = new ArrayList<Hero>(t.getHeros(game));
+			for (Hero h : heroes){
 				List<Hero> hs = new ArrayList<Hero>();
 				if (occupiers.containsKey(h.getOwner(game))){
 					hs = occupiers.get(h.getOwner(game));

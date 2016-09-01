@@ -22,7 +22,7 @@ public class OrderProcessor {
 		order.setPrecursors(game);
 		if (order instanceof EditOrder ){
 			order.executeOnServer(game);
-			return "order executed";
+			return null;
 		} else if (game.getGameState() == game.ORDER_PHASE){
 			if (order instanceof FinishTurn){
 				System.out.println("Finish turn order");
@@ -59,7 +59,7 @@ public class OrderProcessor {
 				}
 				postOrderCheck(game, game.getCurrentPlayer(), false);
 			}
-			return "order accepted";
+			return null;
 		}
 		
 		if (order.validateOrder(game) != null){
@@ -82,7 +82,7 @@ public class OrderProcessor {
 			t.printStackTrace();
 			return t.getMessage();
 		}
-		return "Order executed";
+		return null;
 	}
 	
 	private void postOrderCheck(Game game, Player player, boolean forceIt){
@@ -167,7 +167,6 @@ public class OrderProcessor {
 		for (Hero h: heros){
 			
 			if (h.mustRetreat()){
-				System.out.println("Hero " + h.getName() + " did not retreat, removed");
 				game.addMessage("Hero " + h.getName() + " did not retreat, eliminated");
 				game.removeGameComponent(h);
 			}
@@ -191,7 +190,7 @@ public class OrderProcessor {
 				for (Order o : orders){
 					o.execute();  // serialize the order
 					game.addGameComponent(o);
-					o.getPlayer(game).setTurnFinished(true);
+					o.getHero(game).getOwner(game).setTurnFinished(true);
 					System.out.println(o);
 				}
 			}

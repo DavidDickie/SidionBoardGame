@@ -103,7 +103,7 @@ public class Town extends GameComponentImpl {
 	}
 	
 	public int getLevel(){
-		return this.getGold() + getInf() + getMana();
+		return getGold() + getInf() + getMana();
 	}
 	
 	public int getUpgradeCost(){
@@ -123,7 +123,8 @@ public class Town extends GameComponentImpl {
 	
 	public List<Hero> getHeros(Game game){
 		ArrayList<Hero> list = new ArrayList<Hero>();
-		Iterator<Hero> iHero = game.getHeros().iterator();
+		ArrayList<Hero> iList = new ArrayList<Hero>(game.getHeros());
+		Iterator<Hero> iHero = iList.iterator();
 		while (iHero.hasNext()){
 			Hero h = iHero.next();
 			if (h.getLocation(game).equals(this)){

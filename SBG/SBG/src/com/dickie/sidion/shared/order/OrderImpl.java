@@ -172,6 +172,16 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 	public Hero getHero(Game game) {
 		return game.getHero(getValue("LKEY"));
 	}
+	
+	public String checkForHero(Game game){
+		if (game.getHero(getValue("LKEY")) == null){
+			if (getValue("LKEY")==null){
+				return "No hero is set?";
+			}
+			return "Hero has been removed from game";
+		}
+		return null;
+	}
 
 	@Override
 	public void setPath(Path gc) {
