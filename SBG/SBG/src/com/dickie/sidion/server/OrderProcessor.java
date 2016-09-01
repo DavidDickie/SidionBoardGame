@@ -8,6 +8,7 @@ import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
+import com.dickie.sidion.shared.order.BidOrder;
 import com.dickie.sidion.shared.order.EditOrder;
 import com.dickie.sidion.shared.order.FinishTurn;
 import com.dickie.sidion.shared.order.StandOrder;
@@ -171,6 +172,42 @@ public class OrderProcessor {
 				game.removeGameComponent(h);
 			}
 		}
+		// figure out if people bid for an artification, and if so, give it to them
+		if (game.isArtifactUp()){
+			List<BidOrder> bids = new ArrayList<BidOrder>();
+			for (Order o : game.getOrders()){
+				if (o instanceof BidOrder){
+					if (o.validateOrder(game) != null){
+						game.addMessage("Bid by " + o.getHero(game).getName() + " failes; " + o.validateOrder(game));
+						continue;
+					}
+					bids.add((BidOrder) o);
+				}
+			}
+			if (bids.size() == 0){
+				game.addMessage("No valid bid on the artifact");
+			} else {
+				BidOrder winner = null;
+				int maxBid = 0;
+				boolean tie = true;
+				for (BidOrder o : bids){
+					int total = o.getGoldBid() + o.getManaBid() + o.getInfBid();
+					if (total > maxBid){
+						maxBid = o.getGoldBid() + o.getManaBid() + o.getInfBid();
+						winner = o;
+						tie = false;
+					} else if (total == maxBid){
+						tie = true;
+					}
+				}
+				if (tie){
+					game.addMessage("Tie bid on artifact, no winner!");
+				} else {
+					winner.executeWinner(game);
+				}
+			}
+		}
+		
 		// wipe out orders, replace with "standorder"
 		for (Hero h : game.getHeros()){
 			Order o = new StandOrder();

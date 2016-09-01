@@ -2,6 +2,7 @@ package com.dickie.sidion.shared;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -118,8 +119,10 @@ public class Game {
 	
 	public List<Message>getMessages(){
 		ArrayList<Message> mList = new ArrayList<Message>();
-		for (Message m : messages.values()){
-			mList.add(m);
+		List <String> keys = new ArrayList<String>(messages.keySet());
+		Collections.sort(keys);
+		for (String key : keys){
+			mList.add(messages.get(key));
 		}
 		return mList;
 	}

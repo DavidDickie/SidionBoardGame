@@ -13,6 +13,7 @@ import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
+import com.dickie.sidion.shared.order.BidOrder;
 import com.dickie.sidion.shared.order.BlockPathOrder;
 import com.dickie.sidion.shared.order.ConvertOrder;
 import com.dickie.sidion.shared.order.CreateGameOrder;
@@ -224,6 +225,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				copy = new TeleportOrder();
 			} else if (order instanceof LockOrder){
 				copy = new LockOrder();
+			} else if (order instanceof BidOrder){
+				copy = new BidOrder();
 			} else {
 				copy = order;
 			}
@@ -449,7 +452,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		newOrders.put("Block path", new BlockPathOrder());
 		newOrders.put("Move", new MoveOrder());
 		newOrders.put("Recruit", new RecruitOrder());
-//		newOrders.put("BID");
+		newOrders.put("Bid", new BidOrder());
 		newOrders.put("Improve Town", new ImproveTownOrder());
 		newOrders.put("Improve Hero", new ImproveOrder());
 		newOrders.put("Lock Town", new LockOrder());
