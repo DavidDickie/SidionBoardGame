@@ -19,6 +19,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PlayerPanel extends VerticalPanel implements GameComponentListener, LoadEventListener, java.io.Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Player player = null;
 	final ListBox lb = new ListBox();
 	
@@ -51,28 +55,28 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		VerticalPanel vp1 = new VerticalPanel();
 		vp1.setBorderWidth(2);
 		Label vp1_l1 = new Label("GOLD");
-		Label vp1_l2 = new Label(Integer.toString(p.getResource("GOLD")));
+		Label vp1_l2 = new Label(Integer.toString(p.getGold()));
 		vp1.add(vp1_l1);
 		vp1.add(vp1_l2);
 		hp.add(vp1);
 		VerticalPanel vp2 = new VerticalPanel();
 		vp2.setBorderWidth(2);
 		Label vp2_l1 = new Label("MANA");
-		Label vp2_l2 = new Label(Integer.toString(p.getResource("MANA")));
+		Label vp2_l2 = new Label(Integer.toString(p.getMana()));
 		vp2.add(vp2_l1);
 		vp2.add(vp2_l2);
 		hp.add(vp2);
 		VerticalPanel vp3 = new VerticalPanel();
 		vp3.setBorderWidth(3);
 		Label vp3_l1 = new Label("INF");
-		Label vp3_l2 = new Label(Integer.toString(p.getResource("INF")));
+		Label vp3_l2 = new Label(Integer.toString(p.getInf()));
 		vp3.add(vp3_l1);
 		vp3.add(vp3_l2);
 		hp.add(vp3);
 		VerticalPanel vp4 = new VerticalPanel();
 		vp4.setBorderWidth(3);
 		Label vp4_l1 = new Label("ARTF");
-		Label vp4_l2 = new Label(Integer.toString(p.getResource("ARTIFACTS")));
+		Label vp4_l2 = new Label(Integer.toString(p.getArtifacts()));
 		vp4.add(vp4_l1);
 		vp4.add(vp4_l2);
 		hp.add(vp4);
@@ -114,7 +118,7 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 				if (heroOrderMap.get(h) == null){
 					Utils.logMessage("Hero " + h.getName() + " has no orders!!!!!");
 					h.setOrder(true);
-				} else if (g.getGameState() == g.ORDER_PHASE){
+				} else if (g.getGameState() == Game.ORDER_PHASE){
 					if (!h.hasOrder()){
 						lb.addItem(h.getName());
 						foundOne = true;

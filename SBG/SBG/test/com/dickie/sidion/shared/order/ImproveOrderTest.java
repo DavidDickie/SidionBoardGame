@@ -22,13 +22,13 @@ public class ImproveOrderTest {
 		game.setGameState(Game.MAGIC_PHASE);
 		prince.getOwner(game).addResource("GOLD",10);
 		Hero target = game.getHero("Hero_3");
-		int gold = prince.getOwner(game).getResource("GOLD");
+		int gold = prince.getOwner(game).getGold();
 		int heroLev = target.getLevel();
 		HashMap<String, GameComponent> ht = new HashMap<String, GameComponent>();
 		ht.put("TARGET_HERO", target);
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
-		System.out.println(gold + " " + prince.getOwner(game).getResource("GOLD"));
-		assertTrue(prince.getOwner(game).getResource("GOLD") == gold-4);
+		System.out.println(gold + " " + prince.getOwner(game).getGold());
+		assertTrue(prince.getOwner(game).getGold()== gold-4);
 		assertTrue(target.getLevel() == heroLev + 1); 
 	}
 

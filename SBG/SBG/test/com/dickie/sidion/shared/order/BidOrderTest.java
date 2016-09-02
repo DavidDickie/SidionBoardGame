@@ -20,29 +20,33 @@ public class BidOrderTest {
 		Game game = Game.createGame("junit");
 		BidOrder ro = new BidOrder();
 		Hero prince = game.getHero("Prince_2");
-		game.setGameState(Game.RETREAT);
-		int gold = prince.getOwner(game).getResource("GOLD");
+
+		int gold = prince.getOwner(game).getGold();
 		HashMap<String, GameComponent> ht = new HashMap<String, GameComponent>();
 		ht.put("MANA", new Var(1));
 		ht.put("GOLD", new Var(4));
 		ht.put("INF", new Var(0));
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
+		game.addGameComponent(ro);
 		
 		BidOrder ro2 = new BidOrder();
 		Hero prince2 = game.getHero("Prince_4");
-		game.setGameState(Game.RETREAT);
-		int gold2 = prince2.getOwner(game).getResource("GOLD");
+
+		int gold2 = prince2.getOwner(game).getGold();
 		HashMap<String, GameComponent> ht2 = new HashMap<String, GameComponent>();
 		ht2.put("MANA", new Var(1));
 		ht2.put("GOLD", new Var(3));
 		ht2.put("INF", new Var(0));
 		OrderTestUtil.executeOrder(ro2, prince2, game, ht2);
+		game.addGameComponent(ro2);
 
 		OrderProcessor op = new OrderProcessor();
 		op.doBidOrders(game);
 		
-		assertTrue(prince.getOwner(game).getResource("GOLD") == gold-4);
-		assertTrue(prince2.getOwner(game).getResource("GOLD") == gold2);
+		System.out.println(game);
+		
+		assertTrue(prince.getOwner(game).getGold() == gold-4);
+		assertTrue(prince2.getOwner(game).getGold() == gold2);
 		
 		
 	} 

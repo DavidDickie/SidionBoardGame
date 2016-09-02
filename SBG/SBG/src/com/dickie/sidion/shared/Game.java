@@ -33,7 +33,7 @@ public class Game {
 
 	public void setArtifactUp() {
 		int i = (int) (java.lang.Math.random()*100);
-		if (i < 33){
+		if (i < 50){
 			this.artifactUp = true;
 		} else {
 			artifactUp = false;
@@ -54,7 +54,9 @@ public class Game {
 	
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
-		sb.append("Game " + getName() + " state: " + getGameState() + " current player: " +isNull( getCurrentPlayer().getName()));
+		sb.append("Game " + getName() + " state: " + phaseDef[getGameState()] + 
+				" current player: " +isNull( getCurrentPlayer().getName()) +
+				" artifiact: " + isArtifactUp());
 		sb.append("\nPlayers");
 		for (Player p: players.values()){
 			sb.append("\t" + p + "\n");
@@ -71,9 +73,9 @@ public class Game {
 		for (Order p: orders.values()){
 			sb.append("\t" + p + "\n");
 		}
-		sb.append("\nMessages");
-		for (Message p: messages.values()){
-			sb.append("\t" + p + "\n");
+		sb.append("\nMsgs");
+		for (Message p: getMessages()){
+			sb.append("\t" + p.getMessage() + "\n");
 		}
 		return sb.toString();
 	}
@@ -119,10 +121,13 @@ public class Game {
 	
 	public List<Message>getMessages(){
 		ArrayList<Message> mList = new ArrayList<Message>();
-		List <String> keys = new ArrayList<String>(messages.keySet());
+		List <Integer> keys = new ArrayList<Integer>();
+		for (String s : messages.keySet()){
+			keys.add(Integer.parseInt(s.substring(4)));
+		}
 		Collections.sort(keys);
-		for (String key : keys){
-			mList.add(messages.get(key));
+		for (Integer key : keys){
+			mList.add(messages.get("MESS" + key));
 		}
 		return mList;
 	}
@@ -350,8 +355,8 @@ public class Game {
 	}
 
 	public void clearMessages() {
-		messages.clear();
-		Message m = new Message(this, "Starting new turn");
+		//messages.clear();
+		addMessage("-------- new turn ---------");
 	}
 
 }

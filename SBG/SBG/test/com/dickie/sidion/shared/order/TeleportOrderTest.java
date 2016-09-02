@@ -23,13 +23,13 @@ public class TeleportOrderTest {
 		Town targetTown = game.getTown("Juliann");
 		Player p = hero.getOwner(game);
 		game.setGameState(Game.RETREAT);
-		int mana = hero.getOwner(game).getResource("MANA");
-		int d = targetTown.getDistance(hero.getLocation(game), targetTown, game);
+		int mana = hero.getOwner(game).getMana();
+		int d = Town.getDistance(hero.getLocation(game), targetTown, game);
 		HashMap<String, GameComponent> ht = new HashMap<String, GameComponent>();
 		ht.put("TARGET_HERO", target);
 		ht.put("TOWN", targetTown);
 		OrderTestUtil.executeOrder(ro, hero, game, ht);
-		assertTrue(hero.getOwner(game).getResource("MANA") == mana-d);	
+		assertTrue(hero.getOwner(game).getMana() == mana-d);	
 		assertTrue(target.getLocation(game) == targetTown);
 	} 
 

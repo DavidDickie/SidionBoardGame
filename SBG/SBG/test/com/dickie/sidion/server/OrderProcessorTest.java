@@ -22,6 +22,9 @@ public class OrderProcessorTest {
 		// normally the game create command creates npc orders, but that's in the higher level routine
 		GenNpcOrders gno = new GenNpcOrders();
 			gno.genNpcOrders(game);
+		game.getPlayer("Player2").setTurnFinished(true);
+		game.getPlayer("Player3").setTurnFinished(true);
+		game.getPlayer("Player4").setTurnFinished(true);
 		assertTrue(game.getGameState() == Game.ORDER_PHASE);
 		Player p = game.getPlayer("Player1");
 		Hero h = game.getHero("Prince_6");
@@ -89,13 +92,16 @@ public class OrderProcessorTest {
 	public void fullTurnTest(){
 		Game game = Game.createGame("junit");
 		OrderProcessor op = new OrderProcessor();
-		// normally the game create command creates npc orders, but that's in the higher level routine
+		game.getHero("Hero_3").setLocation(game.getTown("Beoma"));
+		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));		
+		
 		// normally the game create command creates npc orders, but that's in the higher level routine
 		GenNpcOrders gno = new GenNpcOrders();
 			gno.genNpcOrders(game);
-		
-		game.getHero("Hero_3").setLocation(game.getTown("Beoma"));
-		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));		
+			
+		game.getPlayer("Player2").setTurnFinished(true);
+		game.getPlayer("Player3").setTurnFinished(true);
+		game.getPlayer("Player4").setTurnFinished(true);
 		
 		Player p = game.getPlayer("Player1");
 		Hero h = game.getHero("Prince_6");
@@ -125,6 +131,7 @@ public class OrderProcessorTest {
 		FinishTurn fo = new FinishTurn();
 		fo.setPlayer(p);
 		op.processOrder(fo, game);
+		System.out.println(game);
 		// game should be in magic orders
 		assertTrue(game.getGameState() == Game.MAGIC_PHASE);
 		// now, execute player1's orders... the other guys

@@ -43,7 +43,23 @@ public class Player extends GameComponentImpl {
 		return getValue("PASSWORD");
 	}
 	
-	public int getResource(String type){
+	public int getGold(){
+		return getResource("GOLD");
+	}
+	
+	public int getMana(){
+		return getResource("MANA");
+	}
+	
+	public int getInf(){
+		return getResource("INF");
+	}
+	
+	public int getArtifacts(){
+		return getResource("ARTIFACTS");
+	}
+	
+	private int getResource(String type){
 		if (getValue(type) == null){
 			return 0;
 		}
@@ -53,6 +69,9 @@ public class Player extends GameComponentImpl {
 	public void addResource(String type, int number){
 		int current = getResource(type);
 		current += number;
+		if (current < 0){
+			throw new RuntimeException("Setting resource " + type + " to less than 0");
+		}
 		setValue(type, Integer.toString(current));
 	}
 

@@ -3,7 +3,6 @@ package com.dickie.sidion.shared.order;
 import java.util.List;
 
 import com.dickie.sidion.shared.Game;
-import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Town;
 
 public class Retreat  extends OrderImpl {
@@ -22,7 +21,7 @@ public class Retreat  extends OrderImpl {
 		if (checkForHero(game) != null){
 			return checkForHero(game);
 		}
-		if (getOwner(game).getResource("GOLD") < 1){
+		if (getOwner(game).getGold() < 1){
 			return "Player has no gold";
 		}
 		List<Town> towns = getHero(game).getLocation(game).getNeighbors(game);
@@ -36,7 +35,7 @@ public class Retreat  extends OrderImpl {
 		if (!retreatSite){
 			return "No place to retreat to";
 		}
-		if (game.getGameState() == game.RETREAT && getTown() != null){
+		if (game.getGameState() == Game.RETREAT && getTown() != null){
 			retreatSite = false;
 			for (Town t : towns){
 				if (t.equals(getTown())){
@@ -54,7 +53,7 @@ public class Retreat  extends OrderImpl {
 	
 	@Override
 	public boolean isExecutable(Game game) {
-		if (game.getGameState() == game.RETREAT){
+		if (game.getGameState() == Game.RETREAT){
 			return true;
 		}
 		return false;

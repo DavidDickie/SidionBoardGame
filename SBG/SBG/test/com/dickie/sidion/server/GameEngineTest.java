@@ -40,9 +40,9 @@ public class GameEngineTest {
 		
 		game.setGameState(Game.RETREAT);
 		assertTrue (r.validateOrder(game) == null);
-		int gold = hero1.getOwner(game).getResource("GOLD");
+		int gold = hero1.getOwner(game).getGold();
 		r.executeOnServer(game);
-		assertTrue( hero1.getOwner(game).getResource("GOLD") == gold - 1);
+		assertTrue( hero1.getOwner(game).getGold() == gold - 1);
 		assertTrue(hero1.getLocation(game).getName().equals("Beoma"));
 		
 	}
@@ -63,7 +63,7 @@ public class GameEngineTest {
 		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));
 		game.getHero("Prince_6").setLocation(game.getTown("Vonnie"));
 		
-		int gold = hero1.getOwner(game).getResource("GOLD");
+		int gold = hero1.getOwner(game).getGold();
 		
 		
 		
@@ -80,7 +80,7 @@ public class GameEngineTest {
 		mo.setHero(prince);
 		mo.executeOnServer(game);
 		assertTrue(prince.getLocation(game).equals(game.getTown("Vonnie")));
-		assertTrue(hero1.getOwner(game).getResource("GOLD") == gold - 2);
+		assertTrue(hero1.getOwner(game).getGold() == gold - 2);
 		
 		
 		ge.resolveCombat(game);
@@ -92,7 +92,7 @@ public class GameEngineTest {
 		assertTrue (r.validateOrder(game) == null);
 		
 		r.executeOnServer(game);
-		assertTrue( hero1.getOwner(game).getResource("GOLD") == gold - 3);
+		assertTrue( hero1.getOwner(game).getGold() == gold - 3);
 		assertTrue(hero1.getLocation(game).getName().equals("Beoma"));
 		
 	}
@@ -111,7 +111,7 @@ public class GameEngineTest {
 		Hero prince = game.getHero("Prince_0");
 		prince.setLocation(game.getTown("Mira"));
 		game.getHero("Hero_7").setLocation(game.getTown("Vonnie"));		
-		int gold = hero1.getOwner(game).getResource("GOLD");
+		int gold = hero1.getOwner(game).getGold();
 		
 		
 		
@@ -128,7 +128,7 @@ public class GameEngineTest {
 		mo.setHero(prince);
 		mo.executeOnServer(game);
 		assertTrue(prince.getLocation(game).equals(game.getTown("Vonnie")));
-		assertTrue(hero1.getOwner(game).getResource("GOLD") == gold - 2);
+		assertTrue(hero1.getOwner(game).getGold() == gold - 2);
 		
 		
 		ge.resolveCombat(game);

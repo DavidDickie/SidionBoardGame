@@ -34,7 +34,7 @@ public class ImproveOrder extends OrderImpl {
 				return "You cannot improve a hero past level 3";
 			}
 			int cost = (hero.getLevel() + 1) * (hero.getLevel() + 1);
-			if (getOwner(game).getResource("GOLD") < cost){
+			if (getOwner(game).getGold() < cost){
 				return "You do not have " + cost + " gold";
 			}
 		}

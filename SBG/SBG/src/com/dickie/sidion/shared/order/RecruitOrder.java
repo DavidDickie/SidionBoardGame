@@ -6,6 +6,11 @@ import com.dickie.sidion.shared.Player;
 
 public class RecruitOrder  extends OrderImpl {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public RecruitOrder(){
 		super.addPrecursors(true, false, false, false, false, false, false);
 	}
@@ -20,7 +25,7 @@ public class RecruitOrder  extends OrderImpl {
 		if (!prince.isPrince()){
 			return "Only princes may recruit";
 		}
-		if (getOwner(game).getResource("GOLD") < 5){
+		if (getOwner(game).getGold() < getRecruitCost()){
 			return "Insufficient funds";
 		}
 		if (!prince.getLocation(game).hasHero()){
@@ -30,12 +35,16 @@ public class RecruitOrder  extends OrderImpl {
 		return null;
 	}
 	
+	public static int getRecruitCost(){
+		return 5;
+	}
+	
 	@Override
 	public boolean isExecutable(Game game) {
-		if (game.getGameState() == game.ORDER_PHASE){
+		if (game.getGameState() == Game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.RETREAT){
+		if (game.getGameState() == Game.RETREAT){
 			return true;
 		}
 		return false;
@@ -63,7 +72,7 @@ public class RecruitOrder  extends OrderImpl {
 		hero.setOwner(getOwner(game));
 		getHero(game).getLocation(game).setHasHero(false);
 		game.addGameComponent(hero);
-		getOwner(game).addResource("GOLD", -5);
+		getOwner(game).addResource("GOLD", -getRecruitCost());
 		game.addMessage(getHero(game).getName() + " [" + 
 				getPlayer(game).getName() + "] recuited a new hero in " + getHero(game).getLocation(game).getName()); 
 	}

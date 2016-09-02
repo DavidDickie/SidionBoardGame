@@ -25,10 +25,10 @@ public class ConvertOrder extends OrderImpl{
 		if (getHero(game).getLevel() == 0){
 			return getHero(game).getName() + " is " + getHero(game).getLevel() + "; they must be at least level 1";
 		}
-		if (game.getGameState() == game.MAGIC_PHASE){
+		if (game.getGameState() == Game.MAGIC_PHASE){
 			VarString vs = (VarString) precursors.get("TYPE");
 			Var numToConvert = (Var) precursors.get("NUM_TO_CONVERT");
-			if (numToConvert == null){
+			if (numToConvert == null || numToConvert.getKey() == null){
 				return "No number to convert set";
 			}
 			int iNumToConvert = numToConvert.getValue();
@@ -38,7 +38,7 @@ public class ConvertOrder extends OrderImpl{
 			if (!(vs.getValue().equals("GOLD") || vs.getValue().equals("INF"))){
 				return "Invalid type " + precursors.get("TYPE").getKey();
 			}
-			if (getHero(game).getOwner(game).getResource("MANA") < iNumToConvert){
+			if (getHero(game).getOwner(game).getMana() < iNumToConvert){
 				return "insufficient mana to do transfer; need " + (int) (ratio(game)*iNumToConvert);
 			}
 		}
@@ -74,10 +74,10 @@ public class ConvertOrder extends OrderImpl{
 	
 	@Override
 	public boolean isExecutable(Game game) {
-		if (game.getGameState() == game.ORDER_PHASE){
+		if (game.getGameState() == Game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.MAGIC_PHASE){
+		if (game.getGameState() == Game.MAGIC_PHASE){
 			addDoOrderParams();
 			return true;
 		}
@@ -92,7 +92,7 @@ public class ConvertOrder extends OrderImpl{
 	
 	@Override
 	public void executeOnServer(Game game){
-		if (game.getGameState() == game.ORDER_PHASE){
+		if (game.getGameState() == Game.ORDER_PHASE){
 			return;
 		}
 		String rType = precursors.get("TYPE").getKey();

@@ -22,13 +22,13 @@ public class ImproveTownOrderTest {
 		prince.getOwner(game).addResource("GOLD",10);
 		Town target = game.getTown("Vonnie");
 		prince.setLocation(target);
-		int gold = prince.getOwner(game).getResource("GOLD");
+		int gold = prince.getOwner(game).getGold();
 		int townLev = target.getLevel();
 		HashMap<String, GameComponent> ht = new HashMap<String, GameComponent>();
 		ht.put("TARGET_HERO", target);
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
-		System.out.println(gold + " " + prince.getOwner(game).getResource("GOLD"));
-		assertTrue(prince.getOwner(game).getResource("GOLD") == gold-((townLev+1)*(townLev+1)));
+		System.out.println(gold + " " + prince.getOwner(game).getGold());
+		assertTrue(prince.getOwner(game).getGold() == gold-((townLev+1)*(townLev+1)));
 		assertTrue(target.getLevel() == townLev + 1);  
 	} //
 

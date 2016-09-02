@@ -42,9 +42,7 @@ public class OrderProcessor {
 					}
 				}
 				if (allDone){
-//					GreetingServiceImpl.getMessageList(game.getName()).add("All orders are in, shifting to magic phase");
-					game.addMessage("All orders are in, shifting to magic phase");
-					System.out.print("All orders in, orders are:" );
+					System.out.print("All orders in, orders are:\n" );
 					for (Order o : game.getOrders()){
 						System.out.println("\t" + o);
 					}
@@ -99,19 +97,15 @@ public class OrderProcessor {
 	}
 	
 	private void npcCheck(Game game){
-//	System.out.println("Checking if " + game.getCurrentPlayer().getName() + " is a NPC");
+
 		if (game.getCurrentPlayer().isNpc()){
 			System.out.println("Player " + game.getCurrentPlayer().getName() + " is a NPC, executing  orders and moving on");
 			for (Order o : game.getOrders()){
-//				System.out.println("checking " + o);
 				if (o.getPlayer(game) == game.getCurrentPlayer()){
-//					System.out.println("current player for order " + o);
 					if (o.isExecutable(game)){
 						// and isExecutable is going to add the order params,
 						// so we need to reset the precursors
-//						System.out.println("after isExec" + o);
 						o.setPrecursors(game);
-//						System.out.println("after set: " + o);
 						if (o.validateOrder(game) == null){
 							o.executeOnServer(game);
 						} else {
@@ -134,9 +128,11 @@ public class OrderProcessor {
 			p.setTurnFinished(false);
 		}
 
-		
+		//
+		// need to record if artifact was up this round...
+		boolean artifactWasUp = game.isArtifactUp();
 		if (game.shiftToNextGameState()){ // true if it's end of a round
-			shiftToNextRound(game, player);
+			shiftToNextRound(game, player,artifactWasUp);
 		} else {
 			if (game.getGameState() == Game.RETREAT){
 				// should queue up retreat orders if there's been combat
@@ -159,7 +155,7 @@ public class OrderProcessor {
 		}
 	}
 	
-	private void shiftToNextRound(Game game, Player player){
+	private void shiftToNextRound(Game game, Player player, boolean artWasUp){
 		System.out.println("Moving to next round");
 		
 		// wipe out heros that did not retreat
@@ -173,7 +169,7 @@ public class OrderProcessor {
 			}
 		}
 		// figure out if people bid for an artifact, and if so, give it to them
-		if (game.isArtifactUp()){
+		if (artWasUp){
 			doBidOrders(game);
 		}
 		
@@ -192,12 +188,10 @@ public class OrderProcessor {
 		for (Player p : game.getPlayers()){
 			if (p.isNpc()){
 				List<Order> orders = gno.genNpcOrders(p, game);
-				System.out.println("Generated NPC Order");
 				for (Order o : orders){
 					o.execute();  // serialize the order
 					game.addGameComponent(o);
 					o.getHero(game).getOwner(game).setTurnFinished(true);
-					System.out.println(o);
 				}
 			}
 		}
@@ -225,6 +219,7 @@ public class OrderProcessor {
 			int maxBid = 0;
 			boolean tie = true;
 			for (BidOrder o : bids){
+				o.setPrecursors(game);
 				int total = o.getGoldBid() + o.getManaBid() + o.getInfBid();
 				if (total > maxBid){
 					maxBid = o.getGoldBid() + o.getManaBid() + o.getInfBid();

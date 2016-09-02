@@ -99,7 +99,7 @@ public class GameEngine {
 						if (h2.getOwner(game).equals(originalOwner)){
 							// they are ok
 						} else {
-							if (h2.getOwner(game).getResource("GOLD") == 0){
+							if (h2.getOwner(game).getGold() == 0){
 								game.addMessage(h2.getName() + " [" + h2.getOwner(game).getName() + "] cannot retreat (no gold) ... removed from game");
 								game.removeGameComponent(h2);
 							} else {
@@ -136,6 +136,10 @@ public class GameEngine {
 	}
 	
 	public void resetOrderOnConflict(Game game){
+		// if we are in the retreat phase, don't do this, since retreat orders should not be eliminated
+		if (game.getGameState() > Game.PHYS_PHASE){
+			return;
+		}
 		ArrayList<Town> towns = new ArrayList<Town>(game.getTowns());
 		for (Town t: towns){
 			Map<Player, List<Hero>> occupiers = new HashMap<Player, List<Hero>>();

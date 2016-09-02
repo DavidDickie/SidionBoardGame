@@ -3,24 +3,28 @@ package com.dickie.sidion.shared.order;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
-import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Town;
 
 public class TeleportOrder extends OrderImpl{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public TeleportOrder(){
 		super.addPrecursors(true, false, false, false, false, false, false);
 	}
 	
 	public String validateOrder(Game game) {
-		if (game.getGameState() == game.ORDER_PHASE){
+		if (game.getGameState() == Game.ORDER_PHASE){
 			super.validateOrder(game);
 			if (precursors.get("HERO") == null){
 				return "No wizard is set";
 			}
 			return null;
 		}
-		if (game.getGameState() == game.MAGIC_PHASE){
+		if (game.getGameState() == Game.MAGIC_PHASE){
 			Hero target = (Hero) precursors.get("TARGET_HERO");
 			if (target == null){
 				return "No one to teleport";
@@ -47,10 +51,10 @@ public class TeleportOrder extends OrderImpl{
 			if (dist > wizard.getLevel()){
 				return "Distance between towns is too great";
 			}
-			if (dist > wizard.getOwner(game).getResource("MANA")){
+			if (dist > wizard.getOwner(game).getMana()){
 				return "insufficent mana";
 			}
-			if (this.getPlayer(game).getResource("MANA") < 1){
+			if (this.getPlayer(game).getMana() < 1){
 				return "Insufficient mana";
 			}
 		}
@@ -65,10 +69,10 @@ public class TeleportOrder extends OrderImpl{
 	
 	@Override
 	public boolean isExecutable(Game game) {
-		if (game.getGameState() == game.ORDER_PHASE){
+		if (game.getGameState() == Game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.MAGIC_PHASE){
+		if (game.getGameState() == Game.MAGIC_PHASE){
 			addDoOrderParams();
 			return true;
 		}

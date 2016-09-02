@@ -22,19 +22,19 @@ public class BidOrder extends OrderImpl {
 			return checkForHero(game);
 		}
 
-		if (game.getGameState() == Game.RETREAT){
-			if (getGoldBid() > this.getPlayer(game).getResource("GOLD")){
+
+			if (getGoldBid() > this.getPlayer(game).getGold()){
 				return "Insufficient gold for bid";
 			}
-			if (getManaBid() > this.getPlayer(game).getResource("MANA")){
+			if (getManaBid() > this.getPlayer(game).getMana()){
 				return "Insufficient mana for bid";
 			}
-			if (getInfBid() > this.getPlayer(game).getResource("INF")){
+			if (getInfBid() > this.getPlayer(game).getInf()){
 				return "Insufficient influence for bid";
 			}
 			if (getGoldBid() + getManaBid() + getInfBid() < 1){
 				return "Bid must be at least 1 of something";
-			}
+			
 		}
 		return null;
 	}
@@ -92,7 +92,9 @@ public class BidOrder extends OrderImpl {
 		player.addResource("GOLD", -getGoldBid());
 		player.addResource("MANA", -getManaBid());
 		player.addResource("INF", -getInfBid());
-		player.addResource("ARTIFACT", 1);
+		player.addResource("ARTIFACTS", 1);
+		game.addMessage(getHero(game).getName() + "[" + getHero(game).getOwner(game).getName() + " wins an artifact with a "+
+				(getGoldBid() + getManaBid() + getInfBid()) + " bid");
 		
 	}
 

@@ -2,11 +2,15 @@ package com.dickie.sidion.shared.order;
 
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Path;
-import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Town;
 
 public class MoveOrder  extends OrderImpl {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public MoveOrder(){
 		super.addPrecursors(true, false, false, false, false, false, false);
 	}
@@ -18,7 +22,7 @@ public class MoveOrder  extends OrderImpl {
 			return checkForHero(game);
 		}
 
-		if (game.getGameState() == game.PHYS_PHASE){
+		if (game.getGameState() == Game.PHYS_PHASE){
 			if (getTown() == null){
 				return "No town?";
 			}
@@ -35,7 +39,7 @@ public class MoveOrder  extends OrderImpl {
 					return "you may not move to a town owned by another player";
 				}
 			}
-			if (getPlayer(game).getResource("GOLD") < 1){
+			if (getPlayer(game).getGold() < 1){
 				return "Insufficient gold for move";
 			}
 		}
@@ -44,10 +48,10 @@ public class MoveOrder  extends OrderImpl {
 	
 	@Override
 	public boolean isExecutable(Game game) {
-		if (game.getGameState() == game.ORDER_PHASE){
+		if (game.getGameState() == Game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.PHYS_PHASE){
+		if (game.getGameState() == Game.PHYS_PHASE){
 			addDoOrderParams();
 			return true;
 		}

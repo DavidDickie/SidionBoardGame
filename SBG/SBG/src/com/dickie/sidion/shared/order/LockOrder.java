@@ -6,6 +6,11 @@ import com.dickie.sidion.shared.Town;
 
 public class LockOrder extends OrderImpl {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public LockOrder(){
 		super.addPrecursors(true, false, false, false, false, false, false);
 	}
@@ -16,22 +21,22 @@ public class LockOrder extends OrderImpl {
 		if (checkForHero(game) != null){
 			return checkForHero(game);
 		}
-		if (game.getGameState() == Game.RETREAT && getHero(game).getOwner(game).getResource("INF") < getInfCost(getHero(game).getLocation(game))){
+		if (game.getGameState() == Game.RETREAT && getHero(game).getOwner(game).getInf() < getInfCost(getHero(game).getLocation(game))){
 			return "You do not have "  + getInfCost(getHero(game).getLocation(game)) + " influence";
 		}
 		return null;
 	}
 	
-	public int getInfCost(Town t){
-		return t.getLevel() * 5;
+	public static int getInfCost(Town t){
+		return (t.getLevel()+1) * 5;
 	}
 	
 	@Override
 	public boolean isExecutable(Game game) {
-		if (game.getGameState() == game.ORDER_PHASE){
+		if (game.getGameState() == Game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == game.RETREAT ){
+		if (game.getGameState() == Game.RETREAT ){
 			addDoOrderParams();
 			return true;
 		}

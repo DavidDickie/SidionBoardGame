@@ -20,7 +20,7 @@ public class ConvertOrderTest {
 		ConvertOrder ro = new ConvertOrder();
 		Hero prince = game.getHero("Prince_2");
 		game.setGameState(Game.MAGIC_PHASE);
-		int gold = prince.getOwner(game).getResource("GOLD");
+		int gold = prince.getOwner(game).getGold();
 		int mana = 7;
 		prince.getOwner(game).addResource("MANA",4);
 		System.out.println(prince.getOwner(game));
@@ -29,8 +29,8 @@ public class ConvertOrderTest {
 		ht.put("NUM_TO_CONVERT", new Var(4));
 		OrderTestUtil.executeOrder(ro, prince, game, ht);
 		System.out.println(prince.getOwner(game));
-		assertTrue(prince.getOwner(game).getResource("GOLD") == gold+2);
-		assertTrue(prince.getOwner(game).getResource("MANA") == mana-4);
+		assertTrue(prince.getOwner(game).getGold() == gold+2);
+		assertTrue(prince.getOwner(game).getMana() == mana-4);
 	} 
 
 }

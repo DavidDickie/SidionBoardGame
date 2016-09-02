@@ -24,10 +24,10 @@ public class LockOrderTest {
 		hero.getOwner(game).addResource("INF",10);
 		Town target = game.getTown("Vonnie");
 		hero.setLocation(target);
-		int inf = hero.getOwner(game).getResource("INF");
+		int inf = hero.getOwner(game).getInf();
 		HashMap<String, GameComponent> ht = new HashMap<String, GameComponent>();
 		OrderTestUtil.executeOrder(ro, hero, game, ht);
-		assertTrue(hero.getOwner(game).getResource("INF") == inf-ro.getInfCost(target));
+		assertTrue(hero.getOwner(game).getInf() == inf-LockOrder.getInfCost(target));
 		assertTrue(game.getHero(hero.getName()) == null);
 		assertTrue(target.getOwner(game) == p); 
 	}

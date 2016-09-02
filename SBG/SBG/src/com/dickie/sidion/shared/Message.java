@@ -6,6 +6,16 @@ import com.dickie.sidion.shared.Resource.Rtypes;
 
 public class Message extends GameComponentImpl {
 	
+	@Override
+	public String toString() {
+		return getKey() + ": " + getMessage();
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Message(){
 		validAttributes = Arrays.asList("LKEY", "MESSAGE");
 	}
