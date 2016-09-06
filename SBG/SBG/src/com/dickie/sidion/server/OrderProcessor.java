@@ -85,7 +85,7 @@ public class OrderProcessor {
 	}
 	
 	private void postOrderCheck(Game game, Player player, boolean forceIt){
-		if (player.hasExcecutableOrders(game) && !forceIt){
+		if (!player.isTurnFinshed() && player.hasExcecutableOrders(game) && !forceIt){
 			// there's something for this player to do, don't move on
 			return;
 		}

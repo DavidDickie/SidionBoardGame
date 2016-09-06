@@ -96,6 +96,6 @@ public class Hero extends GameComponentImpl {
 
 	}
 	
-	private static String[] startTowns = {"Joletta", "Shaunta", "Jacqui", "Maya"};
+	private static String[] startTowns = {"Vonnie", "Myrle", "Naoma", "Loree"};
 
 }

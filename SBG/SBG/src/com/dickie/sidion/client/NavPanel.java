@@ -215,9 +215,9 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			if (order instanceof ConvertOrder){
 				copy = new ConvertOrder();
 			} else if (order instanceof BlockPathOrder){
-				copy = new ImproveOrder();
+				copy = new BlockPathOrder();
 			} else if (order instanceof ImproveOrder){
-				copy = new MoveOrder();
+				copy = new ImproveOrder();
 			} else if (order instanceof MoveOrder){
 				copy = new MoveOrder();
 			} else if (order instanceof RecruitOrder){

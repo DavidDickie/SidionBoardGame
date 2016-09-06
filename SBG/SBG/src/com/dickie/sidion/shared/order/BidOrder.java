@@ -22,7 +22,7 @@ public class BidOrder extends OrderImpl {
 			return checkForHero(game);
 		}
 
-
+		if (game.getGameState() == Game.RETREAT){
 			if (getGoldBid() > this.getPlayer(game).getGold()){
 				return "Insufficient gold for bid";
 			}
@@ -33,8 +33,8 @@ public class BidOrder extends OrderImpl {
 				return "Insufficient influence for bid";
 			}
 			if (getGoldBid() + getManaBid() + getInfBid() < 1){
-				return "Bid must be at least 1 of something";
-			
+				return "Bid must be at least 1 of something";	
+			}
 		}
 		return null;
 	}

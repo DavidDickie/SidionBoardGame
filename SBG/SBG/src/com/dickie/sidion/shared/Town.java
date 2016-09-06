@@ -184,6 +184,11 @@ public class Town extends GameComponentImpl {
 					t.setInf(0);
 					t.setMana(0);
 				}
+				if (townNames.equals("Teofila")){
+					t.setGold(1);
+					t.setInf(1);
+					t.setMana(1);
+				}
 				towns.put(townNames[count],t);
 				count++;
 			}
