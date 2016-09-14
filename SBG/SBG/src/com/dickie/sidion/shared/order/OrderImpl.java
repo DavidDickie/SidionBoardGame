@@ -26,7 +26,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 
 	@Override
 	public String toString() {
-		String s = super.toString()+ " [serialized] " + getPrecursorsAsString() ;
+		String s = getClass().getSimpleName() + " for " + getHeroAsString() +"[" + getValue("PLAYER") + "]";
 		return s;
 	}
 
@@ -171,6 +171,10 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 	@Override
 	public Hero getHero(Game game) {
 		return game.getHero(getValue("LKEY"));
+	}
+	
+	public String getHeroAsString(){
+		return getValue("LKEY");
 	}
 	
 	public String checkForHero(Game game){

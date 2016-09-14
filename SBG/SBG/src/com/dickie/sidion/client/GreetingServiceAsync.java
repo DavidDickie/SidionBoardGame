@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dickie.sidion.shared.GameComponent;
+import com.dickie.sidion.shared.Message;
 import com.dickie.sidion.shared.Order;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -19,5 +20,5 @@ public interface GreetingServiceAsync {
 	void sendOrders(String name, List<Order> orders, AsyncCallback<String> callback);
 	void executeSingleOrder(String name, Order order, AsyncCallback<String> callback);	
 	void getGameAttrs(String name, AsyncCallback<Map<String, GameComponent>> callback);
-	void getLatestMessagesFromServer(String game, int lastMessage, AsyncCallback<List<String>> callback);
+	void getLatestMessagesFromServer(String game, int lastMessage, AsyncCallback<List<Message>> callback);
 }

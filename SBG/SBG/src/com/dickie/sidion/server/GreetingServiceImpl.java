@@ -11,6 +11,7 @@ import com.dickie.sidion.npc.GenNpcOrders;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Hero;
+import com.dickie.sidion.shared.Message;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
@@ -79,13 +80,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return input;
 	}
 	
-	public List<String> getLatestMessagesFromServer(String game, int lastMessage){
-		System.out.println("Getting messages from " + lastMessage + "; " + gameMessages.size() + " in queue");
-		ArrayList<String> messages =  new ArrayList<String>();
-		for (int i = lastMessage + 1; i < gameMessages.get(game).size(); i++){
-			messages.add(gameMessages.get(game).get(i));
-		}
-		return messages;
+	public List<Message> getLatestMessagesFromServer(String game, int lastMessage){
+		return Game.getGame(game).getMessages();
 	}
 	
 	public Void logMessage(String input){

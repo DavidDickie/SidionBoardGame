@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class GameInfoPanel extends VerticalPanel {
+public class GameInfoPanel extends VerticalPanel implements LoadEventListener {
 
 	/**
 	 * 
@@ -41,6 +41,11 @@ public class GameInfoPanel extends VerticalPanel {
 			sb.append(s.getMessage()).append("\n");
 		}
 		addMessage(sb.toString());
+	}
+
+	@Override
+	public void LoadEvent(String event, Object loaded) {
+		addMessage(event);
 	}
 	
 

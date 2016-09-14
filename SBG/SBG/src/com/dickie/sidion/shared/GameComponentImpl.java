@@ -15,7 +15,7 @@ public class GameComponentImpl implements GameComponent, java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	@Override
 	public String toString() {
-		return getClass().getName() + attributes;
+		return getClass().getSimpleName() + attributes;
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ public class LockOrder extends OrderImpl {
 			return checkForHero(game);
 		}
 		if (game.getGameState() == Game.RETREAT && getHero(game).getOwner(game).getInf() < getInfCost(getHero(game).getLocation(game))){
-			return "You do not have "  + getInfCost(getHero(game).getLocation(game)) + " influence";
+			return "You do not have "  + getInfCost(getHero(game).getLocation(game)) + " influence; you only have " + getHero(game).getOwner(game).getInf();
 		}
 		return null;
 	}

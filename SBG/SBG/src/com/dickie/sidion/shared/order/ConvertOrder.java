@@ -18,12 +18,8 @@ public class ConvertOrder extends OrderImpl{
 	
 	public String validateOrder(Game game) {
 		super.validateOrder(game);
-	
-		if (getHero(game) == null){
-			return "No wizard is set";
-		}
-		if (getHero(game).getLevel() == 0){
-			return getHero(game).getName() + " is " + getHero(game).getLevel() + "; they must be at least level 1";
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
 		if (game.getGameState() == Game.MAGIC_PHASE){
 			VarString vs = (VarString) precursors.get("TYPE");

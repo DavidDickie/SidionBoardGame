@@ -17,12 +17,9 @@ public class TeleportOrder extends OrderImpl{
 	}
 	
 	public String validateOrder(Game game) {
-		if (game.getGameState() == Game.ORDER_PHASE){
-			super.validateOrder(game);
-			if (precursors.get("HERO") == null){
-				return "No wizard is set";
-			}
-			return null;
+		super.validateOrder(game);
+		if (checkForHero(game) != null){
+			return checkForHero(game);
 		}
 		if (game.getGameState() == Game.MAGIC_PHASE){
 			Hero target = (Hero) precursors.get("TARGET_HERO");

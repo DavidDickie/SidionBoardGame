@@ -189,6 +189,9 @@ public class GenNpcOrders {
 				return ito;
 			}
 		}
+		if (h.getLocation(g).getHeros(g).size() == 1){
+			return genStandOrder(h,g);
+		}
 		List<Town> close = town.getNeighbors(g);
 		Collections.shuffle(close);
 		for (Town t : close){

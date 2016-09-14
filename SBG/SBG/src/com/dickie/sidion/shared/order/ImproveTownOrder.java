@@ -23,7 +23,7 @@ public class ImproveTownOrder extends OrderImpl{
 		}
 		Hero hero = getHero(game);
 		
-		if (game.getGameState() == Game.PHYS_PHASE){
+		if (game.getGameState() == Game.RETREAT){
 			Town t = hero.getLocation(game);
 			if (t.isLocked()){
 				return "You cannot improved a town that is owned";

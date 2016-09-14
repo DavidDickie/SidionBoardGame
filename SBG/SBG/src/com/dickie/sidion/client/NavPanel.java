@@ -25,6 +25,7 @@ import com.dickie.sidion.shared.order.ImproveTownOrder;
 import com.dickie.sidion.shared.order.LockOrder;
 import com.dickie.sidion.shared.order.MoveOrder;
 import com.dickie.sidion.shared.order.RecruitOrder;
+import com.dickie.sidion.shared.order.Retreat;
 import com.dickie.sidion.shared.order.StandOrder;
 import com.dickie.sidion.shared.order.TeleportOrder;
 import com.google.gwt.core.client.GWT;
@@ -65,9 +66,10 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private GameInfoPanel gip = null;
 
 	Button refresh = new Button("refresh");
+	Button messages = new Button("Messages");
 	Button turnOnClientLogButton = new Button("Client log off");
 
-	public void initialize(Draw draw, final MapPanel mapPanel, GameInfoPanel gip) {
+	public void initialize(Draw draw, final MapPanel mapPanel, final GameInfoPanel gip) {
 		this.setSize("150px", "100px");
 		this.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 		this.draw = draw;
@@ -83,6 +85,14 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				mapPanel.clearCanvas();
 				Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
 				Utils.setGameAttrs(game, NavPanel.this);
+			}
+		});
+		messages.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				gip.clear();
+				Utils.getMessages(game.getName(), 0, gip);
 			}
 		});
 		turnOnClientLogButton.addClickHandler(new ClickHandler() {
@@ -230,6 +240,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				copy = new BidOrder();
 			} else if (order instanceof FindOrder){
 				copy = new FindOrder();
+			} else if (order instanceof Retreat){
+				copy = new Retreat();
 			} else {
 				copy = order;
 			}
@@ -253,8 +265,9 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	
 	private void updateHeroOrderList() {
 		this.clear();
-		this.add(refresh);
-		this.add(turnOnClientLogButton);
+		add(refresh);
+		add(messages);
+		add(turnOnClientLogButton);
 		for (PlayerPanel pp : playerPanels){
 			if (pp.getPlayer().equals(player)){
 				Utils.logMessage("Client: " +"Display orders for player " + player);
@@ -266,16 +279,16 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 					Utils.logMessage("Client: " +"Sending finish order for " + pp.getPlayer().getName());
 					game.setCurrentPlayer(game.getNextPlayer().getName());
 					Utils.logMessage("Client: " +"Finishing turn for player " + player.getName());
-					FinishTurn ft = new FinishTurn();
-					ft.setPlayer(player);
-					ft.execute();
-					displayMessage(Utils.sendOrderToServer(ft, game));
 					displayMessage("You have entered all orders");
 					Timer timer = new Timer()
 			        {
 			            @Override
 			            public void run()
 			            {
+			            	FinishTurn ft = new FinishTurn();
+							ft.setPlayer(player);
+							ft.execute();
+							displayMessage(Utils.sendOrderToServer(ft, game));
 			            	Utils.getGameFromServer(game, NavPanel.this, NavPanel.this);
 			            }
 			        };
@@ -466,15 +479,15 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 	private void renderPickOrder(final Hero hero) {
 		try {
 			this.clear();
-			this.add(refresh);
+			add(refresh);
 			Utils.logMessage("Client: " +"Rendering a select order dialog");
 			Label lb = new Label(hero.getName() + "[" + hero.getLocation(game).getName() + "]");
-			this.add(lb);
+			add(lb);
 			final ListBox cb = new ListBox();
 			for (String order : newOrders.keySet()) {				
 				cb.addItem(order);
 			}
-			this.add(cb);
+			add(cb);
 			Button exBut = new Button("EXECUTE");
 			exBut.addClickHandler(new ClickHandler() {
 

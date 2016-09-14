@@ -17,7 +17,7 @@ public class RecruitOrderTest {
 		Game game = Game.createGame("junit");
 		RecruitOrder ro = new RecruitOrder();
 		Hero prince = game.getHero("Prince_2");
-		prince.setLocation(game.getTown("Vonnie"));
+		prince.setLocation(game.getTown("Robbi"));
 		game.setGameState(game.RETREAT);
 		int noHeros = game.getHeros().size();
 		HashMap <String, GameComponent> ht = new HashMap<String, GameComponent>();

@@ -18,9 +18,9 @@ public class ImproveTownOrderTest {
 		Game game = Game.createGame("junit");
 		ImproveTownOrder ro = new ImproveTownOrder();
 		Hero prince = game.getHero("Prince_2");
-		game.setGameState(Game.MAGIC_PHASE);
+		game.setGameState(Game.RETREAT);
 		prince.getOwner(game).addResource("GOLD",10);
-		Town target = game.getTown("Vonnie");
+		Town target = game.getTown("Robbi");
 		prince.setLocation(target);
 		int gold = prince.getOwner(game).getGold();
 		int townLev = target.getLevel();

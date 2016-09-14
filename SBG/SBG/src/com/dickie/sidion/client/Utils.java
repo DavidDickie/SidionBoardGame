@@ -7,6 +7,7 @@ import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.GameComponentListener;
 import com.dickie.sidion.shared.Hero;
+import com.dickie.sidion.shared.Message;
 import com.dickie.sidion.shared.Order;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
@@ -147,23 +148,22 @@ public class Utils {
 	static int lastMessage = 0;
 
 	public static void getMessages(final String gameName, final int lastMessage, final LoadEventListener listener) {
-		return;
 		
-//		greetingService.getLatestMessagesFromServer(gameName, lastMessage, new AsyncCallback<List<String>>() {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//			@Override
-//			public void onSuccess(List<String> result) {
-//				for (String s : result) {
-//					listener.LoadEvent(s, null);
-//				}
-//			}
-//
-//		});
+		greetingService.getLatestMessagesFromServer(gameName, lastMessage, new AsyncCallback<List<Message>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess(List<Message> result) {
+				for (Message s : result) {
+					listener.LoadEvent(s.getMessage(), null);
+				}
+			}
+
+		});
 	}
 }

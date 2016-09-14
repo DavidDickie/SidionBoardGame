@@ -21,7 +21,7 @@ public class LockOrderTest {
 		Hero hero = game.getHero("Hero_3");
 		Player p = hero.getOwner(game);
 		game.setGameState(Game.RETREAT);
-		hero.getOwner(game).addResource("INF",10);
+		hero.getOwner(game).addResource("INF",20);
 		Town target = game.getTown("Vonnie");
 		hero.setLocation(target);
 		int inf = hero.getOwner(game).getInf();

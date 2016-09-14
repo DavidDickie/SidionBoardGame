@@ -91,6 +91,11 @@ public class OrderProcessor {
 		}
 		if (game.shiftCurrentToNextPlayer()){
 			shiftToNextPhase(game, player);
+			// if the first player in the new phase is a NPC and it is not
+			// an order phase, we want to cycle until we get to a player
+			if (game.getGameState() != Game.ORDER_PHASE && !game.getCurrentPlayer().isTurnFinshed()){
+				npcCheck(game);
+			}
 		} else {
 			npcCheck(game);
 		}
@@ -220,6 +225,10 @@ public class OrderProcessor {
 			boolean tie = true;
 			for (BidOrder o : bids){
 				o.setPrecursors(game);
+				if (o.validateOrder(game) != null){
+					game.addMessage("Bid by " + o.getHero(game).getName() + " failes; " + o.validateOrder(game));
+					continue;
+				}
 				int total = o.getGoldBid() + o.getManaBid() + o.getInfBid();
 				if (total > maxBid){
 					maxBid = o.getGoldBid() + o.getManaBid() + o.getInfBid();
