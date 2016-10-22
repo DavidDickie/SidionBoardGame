@@ -77,6 +77,28 @@ public class GenNpcOrders {
 		return list;
 	}
 
+	/*
+	 * Prince....
+	 * recruit
+	 * If there is a owned hero, improve hero if you can
+	 * If there is no unowned hero, find one
+	 * if there is a unowned hero, recruit if you can
+	 * if you have lots of mana, convert
+	 * if you can improve the town, improve it
+	 * If you are alone in the town, stay there
+	 * Move if you can
+	 * Stand
+	 * 
+	 * Hero...
+	 * if there's an artifact, bid for it
+	 * if there's more than three heros, just skedadle unless you are the first one
+	 * if the prince is there, stand
+	 * Improve the town
+	 * Lock the town
+	 * If you are not the first hero in the town, and the prince is not there, move
+	 * Stand
+	 */
+	
 	private Order heroOrders(Hero h, Game g) {
 		if (g.isArtifactUp() && !bidOnArt){
 			BidOrder bo = new BidOrder();
@@ -91,15 +113,19 @@ public class GenNpcOrders {
 					1, 
 					(int) (p.getInf()/2 * java.lang.Math.random()), 
 					mana);
+			bidOnArt = true;
 			return bo;
 		}
 		Town town = h.getLocation(g);
-		if (town.getHeros(g).size() > 1){
-			for (Hero lHero : town.getHeros(g)){
-				if (lHero.isPrince()){
-					return genStandOrder(h,g);
-				}
+		boolean princeInTown = princeInTown(town, g);
+		if (town.getHeros(g).size() > 3 && town.getHeros(g).get(0) != h){
+			Order o = doMoveOrder(town, h, g);
+			if (o != null){
+				return o;
 			}
+		}
+		if (!town.isLocked() && princeInTown && town.getHeros(g).size()==2){
+			return genStandOrder(h,g);
 		}
 		if (h.getLocation(g).getLevel() < h.getLevel() && h.getOwner(g).getGold() < h.getLocation(g).getUpgradeCost() + 4){
 			ImproveTownOrder ito = new ImproveTownOrder();
@@ -115,7 +141,7 @@ public class GenNpcOrders {
 			return lo;
 		}
 		
-		if (!town.getHeros(g).get(0).equals(h) || town.isLocked()){
+		if (!town.getHeros(g).get(0).equals(h)  || town.isLocked()){
 			Order o = doMoveOrder(town, h, g);
 			if (o != null){
 				return o;
@@ -124,22 +150,49 @@ public class GenNpcOrders {
 		return genStandOrder(h,g);
 	}
 	
-	private Order doMoveOrder(Town town, Hero h, Game g){
-		List<Town> close = town.getNeighbors(g);
-		Collections.shuffle(close);
-		for (Town t : close){
-			if (town.isLocked() || t.getLevel() > town.getLevel()){
-				MoveOrder mo = new MoveOrder();
-				mo.setHero(h);
-				mo.setOwner(h.getOwner(g));
-				mo.setTown(t);
-				if (mo.validateOrder(g) == null){
-					return mo;
-				}
+	private boolean princeInTown(Town town, Game g){
+		for (Hero lHero : town.getHeros(g)){
+			if (lHero.isPrince()){
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
+	
+	private Order doMoveOrder(Town town, Hero h, Game g){
+		Town t = bestTown(town, h.getOwner(g), g);
+		if (t == null){
+			return null;
+		}
+		MoveOrder mo = new MoveOrder();
+		mo.setHero(h);
+		mo.setOwner(h.getOwner(g));
+		mo.setTown(t);
+		return mo;
+	}
+	
+	private Town bestTown(Town center, Player p, Game game){
+		Town best = null;
+		int value = -10;
+		for (Town t : center.getNeighbors(game)){
+			int tempval = t.getLevel();
+			if (t.hasHero()){
+				tempval++;
+			}
+			for (Hero h: t.getHeros(game)){
+				if (h.getOwner(game).equals(p)){
+					tempval--;
+				}
+			}
+			if (tempval > value){
+				value = tempval;
+				best = t;
+			}
+		}
+		return best;
+	}
+
+	
 
 	private Order doPrinceOrders(Hero h, Game g) {
 		Town town = h.getLocation(g);
@@ -152,7 +205,23 @@ public class GenNpcOrders {
 				return ro;
 			}
 		}
-		if (!town.hasHero() && !town.isLocked()){
+		if (h.getLocation(g).getHeros(g).size() > 1){
+			Hero h2 = null;
+			for (Hero htemp: h.getLocation(g).getHeros(g)){
+				if (htemp != h){
+					h2 = htemp;
+					break;
+				}
+			}
+			if (h2.getLevel() < 2 && h.getOwner(g).getGold() > 8){
+				ImproveOrder ito = new ImproveOrder();
+				ito.setHero(h);
+				ito.setPlayer(h.getOwner(g));
+				ito.addTargetHero(h2);
+				return ito;
+			}
+		}
+		if (!town.hasHero() && !town.isLocked() && town.getHeros(g).size() == 1){
 			FindOrder fo = new FindOrder();
 			fo.setHero(h);;
 			fo.setOwner(h.getOwner(g));
@@ -173,30 +242,14 @@ public class GenNpcOrders {
 			return ito;
 		}
 
-		if (h.getLocation(g).getHeros(g).size() > 1){
-			Hero h2 = null;
-			for (Hero htemp: h.getLocation(g).getHeros(g)){
-				if (htemp != h){
-					h2 = htemp;
-					break;
-				}
-			}
-			if (h2.getLevel() < 2 && h.getOwner(g).getGold() > 8){
-				ImproveOrder ito = new ImproveOrder();
-				ito.setHero(h);
-				ito.setPlayer(h.getOwner(g));
-				ito.addTargetHero(h2);
-				return ito;
-			}
-		}
 		if (h.getLocation(g).getHeros(g).size() == 1){
 			return genStandOrder(h,g);
 		}
 		List<Town> close = town.getNeighbors(g);
 		Collections.shuffle(close);
 		for (Town t : close){
-			if (t == null){
-				throw new RuntimeException("The town is null???");
+			if (t.isLocked() || (t.getTempOwner(g) != null && t.getTempOwner(g).equals(h.getOwner(g)))){
+				continue;
 			}
 			List<Hero> tHeros= t.getHeros(g);
 			int totalThere = 0;
@@ -214,20 +267,7 @@ public class GenNpcOrders {
 			}
 		}
 		if (town.getHeros(g).size() > 1){
-			
-			for (Town t : close){
-				if (t == null){
-					throw new RuntimeException("The town is null???");
-				}
-				MoveOrder mo = new MoveOrder();
-				mo.setHero(h);
-				mo.setOwner(h.getOwner(g));
-				mo.setTown(t);
-//				mo.execute();
-				if (mo.validateOrder(g) == null){
-					return mo;
-				}
-			}
+			doMoveOrder(town, h, g);
 		}
 		return genStandOrder(h,g);
 	}

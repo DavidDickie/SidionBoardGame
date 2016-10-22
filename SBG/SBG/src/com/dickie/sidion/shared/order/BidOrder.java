@@ -21,6 +21,9 @@ public class BidOrder extends OrderImpl {
 		if (checkForHero(game) != null){
 			return checkForHero(game);
 		}
+		if (getHero(game).getOwner(game) != getPlayer(game)){
+			return "Hero owner and order owner are not the same?";
+		}
 
 		if (game.getGameState() == Game.RETREAT){
 			if (getGoldBid() > this.getPlayer(game).getGold()){
@@ -85,6 +88,8 @@ public class BidOrder extends OrderImpl {
 	@Override
 	public void executeOnServer(Game game){
 		// special case; we have to evaluate all bids at the end and pick the winner!
+		// so just store this order
+		game.addGameComponent(this);
 	}
 	
 	public void executeWinner(Game game){
@@ -93,7 +98,7 @@ public class BidOrder extends OrderImpl {
 		player.addResource("MANA", -getManaBid());
 		player.addResource("INF", -getInfBid());
 		player.addResource("ARTIFACTS", 1);
-		game.addMessage(getHero(game).getName() + "[" + getHero(game).getOwner(game).getName() + " wins an artifact with a "+
+		game.addMessage(getHero(game).getName() + "[" + getHero(game).getOwner(game).getName() + "] wins an artifact with a "+
 				(getGoldBid() + getManaBid() + getInfBid()) + " bid");
 		
 	}

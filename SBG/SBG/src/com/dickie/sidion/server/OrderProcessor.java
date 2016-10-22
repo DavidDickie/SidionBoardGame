@@ -7,6 +7,7 @@ import com.dickie.sidion.npc.GenNpcOrders;
 import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
+import com.dickie.sidion.shared.Path;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.order.BidOrder;
 import com.dickie.sidion.shared.order.EditOrder;
@@ -51,6 +52,15 @@ public class OrderProcessor {
 					ge.flagOriginalOwner(game);
 					
 					game.clearMessages();
+					
+					// clear last turn's blocks
+					
+					for (Path p : game.getPaths()){
+						if (p.getBlocked()){
+							p.setBlocked(false);
+						}
+					}
+					
 					game.setGameState(game.MAGIC_PHASE);
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);
@@ -85,7 +95,9 @@ public class OrderProcessor {
 	}
 	
 	private void postOrderCheck(Game game, Player player, boolean forceIt){
+		
 		if (!player.isTurnFinshed() && player.hasExcecutableOrders(game) && !forceIt){
+			npcCheck(game);
 			// there's something for this player to do, don't move on
 			return;
 		}
@@ -101,7 +113,7 @@ public class OrderProcessor {
 		}
 	}
 	
-	private void npcCheck(Game game){
+	private boolean npcCheck(Game game){
 
 		if (game.getCurrentPlayer().isNpc()){
 			System.out.println("Player " + game.getCurrentPlayer().getName() + " is a NPC, executing  orders and moving on");
@@ -122,7 +134,9 @@ public class OrderProcessor {
 			FinishTurn fo = new FinishTurn();
 			fo.setPlayer(game.getCurrentPlayer());
 			this.processOrder(fo, game);
+			return true;
 		}
+		return false;
 	}
 	
 	private void shiftToNextPhase(Game game, Player player){
@@ -208,6 +222,7 @@ public class OrderProcessor {
 	
 	public void doBidOrders(Game game){
 		List<BidOrder> bids = new ArrayList<BidOrder>();
+		StringBuffer sb = new StringBuffer();
 		for (Order o : game.getOrders()){
 			if (o instanceof BidOrder){
 				if (o.validateOrder(game) != null){
@@ -226,9 +241,13 @@ public class OrderProcessor {
 			for (BidOrder o : bids){
 				o.setPrecursors(game);
 				if (o.validateOrder(game) != null){
-					game.addMessage("Bid by " + o.getHero(game).getName() + " failes; " + o.validateOrder(game));
+					game.addMessage("Bid by " + o.getHero(game).getName() + "[" + o.getHero(game).getOwner(game).getName() +
+							"] failes; " + o.validateOrder(game));
 					continue;
 				}
+				sb.append(o.getHero(game).getName()  + "[" + o.getHero(game).getOwner(game).getName() + "] bids " + 
+				o.getGoldBid() + "/" + o.getManaBid() + "/" + o.getInfBid() + " G/M/I, has ");
+				sb.append(o.getPlayer(game).getGold() + "/" + o.getPlayer(game).getMana() + "/" + o.getPlayer(game).getInf() + "; ");
 				int total = o.getGoldBid() + o.getManaBid() + o.getInfBid();
 				if (total > maxBid){
 					maxBid = o.getGoldBid() + o.getManaBid() + o.getInfBid();
@@ -238,6 +257,7 @@ public class OrderProcessor {
 					tie = true;
 				}
 			}
+			game.addMessage(sb.toString());
 			if (tie){
 				game.addMessage("Tie bid on artifact, no winner!");
 			} else {

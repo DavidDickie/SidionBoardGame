@@ -65,6 +65,7 @@ public class DAO {
 		saveData(game.getName(), new ArrayList<GameComponent>(game.getTowns()));
 		saveData(game.getName(), new ArrayList<GameComponent>(game.getPlayers()));
 		saveData(game.getName(), new ArrayList<GameComponent>(game.getOrders()));
+		saveData(game.getName(), new ArrayList<GameComponent>(game.getMessages()));
 	}
 	
 	public Game loadGame(String gameName) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException{

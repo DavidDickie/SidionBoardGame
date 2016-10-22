@@ -46,7 +46,7 @@ public class ImproveOrder extends OrderImpl {
 		if (game.getGameState() == Game.ORDER_PHASE){
 			return true;
 		}
-		if (game.getGameState() == Game.PHYS_PHASE){
+		if (game.getGameState() == Game.RETREAT){
 			addDoOrderParams();
 			return true;
 		}

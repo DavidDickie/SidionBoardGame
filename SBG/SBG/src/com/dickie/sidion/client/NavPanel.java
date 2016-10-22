@@ -177,14 +177,17 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 			@Override
 			public void onClick(ClickEvent event) {
-				NavPanel.this.sendOrder(order);
+				if (sendOrder(order)){
+					order.getHero(game).setOrder(true);
+				}
+				NavPanel.this.updateHeroOrderList();
 				
 			}
 		});
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.add(b);
 		Button b2 = new Button("STAND");
-		b.addClickHandler(new ClickHandler() {
+		b2.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
@@ -199,25 +202,21 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 	}
 
-	private void sendOrder(Order order) {
+	private boolean sendOrder(Order order) {
 		try {
 			Utils.logMessage("Client; doing " + order.toString());
 			String s = order.validateOrder(game);
 			if (s != null) {
 				Utils.logMessage("Client: " +"Validation failed: " + s);
 				Utils.displayMessage("Order failed: " + s);
-				return;
+				return false;
 			} else {
 				Utils.logMessage("Client: order validated");
 			}
 			// one special case
 			if (order instanceof CreateGameOrder){
 				Utils.createGame(((VarString)order.getPrecursors().get("LKEY")).getValue());
-				return;
-			}
-			// make changes to local copy if this is not order assignment phase
-			if (game.getGameState() != Game.ORDER_PHASE){
-				order.executeOnServer(game);
+				return true;
 			}
 			
 			order.execute();
@@ -228,6 +227,8 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 				copy = new BlockPathOrder();
 			} else if (order instanceof ImproveOrder){
 				copy = new ImproveOrder();
+			} else if (order instanceof ImproveTownOrder){
+				copy = new ImproveTownOrder();
 			} else if (order instanceof MoveOrder){
 				copy = new MoveOrder();
 			} else if (order instanceof RecruitOrder){
@@ -256,9 +257,10 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			} catch(Throwable t){
 				// some orders do not have a hero
 			}
-			updateHeroOrderList();
+			return true;
 		} catch (Throwable t) {
 			displayMessage("error: " + t.getMessage());
+			return false;
 		}
 
 	}
@@ -311,7 +313,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			gip.addMessage("Artifact is AVAILABLE");
 		}
 		gip.addMessage("");
-		gip.addMessages(game.getMessages());
+//		gip.addMessages(game.getMessages());
 //		for (Order o: game.getOrders()){
 //			gip.addMessage(o.toString());
 //		}
@@ -496,8 +498,11 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 					Order o = newOrders.get(cb.getSelectedItemText());
 					o.setOwner(player);
 					o.setHero(hero);
-					hero.setOrder(true);
-					sendOrder(o);
+					
+					if (sendOrder(o)){
+						hero.setOrder(true);
+					}
+					NavPanel.this.updateHeroOrderList();
 				}
 			});
 			add(exBut);

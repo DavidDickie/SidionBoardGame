@@ -96,7 +96,7 @@ public class GameEngine {
 				if (!tie){
 					game.addMessage("There was a combat in " + t.getName() +", " + winner.getName() + " wins with " + maxPoints + " combat points");
 					for (Hero h2 : t.getHeros(game)){
-						if (h2.getOwner(game).equals(originalOwner)){
+						if (h2.getOwner(game).equals(winner)){
 							// they are ok
 						} else {
 							if (h2.getOwner(game).getGold() == 0){

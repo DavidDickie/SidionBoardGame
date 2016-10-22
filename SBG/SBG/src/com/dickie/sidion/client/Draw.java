@@ -73,14 +73,28 @@ public class Draw {
 		List<Hero> heros = t.getHeros(game);
 		int number = heros.size() - 1;
 		for (Hero h : heros){
-			if (!h.isPrince()){
-				mp.setLineColor("white");
-			} else { 
-				mp.setLineColor(h.getOwner(game).getColor()); 
-			}	
-			mp.setFillColor(h.getOwner(game).getColor());
-			mp.drawCircle(t.getX() - defaultSize/2 * number/2, t.getY() + defaultSize, defaultSize/8, null, h);
+			drawHero(h, t.getX(), t.getY(), number, game);
 			number--;
+		}
+	}
+	
+	private void drawHero(Hero h, int x, int y, int number, Game game){
+		if (!h.isPrince()){
+			mp.setLineColor("white");
+		} else { 
+			mp.setLineColor(h.getOwner(game).getColor()); 
+		}	
+		mp.setFillColor(h.getOwner(game).getColor());
+		if (h.isPrince() || h.getLevel() == 3){
+			mp.drawCircle(x - defaultSize/2 * number/2, y + defaultSize, defaultSize/8, null, h);
+		} else if (h.getLevel() == 1){
+			mp.drawRec(x - defaultSize/2 * number/2, y + defaultSize, defaultSize/4, null, h);
+		} else if (h.getLevel() == 2){
+			mp.drawDiamond(x - defaultSize/2 * number/2, y + defaultSize, defaultSize/4, null, h);
+		}
+		if (h.isPrince()){
+			mp.setFillColor("yellow");
+			mp.drawCircle(x - defaultSize/2 * number/2, y + defaultSize, defaultSize/16, null, h);
 		}
 	}
 	

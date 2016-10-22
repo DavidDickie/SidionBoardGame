@@ -9,6 +9,12 @@ public class FinishTurn extends OrderImpl {
 	public void executeOnServer(Game game) {
 		this.getOwner(game).setTurnFinished(true); 
 	}
+	
+	@Override
+	public String toString() {
+		String s = getClass().getSimpleName() + " for " + getValue("PLAYER");
+		return s;
+	}
 
 	@Override
 	public boolean isExecutable(Game game) {

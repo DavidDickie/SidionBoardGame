@@ -48,7 +48,7 @@ public class MapPanel extends DecoratorPanel {
 	
 	public void drawBackgroundImage(){
 		Image image = new Image(0, 0, 800, 800, "Project1.png");
-//		canvas.add(image);
+		canvas.add(image);
 	}
 	
 	public void drawMapBackground(){
@@ -103,6 +103,22 @@ public class MapPanel extends DecoratorPanel {
 				    gc.selected();
 				  }
 				});
+		addLabel(x,y,size,label);
+	}
+	
+	public void drawDiamond(int x, int y, int size, String label, final GameComponent gc){
+		Rectangle rec = new Rectangle(x - size/2, y-size/2, size, size);
+		rec.setStrokeColor(lineColor);
+		rec.setFillColor(fillColor);
+		rec.setRotation(45);
+		canvas.add(rec);
+		if (gc != null){
+			rec.addClickHandler(new ClickHandler() {
+				  public void onClick(ClickEvent event) {
+				    gc.selected();
+				  }
+				});
+		}
 		addLabel(x,y,size,label);
 	}
 	

@@ -92,7 +92,7 @@ public class TeleportOrder extends OrderImpl{
 		}
 		getPlayer(game).addResource("MANA", -dist);
 		game.addMessage(getHero(game).getName() + " [" + 
-				getPlayer(game).getName() + "] teleported " + target.getName() + " to " + getTown());
+				getPlayer(game).getName() + "] teleported " + target.getName() + " to " + getTown().getName());
 	}
 
 }
