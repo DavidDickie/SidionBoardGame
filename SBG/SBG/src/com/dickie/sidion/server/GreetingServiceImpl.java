@@ -13,6 +13,7 @@ import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Message;
 import com.dickie.sidion.shared.Order;
+import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
 import com.dickie.sidion.shared.order.StandOrder;
@@ -65,7 +66,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	
 	public String greetServer(String input) throws IllegalArgumentException {
-		Game game = Game.createGame(input);
+		Game game =null;
+		if (input.startsWith("-")){
+			input = input.replace("-", "");
+			String[] names = input.split(";");
+			game = Game.getGame(names[0]);
+			game.setName(names[1]);
+			int playerNum = 2;
+			for (Player p : game.getPlayers()){
+				p.setName(names[playerNum++]);
+				String password = names[playerNum++];
+				if (password == null || password.equals("")){
+					
+				} else {
+					p.setPassword(password);
+					p.setNpc(false);
+				}
+			}
+			Game.addGame(game);
+		} else {
+			game = Game.createGame(input);
+		}
 		// create dummy orders
 		for (Hero h : game.getHeros()){
 			Order o = new StandOrder();

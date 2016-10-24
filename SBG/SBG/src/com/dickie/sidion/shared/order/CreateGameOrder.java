@@ -21,7 +21,16 @@ public class CreateGameOrder extends OrderImpl{
 	
 	@Override
 	public void executeOnServer(Game game) {
-		Game.createGame(((VarString)precursors.get("LKEY")).getValue());
+		String gameName = ((VarString)precursors.get("LKEY")).getValue();
+		if (gameName.startsWith("-")){
+			gameName = gameName.replace("-", "");
+			String[] names = gameName.split(";");
+			Game g = Game.getGame(names[0]);
+			g.setName(names[1]);
+			Game.addGame(g);
+		} else {
+			Game.createGame(gameName);
+		}
 	}
 	
 	@Override

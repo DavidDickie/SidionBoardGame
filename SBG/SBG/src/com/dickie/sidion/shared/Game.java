@@ -220,7 +220,7 @@ public class Game {
 	public Game() {
 	}
 	
-	public void addGame(Game g){
+	public static void addGame(Game g){
 		games.put(g.getName(), g);
 	}
 	

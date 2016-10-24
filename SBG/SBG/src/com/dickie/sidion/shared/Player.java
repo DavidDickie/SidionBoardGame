@@ -165,6 +165,8 @@ public class Player extends GameComponentImpl {
 		return Boolean.valueOf(getValue("NPC"));
 	}
 	
-
+	public void setNpc(boolean b){
+		setValue("NPC", Boolean.toString(b));
+	}
 
 }
