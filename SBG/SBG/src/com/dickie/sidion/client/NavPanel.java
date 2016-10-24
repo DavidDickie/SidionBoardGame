@@ -361,7 +361,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			if (player != null){
 				player = game.getPlayer(player.getName());
 			} else {
-				player = game.getPlayer(userTextBox.getText());
+				player = game.getPlayerByDisplayName(userTextBox.getText());
 			}
 			gip.clear();
 			getMessagesFromServer();
@@ -371,17 +371,20 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 					try{
 						PlayerPanel pp = new PlayerPanel();
 						playerPanels.add(pp);
-						RootPanel pPanelRoot = RootPanel.get(p.getName());
+						RootPanel pPanelRoot = RootPanel.get("Player" + (p.getPlayerOrder()+1));
 						pPanelRoot.add(pp);
 						pp.displayPlayer(p, game);
 					} catch (Throwable t){
 						Utils.logMessage("Client: " +"Could not display player panel: " + t.getMessage());
 					}
 				}
+				RootPanel pPanelRoot = RootPanel.get("artifact");
+				pPanelRoot.add(new ArtifactFlag());
 			} else {
 				for (PlayerPanel pp : NavPanel.this.playerPanels){
 					pp.displayPlayer(game.getPlayer(pp.getPlayer().getName()), game);
 				}
+				ArtifactFlag.setIsArtifact(game.isArtifactUp());
 			}
 			updateHeroOrderList();
 			
@@ -396,7 +399,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 					gip.addMessage("Executing physical orders");
 					break;
 				case 3:
-					gip.addMessage("Doing retreats (if any)");
+					gip.addMessage("Doing final orders and retreats (if any)");
 					break;
 			}
 			userLoginState();
@@ -448,7 +451,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		if (player == null) {
 			String s = "";
 			for (Player p2 : game.getPlayers()) {
-				s += p2.getName() + "/";
+				s += p2.getDisplayName() + "/";
 			}
 			Utils.displayMessage("That is not a valid username; " + s);
 			return;

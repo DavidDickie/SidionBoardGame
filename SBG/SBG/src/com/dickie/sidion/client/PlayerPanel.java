@@ -28,6 +28,7 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 	
 	public PlayerPanel(){
 		this.setSize("150px", "150px");
+		
 	}
 	
 	public void displayPlayer(Player p, final Game g){
@@ -37,7 +38,7 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		this.clear();
 		this.setBorderWidth(2);
 		
-		String s = p.getName();
+		String s = p.getDisplayName();
 		if (g.getCurrentPlayer() == p){
 			s += "[*]";
 		}
@@ -50,6 +51,7 @@ public class PlayerPanel extends VerticalPanel implements GameComponentListener,
 		Label l = new Label(s);
 		l.setStyleName("H1", true);
 		l.getElement().getStyle().setBackgroundColor(p.getColor());
+		l.getElement().getStyle().setColor("white");
 		this.add(l);
 		HorizontalPanel hp = new HorizontalPanel();
 		VerticalPanel vp1 = new VerticalPanel();

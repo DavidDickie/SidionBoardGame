@@ -163,6 +163,15 @@ public class Game {
 		return players.get(playerName);
 	}
 	
+	public Player getPlayerByDisplayName(String playerName){
+		for (Player p : getPlayers()){
+			if (p.getDisplayName().equals(playerName)){
+				return p;
+			}
+		}
+		return null;
+	}
+	
 	public Collection<Player> getPlayers(){
 		return players.values();
 	}
@@ -183,9 +192,9 @@ public class Game {
 	public static Game createGame(String name){
 		Game game = new Game(name);
 		game.players = Player.createPlayers(game, new String []{"Player1", "Player2", "Player3", "Player4"});
-		game.setCurrentPlayer("Player1");
+		game.setCurrentPlayer(game.getPlayerByTurnOrder(0).getName());
 		game.setGameState(0);
-		game.setStartingPlayer("Player1");
+		game.setStartingPlayer(game.getPlayerByTurnOrder(0).getName());
 		game.towns = Town.createTowns(game);
 		game.heros = Hero.createHeros(game);
 		game.paths = Path.createPath(game);
@@ -306,6 +315,15 @@ public class Game {
 		}
 		System.out.println("Shifting current player to " + currentPlayer);
 		return false;
+	}
+	
+	public Player getPlayerByTurnOrder(int order){
+		for (Player p : players.values()){
+			if (order == p.getPlayerOrder()){
+				return p;
+			}
+		}
+		return null;
 	}
 	
 	public Player getNextPlayer(){

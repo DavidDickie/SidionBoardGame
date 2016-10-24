@@ -1,7 +1,6 @@
 package com.dickie.sidion.server;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +8,6 @@ import com.dickie.sidion.shared.Game;
 import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
-import com.dickie.sidion.shared.Var;
-import com.dickie.sidion.shared.VarString;
 import com.dickie.sidion.shared.order.StandOrder;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -49,8 +46,9 @@ public class DAO {
 			game.setArtifactUp(((Boolean)e.getProperty("Artifact")).booleanValue());
 		} catch (Exception e) {
 			e.printStackTrace();
-			game.setCurrentPlayer("Player1");
-			game.setStartingPlayer("Player1");
+			String playerName = game.getPlayerByTurnOrder(0).getName();
+			game.setCurrentPlayer(playerName);
+			game.setStartingPlayer(playerName);
 			game.setArtifactUp(false);
 			game.setGameState(0);
 		}
@@ -88,7 +86,7 @@ public class DAO {
 				game.addGameComponent(so);
 			}
 		}
-		game.addGame(game);
+		Game.addGame(game);
 		return game;
 	}
 	
@@ -111,7 +109,7 @@ public class DAO {
 	public List<String> getGames(){
 		ArrayList<String> games = new ArrayList<String>();
 		Query query = new Query("Game");
-		List<Entity> entities = entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		List<Entity> entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		for (Entity e: entities){
 			games.add((String)e.getProperty("Name"));
 		}

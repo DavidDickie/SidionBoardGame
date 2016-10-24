@@ -12,7 +12,7 @@ import com.dickie.sidion.shared.order.StandOrder;
 public class Player extends GameComponentImpl {
 	
 	public Player(){
-		validAttributes = Arrays.asList("LKEY", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS", "TURN_FINISHED", "TURNORDER", "NPC");
+		validAttributes = Arrays.asList("LKEY", "DISPLAYNAME", "COLOR", "PASSWORD", "IS_ADMIN", "MANA", "INF", "GOLD", "ARTIFACTS", "TURN_FINISHED", "TURNORDER", "NPC");
 	}
 	
 	int playerOrder = 0;
@@ -110,6 +110,16 @@ public class Player extends GameComponentImpl {
 		setValue("LKEY", name);
 	}
 	
+	public String getDisplayName() {
+		
+		return getValue("DISPLAYNAME");
+	}
+
+
+	public void setDisplayName(String name) {
+		setValue("DISPLAYNAME", name);
+	}
+	
 	public List<Hero> getHeros(Game game){
 		ArrayList<Hero> list = new ArrayList<Hero>();
 		Iterator<Hero> iHero = game.getHeros().iterator();
@@ -135,6 +145,7 @@ public class Player extends GameComponentImpl {
 			}
 			p.setColor(colors[count]);
 			p.setName(name);
+			p.setDisplayName(name);
 			p.setAdmin(false);
 			p.addResource("GOLD", 5);
 			p.addResource("MANA", 3);

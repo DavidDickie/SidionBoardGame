@@ -13,11 +13,12 @@ import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Message;
 import com.dickie.sidion.shared.Order;
+import com.dickie.sidion.shared.Path;
 import com.dickie.sidion.shared.Player;
+import com.dickie.sidion.shared.Town;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
 import com.dickie.sidion.shared.order.StandOrder;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -67,14 +68,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public String greetServer(String input) throws IllegalArgumentException {
 		Game game =null;
-		if (input.startsWith("-")){
-			input = input.replace("-", "");
+		if (input.startsWith("+")){
+			input = input.replace("+", "");
 			String[] names = input.split(";");
 			game = Game.getGame(names[0]);
 			game.setName(names[1]);
 			int playerNum = 2;
 			for (Player p : game.getPlayers()){
-				p.setName(names[playerNum++]);
+				p.setDisplayName(names[playerNum++]);
 				String password = names[playerNum++];
 				if (password == null || password.equals("")){
 					
@@ -84,6 +85,31 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				}
 			}
 			Game.addGame(game);
+			try {
+				Game g2 = dao.loadGame(names[0]);
+				for (Town t : g2.getTowns()){
+					if (game.getTown(t.getKey()) == null){
+						System.out.println("Could not find town " + t.getName());
+					}
+				}
+				for (Hero t : g2.getHeros()){
+					if (game.getHero(t.getKey()) == null){
+						System.out.println("Could not find hero " + t.getName());
+					}
+				}
+				for (Path t : g2.getPaths()){
+					if (game.getPath(t.getKey()) == null){
+						System.out.println("Could not find path " + t.getKey());
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} else if (input.startsWith("-")){
+			dao.deleteGame(input, true);
+			return "Game " + input + " deleted";
 		} else {
 			game = Game.createGame(input);
 		}
