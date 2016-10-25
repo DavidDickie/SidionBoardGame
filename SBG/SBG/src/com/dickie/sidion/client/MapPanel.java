@@ -48,7 +48,7 @@ public class MapPanel extends DecoratorPanel {
 	
 	public void drawBackgroundImage(){
 		Image image = new Image(0, 0, 800, 800, "Project1.png");
-//		canvas.add(image);
+		canvas.add(image);
 	}
 	
 	public void drawMapBackground(){
@@ -127,7 +127,7 @@ public class MapPanel extends DecoratorPanel {
 		line.setStrokeColor(lineColor);
 		x1 = java.lang.Math.max(x1, x2);
 		y1 = java.lang.Math.max(y1, y2);
-		drawRec(x1 - java.lang.Math.abs(x1 - x2)/2, y1 - java.lang.Math.abs(y1 - y2)/2, 8, "", gc);
+		drawRec(x1 - java.lang.Math.abs(x1 - x2)/2, y1 - java.lang.Math.abs(y2-y1)/2, 8, "", gc);
 		canvas.add(line);
 	}
 	

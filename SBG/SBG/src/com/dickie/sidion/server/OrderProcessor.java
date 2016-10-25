@@ -65,8 +65,9 @@ public class OrderProcessor {
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);
 					}
+					postOrderCheck(game, game.getCurrentPlayer(), false);
 				}
-				postOrderCheck(game, game.getCurrentPlayer(), false);
+				
 			}
 			return null;
 		}
