@@ -1,2 +1,3 @@
 # Module sbg
 # RPC service class, partial path of RPC policy file
+com.dickie.sidion.client.GreetingService, 742E7A6133A380C2AA3527B36BF77424.gwt.rpc

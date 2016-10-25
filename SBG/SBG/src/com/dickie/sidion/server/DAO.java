@@ -45,8 +45,8 @@ public class DAO {
 			game.setGameState(((Long)e.getProperty("GameState")).intValue());
 			game.setArtifactUp(((Boolean)e.getProperty("Artifact")).booleanValue());
 		} catch (Exception e) {
-			e.printStackTrace();
-			String playerName = game.getPlayerByTurnOrder(0).getName();
+			System.out.println("No attributes are set, forcing to defaults");
+			String playerName = "Player1";
 			game.setCurrentPlayer(playerName);
 			game.setStartingPlayer(playerName);
 			game.setArtifactUp(false);
@@ -72,7 +72,13 @@ public class DAO {
 		loadGameStatus(game);
 		List<GameComponent> list = getData(gameName, null);
 		if (list.size() == 0){
-			throw new RuntimeException("No game " + gameName);
+			if (gameName.equals("test")){
+				// generate a basic game
+				game = Game.createGame("test");
+				saveGame(game);
+			} else {
+				throw new RuntimeException("No game " + gameName);
+			}
 		}
 		for (GameComponent gc : list){
 			game.addGameComponent(gc);

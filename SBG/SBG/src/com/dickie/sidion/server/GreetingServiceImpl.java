@@ -47,6 +47,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		List<String> games = dao.getGames();
 		if (games.size() == 0){
 			System.out.println("No games loaded????");
+			Game.createGame("test");
 		}
 		for (String gameName : games){
 			ArrayList<String> messages = new ArrayList<String>();
@@ -186,15 +187,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public Map<String, GameComponent> getGameAttrs(String name){
 		HashMap<String, GameComponent> map = new HashMap<String, GameComponent>();
-		Game game = Game.getInstance(name);
-		Var var = new Var(game.getGameState());
-		map.put("GAMESTATE", var);
-		VarString var2 = new VarString(game.getCurrentPlayer().getName());
-		map.put("CURRENTPLAYER", var2);
-		VarString var3 = new VarString(game.getStartingPlayer().getName());
-		map.put("STARTINGPLAYER", var3);
-		VarString var4= new VarString(Boolean.toString(game.isArtifactUp()));
-		map.put("ARTIFACT", var4);
+		try{
+			Game game = Game.getInstance(name);
+			Var var = new Var(game.getGameState());
+			map.put("GAMESTATE", var);
+			VarString var2 = new VarString(game.getCurrentPlayer().getName());
+			map.put("CURRENTPLAYER", var2);
+			VarString var3 = new VarString(game.getStartingPlayer().getName());
+			map.put("STARTINGPLAYER", var3);
+			VarString var4= new VarString(Boolean.toString(game.isArtifactUp()));
+			map.put("ARTIFACT", var4);
+		} catch (Exception e){
+			System.out.println("Could not load game attrs, loading defaults");
+			Var var = new Var(0);
+			map.put("GAMESTATE", var);
+			VarString var2 = new VarString("Player1");
+			map.put("CURRENTPLAYER", var2);
+			VarString var3 = new VarString("Player1");
+			map.put("STARTINGPLAYER", var3);
+			VarString var4= new VarString("false");
+			map.put("ARTIFACT", var4);
+		}
 		return map;
 	}
 	
