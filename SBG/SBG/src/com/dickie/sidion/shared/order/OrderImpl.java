@@ -26,7 +26,7 @@ public abstract class OrderImpl extends GameComponentImpl implements Order {
 
 	@Override
 	public String toString() {
-		String s = getClass().getSimpleName() + " for " + getHeroAsString() +"[" + getValue("PLAYER") + "]";
+		String s = getClass().getSimpleName() + " for " + getHeroAsString();
 		return s;
 	}
 

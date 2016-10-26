@@ -98,7 +98,7 @@ public class BidOrder extends OrderImpl {
 		player.addResource("MANA", -getManaBid());
 		player.addResource("INF", -getInfBid());
 		player.addResource("ARTIFACTS", 1);
-		game.addMessage(getHero(game).getName() + "[" + getHero(game).getOwner(game).getName() + "] wins an artifact with a "+
+		game.addMessage(getHero(game).getName() + "[" + getHero(game).getOwner(game).getDisplayName() + "] wins an artifact with a "+
 				(getGoldBid() + getManaBid() + getInfBid()) + " bid");
 		
 	}

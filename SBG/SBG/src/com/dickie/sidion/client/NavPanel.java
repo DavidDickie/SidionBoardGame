@@ -360,6 +360,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 			draw.drawMap(game);
 			if (player != null){
 				player = game.getPlayer(player.getName());
+//				RootPanel pPanelRoot = RootPanel.get(title)
 			} else {
 				player = game.getPlayerByDisplayName(userTextBox.getText());
 			}
@@ -477,7 +478,7 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 		newOrders.put("Improve Town", new ImproveTownOrder());
 		newOrders.put("Improve Hero", new ImproveOrder());
 		newOrders.put("Lock Town", new LockOrder());
-		newOrders.put("Find Hero", new FindOrder());
+//		newOrders.put("Find Hero", new FindOrder());
 //		newOrders.put("RETREAT"); 
 	}
 

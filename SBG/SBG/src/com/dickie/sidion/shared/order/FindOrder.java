@@ -50,7 +50,7 @@ public class FindOrder extends OrderImpl {
 	public void executeOnServer(Game game) {
 		getHero(game).getLocation(game).setHasHero(true);
 		game.addMessage("Prince " + getHero(game).getName() + "[" + 
-				getOwner(game).getName() + "] finds a new hero in " + 
+				getOwner(game).getDisplayName() + "] finds a new hero in " + 
 				getHero(game).getLocation(game).getName());
 		
 	}

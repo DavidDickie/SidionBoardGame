@@ -242,11 +242,11 @@ public class OrderProcessor {
 			for (BidOrder o : bids){
 				o.setPrecursors(game);
 				if (o.validateOrder(game) != null){
-					game.addMessage("Bid by " + o.getHero(game).getName() + "[" + o.getHero(game).getOwner(game).getName() +
+					game.addMessage("Bid by " + o.getHero(game).getName() + "[" + o.getHero(game).getOwner(game).getDisplayName() +
 							"] failes; " + o.validateOrder(game));
 					continue;
 				}
-				sb.append(o.getHero(game).getName()  + "[" + o.getHero(game).getOwner(game).getName() + "] bids " + 
+				sb.append(o.getHero(game).getName()  + "[" + o.getHero(game).getOwner(game).getDisplayName() + "] bids " + 
 				o.getGoldBid() + "/" + o.getManaBid() + "/" + o.getInfBid() + " G/M/I, has ");
 				sb.append(o.getPlayer(game).getGold() + "/" + o.getPlayer(game).getMana() + "/" + o.getPlayer(game).getInf() + "; ");
 				int total = o.getGoldBid() + o.getManaBid() + o.getInfBid();

@@ -54,7 +54,7 @@ public class LockOrder extends OrderImpl {
 		Town t = this.getHero(game).getLocation(game);
 		t.setOwner(getHero(game).getOwner(game));
 		getHero(game).getOwner(game).addResource("INF", -getInfCost(t));
-		game.addMessage(h.getName() + "[" + h.getOwner(game).getName() + "] locks " + t.getName());
+		game.addMessage(h.getName() + "[" + h.getOwner(game).getDisplayName() + "] locks " + t.getName());
 		game.removeGameComponent(getHero(game)); 
 	}
 

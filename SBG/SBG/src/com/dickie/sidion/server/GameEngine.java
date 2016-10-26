@@ -176,7 +176,7 @@ public class GameEngine {
 			Player p = t.getTempOwner(game);
 			if (p != null){
 				StringBuffer sb = new StringBuffer();
-				sb.append("Producing for " + t.getName() +"[" + p.getName() + "]: ");
+				sb.append("Producing for " + t.getName() +"[" + p.getDisplayName() + "]: ");
 				if (t.getGold() == 1){
 					p.addResource("GOLD", 1);
 					sb.append("GOLD ");
