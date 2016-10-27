@@ -8,7 +8,7 @@ import java.util.Map;
 public class Hero extends GameComponentImpl {
 
 	public Hero() {
-		validAttributes = Arrays.asList("PLAYER", "LOC", "IS_PRINCE", "LEVEL", "LKEY", "HASORDER", "MUST_RETREAT");
+		validAttributes = Arrays.asList("PLAYER", "LOC", "IS_PRINCE", "LEVEL", "LKEY", "HASORDER", "MUST_RETREAT", "DID_STAND");
 	}
 	
 	public void setMustRetreat(boolean retreat){
@@ -63,6 +63,14 @@ public class Hero extends GameComponentImpl {
 
 	public void setOrder(boolean b) {
 		setValue("HASORDER", Boolean.toString(b));
+	}
+	
+	public void setDidStand(boolean b){
+		setValue("DID_STAND", Boolean.toString(b));
+	}
+	
+	public boolean didStand(){
+		return Boolean.parseBoolean(getValue("DID_STAND"));
 	}
 
 	public static Map<String, Hero> createHeros(Game game) {

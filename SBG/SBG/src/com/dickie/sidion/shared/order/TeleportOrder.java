@@ -36,19 +36,16 @@ public class TeleportOrder extends OrderImpl{
 				return "Cannot teleport someone into a locked town";
 			}
 			Hero wizard = this.getHero(game);
-			for (Order order : game.getOrders()){
-				if (order.getHero(game) != null && order.getHero(game).equals(target)){
-					if (!(order instanceof StandOrder)){
-						return "Target hero must not have other orders";
-					}
-				}
+			if (!target.didStand()){
+				return "Target hero must not have other orders";
 			}
+
 			int dist = distance(game);
 			
 			if (dist > wizard.getLevel()){
 				return "Distance between towns is too great";
 			}
-			if (dist > wizard.getOwner(game).getMana()){
+			if (dist*dist > wizard.getOwner(game).getMana()){
 				return "insufficent mana";
 			}
 			if (this.getPlayer(game).getMana() < 1){
@@ -90,7 +87,7 @@ public class TeleportOrder extends OrderImpl{
 		if (getTown().getTempOwner(game) == null){
 			getTown().setTempOwner(target.getOwner(game));
 		}
-		getPlayer(game).addResource("MANA", -dist);
+		getPlayer(game).addResource("MANA", -dist*dist);
 		game.addMessage(getHero(game).getName() + " [" + 
 				getPlayer(game).getName() + "] teleported " + target.getName() + " to " + getTown().getName());
 	}

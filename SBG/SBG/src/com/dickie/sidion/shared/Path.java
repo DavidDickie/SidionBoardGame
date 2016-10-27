@@ -3,12 +3,15 @@ package com.dickie.sidion.shared;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.gwt.user.client.rpc.IsSerializable;
 
-import com.dickie.sidion.client.SBG;
 
 public class Path extends GameComponentImpl{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Path(){
 		validAttributes = Arrays.asList("LKEY", "PLAYER", "TOWN1", "TOWN2", "BLOCKED");
 	}
@@ -79,6 +82,30 @@ public class Path extends GameComponentImpl{
 				}
 			}
 		}
+		Path path = new Path();
+		path.setTown1(towns[0][0]);
+		path.setTown2(towns[1][1]);
+		path.setKey("0_0c");
+		paths.put(path.getKey(), path);
+		
+		path = new Path();
+		path.setTown1(towns[square-1][0]);
+		path.setTown2(towns[square-2][1]);
+		path.setKey((square-1) + "_" + 0 + "c");
+		paths.put(path.getKey(), path);
+		
+		path = new Path();
+		path.setTown1(towns[square-1][square-1]);
+		path.setTown2(towns[square-2][square-2]);
+		path.setKey((square-1) + "_" + (square-1) + "c");
+		paths.put(path.getKey(), path);
+		
+		path = new Path();
+		path.setTown1(towns[0][square-1]);
+		path.setTown2(towns[1][square-2]);
+		path.setKey(0 + "_" + (square-1) + "c");
+		paths.put(path.getKey(), path);
+		
 		return paths;
 		
 	}

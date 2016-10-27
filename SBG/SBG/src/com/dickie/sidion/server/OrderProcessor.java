@@ -61,6 +61,14 @@ public class OrderProcessor {
 						}
 					}
 					
+					// set heroes who explicity did "stand" order
+					for (Order o : game.getOrders()){
+						if (o instanceof StandOrder){
+							o.getHero(game).setDidStand(true);
+						}
+						o.getHero(game).setDidStand(false);
+					}
+					
 					game.setGameState(game.MAGIC_PHASE);
 					for (Player p: game.getPlayers()){
 						p.setTurnFinished(false);

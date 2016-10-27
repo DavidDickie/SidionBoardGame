@@ -10,6 +10,7 @@ import com.dickie.sidion.shared.GameComponent;
 import com.dickie.sidion.shared.GameComponentListener;
 import com.dickie.sidion.shared.Hero;
 import com.dickie.sidion.shared.Order;
+import com.dickie.sidion.shared.Path;
 import com.dickie.sidion.shared.Player;
 import com.dickie.sidion.shared.Var;
 import com.dickie.sidion.shared.VarString;
@@ -91,8 +92,18 @@ public class NavPanel extends VerticalPanel implements GameComponentListener, Lo
 
 			@Override
 			public void onClick(ClickEvent event) {
-				gip.clear();
-				Utils.getMessages(game.getName(), 0, gip);
+				if (player.equals("admin")){
+					gip.clear();
+					StringBuffer sb = new StringBuffer();
+					sb.append(game.toString() + "\n" + "paths: \n");
+					for (Path p : game.getPaths()){
+						sb.append("\t" + p + "\n");
+					}
+					gip.addMessage(sb.toString());
+				} else {
+					gip.clear();
+					Utils.getMessages(game.getName(), 0, gip);
+				}
 			}
 		});
 		turnOnClientLogButton.addClickHandler(new ClickHandler() {

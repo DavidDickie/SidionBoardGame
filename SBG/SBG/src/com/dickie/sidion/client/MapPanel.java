@@ -122,12 +122,13 @@ public class MapPanel extends DecoratorPanel {
 		addLabel(x,y,size,label);
 	}
 	
-	public void drawPath(int x1, int y1, int x2, int y2, final GameComponent gc){
+	public void drawPath(int x1, int y1, int x2, int y2, GameComponent gc){
 		Line line = new Line(x1, y1, x2, y2);
 		line.setStrokeColor(lineColor);
-		x1 = java.lang.Math.max(x1, x2);
-		y1 = java.lang.Math.max(y1, y2);
-		drawRec(x1 - java.lang.Math.abs(x1 - x2)/2, y1 - java.lang.Math.abs(y2-y1)/2, 8, "", gc);
+		int x = java.lang.Math.max(x1, x2);
+		int y = java.lang.Math.max(y1, y2);
+		drawRec(x - java.lang.Math.abs(x1 - x2)/2, y - java.lang.Math.abs(y2-y1)/2, 8, "", gc);
+		
 		canvas.add(line);
 	}
 	

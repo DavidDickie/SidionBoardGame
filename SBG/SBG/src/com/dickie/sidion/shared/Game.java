@@ -198,6 +198,9 @@ public class Game {
 		game.towns = Town.createTowns(game);
 		game.heros = Hero.createHeros(game);
 		game.paths = Path.createPath(game);
+		for (Path p : game.getPaths()){
+			System.out.println("Path is " + p);
+		}
 		game.messages = new HashMap<String,Message>();
 		Message m = new Message();
 		m.setKey("MESS1");

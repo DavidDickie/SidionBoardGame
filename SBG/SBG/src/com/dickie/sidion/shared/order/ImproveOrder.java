@@ -37,6 +37,9 @@ public class ImproveOrder extends OrderImpl {
 			if (getOwner(game).getGold() < cost){
 				return "You do not have " + cost + " gold";
 			}
+			if (!hero.didStand()){
+				return "Target hero did not explicity stand for orders";
+			}
 		}
 		return null;
 	}
