@@ -69,6 +69,31 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public String greetServer(String input) throws IllegalArgumentException {
 		Game game =null;
+		if (input.startsWith("@")){
+			
+			input = input.replace("@","");
+			String[] commandPars = input.split(" ");
+			game = Game.getGame(commandPars[0]);
+			String command = commandPars[1];
+			if (command.equals("ClearOrders")){
+				String player = commandPars[2];
+				StringBuffer sb = new StringBuffer();
+				sb.append("Cleared following orders:\n");
+				for (Order o : game.getOrders()){
+					if (o.getOwner(game).getDisplayName().equals(player)){
+						sb.append(o + "\n");
+						StandOrder so = new StandOrder();
+						so.setHero(o.getHero(game));
+						so.setPlayer(o.getOwner(game));
+						game.addGameComponent(so);
+					}
+				}
+				game.getPlayer(player).setTurnFinished(false);
+				dao.saveGame(game);
+				return sb.toString();
+			}
+			return "What order is " + input + " supposed to be?";
+		}
 		if (input.startsWith("+")){
 			input = input.replace("+", "");
 			String[] names = input.split(";");
